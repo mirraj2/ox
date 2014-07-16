@@ -1,9 +1,10 @@
+/* Copyright 2012 Addepar. All Rights Reserved. */
+
 package jasonlib;
 
 import java.io.File;
 
 public final class OS {
-
   public static enum OS_Type {
     WINDOWS, MAC, LINUX, UNKNOWN
   }
@@ -26,24 +27,27 @@ public final class OS {
   private OS() {}
 
   public static File getLocalAppFolder(String appName) {
-    String s;
+    String ret;
     if (type == OS_Type.WINDOWS) {
-      s = System.getenv("LOCALAPPDATA");
-      if (s == null) {
-        s = System.getProperty("user.home") + File.separatorChar + "Local Settings"
+      ret = System.getenv("LOCALAPPDATA");
+      if (ret == null) {
+        ret =
+            System.getProperty("user.home") + File.separatorChar + "Local Settings"
                 + File.separatorChar + "Application Data";
       }
     } else {
       appName = "." + appName;
-      s = System.getProperty("user.home");
+      ret = System.getProperty("user.home");
     }
-    if (!s.endsWith(File.separator)) {
-      s = s + File.separatorChar;
+    if (!ret.endsWith(File.separator)) {
+      ret = ret + File.separatorChar;
     }
-    s = s + appName + File.separatorChar;
+    ret = ret + appName + File.separatorChar;
 
-    File file = new File(s);
-    file.mkdirs();
+    File file = new File(ret);
+    if (!file.exists()) {
+      file.mkdirs();
+    }
     return file;
   }
 
@@ -75,13 +79,13 @@ public final class OS {
     return t;
   }
 
-  public static String getDesktop() {
+  public static File getDesktop() {
     String t = System.getProperty("user.home");
     if (!t.endsWith(File.separator)) {
       t = t + File.separatorChar;
     }
     t += "Desktop" + File.separatorChar;
-    return t;
+    return new File(t);
   }
 
   public static String getUserName() {

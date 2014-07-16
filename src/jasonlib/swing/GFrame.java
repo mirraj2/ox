@@ -21,8 +21,11 @@ public class GFrame extends JFrame {
     setSize(width, height);
 
     setLocationRelativeTo(null);
+  }
 
+  public GFrame start() {
     setVisible(true);
+    return this;
   }
 
 }

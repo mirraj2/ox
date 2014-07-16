@@ -1,5 +1,8 @@
 package jasonlib;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -12,9 +15,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Json implements Iterable<String> {
 
@@ -60,6 +60,13 @@ public class Json implements Iterable<String> {
     return ret;
   }
 
+  public String getOrNull(String key) {
+    if (!has(key)) {
+      return null;
+    }
+    return get(key);
+  }
+
   public boolean has(String key) {
     return obj().has(key);
   }
@@ -100,6 +107,11 @@ public class Json implements Iterable<String> {
     return this;
   }
 
+  public Json add(Json element) {
+    array().add(element.e);
+    return this;
+  }
+
   public JsonObject asJsonObject() {
     return obj();
   }
@@ -126,6 +138,10 @@ public class Json implements Iterable<String> {
 
   private JsonObject obj() {
     return e.getAsJsonObject();
+  }
+
+  private JsonArray array() {
+    return e.getAsJsonArray();
   }
 
   @Override
