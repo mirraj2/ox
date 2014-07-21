@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 
@@ -17,14 +18,20 @@ public class Graphics3D {
     this.g = g;
 
     g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-    g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+
+    // this makes things SUPER SLOW on Mac OS
+    // g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
   }
 
-  public Graphics3D setColor(int r, int g, int b) {
-    return setColor(new Color(r, g, b));
+  public Graphics3D color(int r, int g, int b) {
+    return color(r, g, b, 255);
   }
 
-  public Graphics3D setColor(Color c) {
+  public Graphics3D color(int r, int g, int b, int a) {
+    return color(new Color(r, g, b, a));
+  }
+
+  public Graphics3D color(Color c) {
     g.setColor(c);
     return this;
   }
@@ -44,8 +51,31 @@ public class Graphics3D {
     return this;
   }
 
+
+  public Graphics3D draw(Image i, double dx, double dy, Rectangle sourceRegion) {
+    Rectangle r = sourceRegion;
+    return draw(i, dx, dy, r.x, r.y, r.width, r.height);
+  }
+
+  public Graphics3D draw(Image i, double dx1, double dy1, double sx1, double sy1, int w, int h) {
+    g.drawImage(i, (int) dx1, (int) dy1, (int) dx1 + w, (int) dy1 + h,
+        (int) sx1, (int) sy1, (int) sx1 + w, (int) sy1 + h, null);
+    return this;
+  }
+
+  public Graphics3D draw(Image i, double dx1, double dy1, double dx2, double dy2, double sx1, double sy1, double sx2,
+      double sy2) {
+    g.drawImage(i, (int) dx1, (int) dy1, (int) dx2, (int) dy2, (int) sx1, (int) sy1, (int) sx2, (int) sy2, null);
+    return this;
+  }
+
   public Graphics3D fill(Shape s) {
     g.fill(s);
+    return this;
+  }
+
+  public Graphics3D fillRect(double x, double y, double w, double h) {
+    g.fillRect((int) x, (int) y, (int) w, (int) h);
     return this;
   }
 

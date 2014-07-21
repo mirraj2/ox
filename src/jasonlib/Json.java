@@ -94,7 +94,7 @@ public class Json implements Iterable<String> {
 
   public Json with(String key, Json value) {
     checkNotNull(value);
-    obj().add(key, value.asJsonObject());
+    obj().add(key, value.e);
     return this;
   }
 
