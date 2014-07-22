@@ -1,4 +1,6 @@
-package jasonlib.swing;
+package jasonlib.swing.global;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -13,6 +15,7 @@ import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
 
@@ -31,7 +34,7 @@ public class Components {
   }
 
   public static void focus(JComponent component) {
-    JFrame frame = getAncestorOfClass(component, JFrame.class);
+    JFrame frame = getAncestorOfClass(JFrame.class, component);
     if (frame != null) {
       frame.toFront();
     }
@@ -53,18 +56,22 @@ public class Components {
   }
 
   @SuppressWarnings("unchecked")
-  public static <T> T getAncestorOfClass(JComponent c, Class<T> clazz) {
-    Component current = c;
-    while (current != null) {
-      if (clazz.isAssignableFrom(current.getClass())) {
-        return (T) current;
+  public static <T extends Component> T getAncestorOfClass(Class<T> clazz, Component comp) {
+    checkNotNull(clazz, "clazz");
+    checkNotNull(comp, "comp");
+
+    while (comp != null && !clazz.isAssignableFrom(comp.getClass())) {
+      if (comp instanceof JPopupMenu) {
+        comp = ((JPopupMenu) comp).getInvoker();
+      } else {
+        comp = comp.getParent();
       }
-      current = current.getParent();
     }
-    return null;
+
+    return (T) comp;
   }
 
-  public static void focusBestChild(JComponent component) {
+  public static void focusBestChild(Container component) {
     List<JComponent> children = Lists.newArrayList();
     recurse(component, children);
 

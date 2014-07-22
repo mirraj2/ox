@@ -1,4 +1,6 @@
-package jasonlib.swing;
+package jasonlib.swing.global;
+
+import jasonlib.swing.DragListener;
 
 import java.awt.Component;
 import java.awt.datatransfer.DataFlavor;

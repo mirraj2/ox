@@ -36,6 +36,11 @@ public class Graphics3D {
     return this;
   }
 
+  public Graphics3D line(int x1, int y1, int x2, int y2) {
+    g.drawLine(x1, y1, x2, y2);
+    return this;
+  }
+
   public Graphics3D draw(Shape s) {
     g.draw(s);
     return this;

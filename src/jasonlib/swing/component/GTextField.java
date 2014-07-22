@@ -13,6 +13,10 @@ public class GTextField extends JTextField {
 
   private List<ChangeListener> listeners = Lists.newArrayListWithCapacity(1);
 
+  public GTextField() {
+    this("");
+  }
+
   public GTextField(String text) {
     super(text);
 
@@ -42,6 +46,11 @@ public class GTextField extends JTextField {
     for (ChangeListener c : listeners) {
       c.stateChanged(null);
     }
+  }
+
+  @Override
+  public String getText() {
+    return super.getText().trim();
   }
 
 }

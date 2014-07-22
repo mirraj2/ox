@@ -5,11 +5,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -132,6 +134,14 @@ public class Json implements Iterable<String> {
     List<Json> ret = Lists.newArrayListWithCapacity(e.getAsJsonArray().size());
     for (JsonElement item : e.getAsJsonArray()) {
       ret.add(new Json(item));
+    }
+    return ret;
+  }
+
+  public Map<String, String> asStringMap() {
+    Map<String, String> ret = Maps.newHashMap();
+    for (String key : this) {
+      ret.put(key, get(key));
     }
     return ret;
   }

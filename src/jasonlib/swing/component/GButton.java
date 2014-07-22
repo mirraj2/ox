@@ -21,4 +21,8 @@ public class GButton extends JButton {
     setFocusable(false);
   }
 
+  public void setDefault(boolean b) {
+
+  }
+
 }

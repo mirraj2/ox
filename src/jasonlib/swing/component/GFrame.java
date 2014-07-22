@@ -1,4 +1,4 @@
-package jasonlib.swing;
+package jasonlib.swing.component;
 
 import java.awt.Container;
 
@@ -49,6 +49,10 @@ public class GFrame extends JFrame {
 
     revalidate();
     repaint();
+  }
+
+  public GFrame create() {
+    return new GFrame();
   }
 
 }
