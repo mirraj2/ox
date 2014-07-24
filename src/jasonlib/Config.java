@@ -3,13 +3,10 @@ package jasonlib;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.apache.log4j.Logger;
 
 import com.google.common.base.Strings;
-import com.google.common.base.Throwables;
-import com.google.common.io.Files;
 
 public class Config {
 
@@ -22,11 +19,7 @@ public class Config {
     configFile = new File(dir, "config.json");
 
     if (configFile.exists()) {
-      try {
-        json = new Json(Files.toByteArray(configFile));
-      } catch (IOException e) {
-        throw Throwables.propagate(e);
-      }
+      json = IO.from(configFile).toJson();
     } else {
       logger.debug("Creating a new config.json -> " + configFile);
       json = new Json();
@@ -40,11 +33,7 @@ public class Config {
     configFile = new File(OS.getLocalAppFolder(appName), "config.json");
 
     if (configFile.exists()) {
-      try {
-        json = new Json(Files.toByteArray(configFile));
-      } catch (IOException e) {
-        throw Throwables.propagate(e);
-      }
+      json = IO.from(configFile).toJson();
     } else {
       logger.debug("Creating a new config.json");
       json = new Json();
@@ -62,11 +51,7 @@ public class Config {
   }
 
   private void save() {
-    try {
-      Files.write(json.asByteArray(), configFile);
-    } catch (IOException e) {
-      throw Throwables.propagate(e);
-    }
+    IO.from(json).to(configFile);
   }
 
   public static Config load(File dir) {

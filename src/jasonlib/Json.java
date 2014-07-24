@@ -3,6 +3,7 @@ package jasonlib;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.io.Reader;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,10 @@ public class Json implements Iterable<String> {
 
   public Json(byte[] data) {
     this(parser.parse(new String(data, Charsets.UTF_8)));
+  }
+
+  public Json(Reader reader) {
+    this(parser.parse(reader));
   }
 
   public Json(JsonElement e) {

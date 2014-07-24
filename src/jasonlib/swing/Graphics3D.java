@@ -1,16 +1,22 @@
 package jasonlib.swing;
 
+import jasonlib.Rect;
+
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
+import java.awt.Stroke;
 
 public class Graphics3D {
+
+  private static final Stroke NORMAL_STROKE = new BasicStroke(1f);
 
   private final Graphics2D g;
 
@@ -36,8 +42,26 @@ public class Graphics3D {
     return this;
   }
 
-  public Graphics3D line(int x1, int y1, int x2, int y2) {
-    g.drawLine(x1, y1, x2, y2);
+  public Graphics3D font(Font font) {
+    g.setFont(font);
+    return this;
+  }
+
+  public Graphics3D text(String text, Rect r) {
+    FontMetrics fm = g.getFontMetrics();
+    int w = fm.stringWidth(text);
+    int h = fm.getHeight() - fm.getDescent();
+
+    return text(text, r.centerX() - w / 2, r.centerY() + h / 2);
+  }
+
+  public Graphics3D text(String text, double x, double y) {
+    g.drawString(text, (int) x, (int) y);
+    return this;
+  }
+
+  public Graphics3D line(double x1, double y1, double x2, double y2) {
+    g.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
     return this;
   }
 
@@ -57,9 +81,9 @@ public class Graphics3D {
   }
 
 
-  public Graphics3D draw(Image i, double dx, double dy, Rectangle sourceRegion) {
-    Rectangle r = sourceRegion;
-    return draw(i, dx, dy, r.x, r.y, r.width, r.height);
+  public Graphics3D draw(Image i, double dx, double dy, Rect sourceRegion) {
+    Rect r = sourceRegion;
+    return draw(i, dx, dy, r.x, r.y, r.w(), r.h());
   }
 
   public Graphics3D draw(Image i, double dx1, double dy1, double sx1, double sy1, int w, int h) {
@@ -109,13 +133,25 @@ public class Graphics3D {
   }
 
   public Graphics3D setStroke(double thickness) {
-    g.setStroke(new BasicStroke((float) thickness));
+    if (thickness == 1) {
+      g.setStroke(NORMAL_STROKE);
+    } else {
+      g.setStroke(new BasicStroke((float) thickness));
+    }
     return this;
   }
 
   public Graphics3D alpha(double alpha) {
     g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) alpha));
     return this;
+  }
+
+  public Graphics3D draw(Rect r) {
+    return draw(r.convert());
+  }
+
+  public Graphics3D fill(Rect r) {
+    return fill(r.convert());
   }
 
   public static Graphics3D create(Graphics g) {

@@ -71,6 +71,38 @@ public class Components {
     return (T) comp;
   }
 
+  public static <T> T getChildOfClass(Class<T> c, Container parent) {
+    List<T> ret = Lists.newArrayList();
+    getChildrenOfClass(c, parent, ret);
+    if (ret.isEmpty()) {
+      return null;
+    }
+    if (ret.size() > 1) {
+      throw new RuntimeException("Found multiple children of class : " + c);
+    }
+    return ret.get(0);
+  }
+
+  public static <T> List<T> getChildrenOfClass(Class<T> c, Container parent) {
+    List<T> ret = Lists.newArrayList();
+    getChildrenOfClass(c, parent, ret);
+    return ret;
+  }
+
+  @SuppressWarnings("unchecked")
+  private static <T> void getChildrenOfClass(Class<T> c, Container parent, List<T> targetList) {
+    for (int i = 0; i < parent.getComponentCount(); i++) {
+      Component child = parent.getComponent(i);
+      if (c.isAssignableFrom(child.getClass())) {
+        targetList.add((T) child);
+      }
+
+      if (child instanceof Container) {
+        getChildrenOfClass(c, (Container) child, targetList);
+      }
+    }
+  }
+
   public static void focusBestChild(Container component) {
     List<JComponent> children = Lists.newArrayList();
     recurse(component, children);
