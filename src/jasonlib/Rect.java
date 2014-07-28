@@ -1,6 +1,11 @@
 package jasonlib;
 
+import static java.lang.Integer.parseInt;
+
 import java.awt.Rectangle;
+import java.util.Iterator;
+
+import com.google.common.base.Splitter;
 
 public class Rect {
   public final double x, y, w, h;
@@ -75,6 +80,10 @@ public class Rect {
     return new Rect(x + dx, y + dy, w, h);
   }
 
+  public Rect location(double x, double y) {
+    return new Rect(x, y, w, h);
+  }
+
   public int x() {
     return (int) x;
   }
@@ -116,11 +125,26 @@ public class Rect {
     return x + ", " + y + ", " + w + ", " + h;
   }
 
-  public Rect within(double bx, double by, double bw, double bh) {
+  public Rect resizeWithin(Rect r) {
+    return moveWithin(r.x, r.y, r.w, r.h);
+  }
+
+  public Rect moveWithin(double bx, double by, double bw, double bh) {
     double newX = Math.max(x, bx);
     double newY = Math.max(y, by);
     newX = Math.min(newX, bx + bw - w);
     newY = Math.min(newY, by + bh - h);
     return new Rect(newX, newY, w, h);
   }
+
+  public String serialize() {
+    return x() + " " + y() + " " + w() + " " + h();
+  }
+
+  public static Rect parse(String s) {
+    Iterator<String> iter = Splitter.on(' ').split(s).iterator();
+    return new Rect(parseInt(iter.next()), parseInt(iter.next()), parseInt(iter.next()),
+        parseInt(iter.next()));
+  }
+
 }
