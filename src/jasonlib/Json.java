@@ -1,15 +1,11 @@
 package jasonlib;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.io.Reader;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -18,6 +14,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Json implements Iterable<String> {
 
@@ -99,6 +97,11 @@ public class Json implements Iterable<String> {
     return this;
   }
 
+  public Json with(String key, Enum<?> value) {
+    checkNotNull(value, "Tried to associate null with field: " + key);
+    return with(key, value.name());
+  }
+
   public Json with(String key, Json value) {
     checkNotNull(value);
     obj().add(key, value.e);
@@ -115,7 +118,7 @@ public class Json implements Iterable<String> {
   }
 
   public Json add(Json element) {
-    array().add(element.e);
+    e.getAsJsonArray().add(element.e);
     return this;
   }
 
@@ -155,10 +158,6 @@ public class Json implements Iterable<String> {
     return e.getAsJsonObject();
   }
 
-  private JsonArray array() {
-    return e.getAsJsonArray();
-  }
-
   @Override
   public String toString() {
     return e.toString();
@@ -172,6 +171,14 @@ public class Json implements Iterable<String> {
       ret.add(e.getKey());
     }
     return ret.iterator();
+  }
+
+  public static Json object() {
+    return new Json();
+  }
+
+  public static Json array() {
+    return new Json(new JsonArray());
   }
 
 }

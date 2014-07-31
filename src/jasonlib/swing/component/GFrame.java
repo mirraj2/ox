@@ -1,7 +1,7 @@
 package jasonlib.swing.component;
 
+import java.awt.Color;
 import java.awt.Container;
-
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
@@ -14,7 +14,9 @@ public class GFrame extends JFrame {
   public GFrame(String title) {
     super(title);
 
+    size(800, 600);
     setDefaultCloseOperation(EXIT_ON_CLOSE);
+    setBackground(Color.white);
   }
 
   public GFrame start() {
@@ -49,6 +51,11 @@ public class GFrame extends JFrame {
 
     revalidate();
     repaint();
+  }
+
+  public GFrame resizable(boolean b) {
+    setResizable(b);
+    return this;
   }
 
   public GFrame create() {

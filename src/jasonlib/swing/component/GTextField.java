@@ -1,12 +1,10 @@
 package jasonlib.swing.component;
 
 import java.util.List;
-
 import javax.swing.JTextField;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-
 import com.google.common.collect.Lists;
 
 public class GTextField extends JTextField {

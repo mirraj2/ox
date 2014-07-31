@@ -1,7 +1,6 @@
 package jasonlib.swing;
 
 import jasonlib.Rect;
-
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -123,7 +122,7 @@ public class Graphics3D {
     return this;
   }
 
-  public Graphics3D copy(){
+  public Graphics3D copy() {
     return create(g.create());
   }
 

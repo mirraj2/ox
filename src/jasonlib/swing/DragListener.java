@@ -2,7 +2,7 @@ package jasonlib.swing;
 
 public abstract class DragListener {
 
-  public abstract void handleDrop(Object data);
+  public abstract void handleDrop(Object data, int x, int y);
 
   public void dragEntered() {
   }
@@ -10,7 +10,8 @@ public abstract class DragListener {
   public void dragExited() {
   }
 
-  public void dragMoved() {
+  public boolean canDrop(int x, int y) {
+    return true;
   }
 
 }

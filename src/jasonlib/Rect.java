@@ -1,11 +1,11 @@
 package jasonlib;
 
-import static java.lang.Integer.parseInt;
-
 import java.awt.Rectangle;
 import java.util.Iterator;
 
 import com.google.common.base.Splitter;
+
+import static java.lang.Integer.parseInt;
 
 public class Rect {
   public final double x, y, w, h;

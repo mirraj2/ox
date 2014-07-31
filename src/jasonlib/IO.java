@@ -1,35 +1,21 @@
 package jasonlib;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.InflaterInputStream;
 import java.util.zip.InflaterOutputStream;
-
 import javax.imageio.ImageIO;
-
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.io.ByteStreams;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class IO {
 
@@ -143,6 +129,14 @@ public class IO {
       }
     }
 
+    public void to(URL url) {
+      try {
+        to(new File(url.toURI()));
+      } catch (Exception e) {
+        throw Throwables.propagate(e);
+      }
+    }
+
     public byte[] toByteArray() {
       ByteArrayOutputStream os = new ByteArrayOutputStream();
       try {
@@ -151,6 +145,11 @@ public class IO {
         throw Throwables.propagate(e);
       }
       return os.toByteArray();
+    }
+
+    @Override
+    public String toString() {
+      return new String(toByteArray(), Charsets.UTF_8);
     }
 
     public Json toJson() {
@@ -185,7 +184,11 @@ public class IO {
           ret = (InputStream) o;
         } else if (o instanceof URL) {
           URL url = (URL) o;
-          ret = url.openStream();
+          URLConnection conn = url.openConnection();
+          conn.setRequestProperty("User-Agent",
+              "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 " +
+                  "(KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36");
+          ret = conn.getInputStream();
         }
         if (ret == null) {
           throw new RuntimeException("Don't know how to turn " + o.getClass() + " into a stream.");

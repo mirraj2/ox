@@ -22,7 +22,7 @@ public class Config {
       json = IO.from(configFile).toJson();
     } else {
       logger.debug("Creating a new config.json -> " + configFile);
-      json = new Json();
+      json = Json.object();
       save();
     }
   }
@@ -36,7 +36,7 @@ public class Config {
       json = IO.from(configFile).toJson();
     } else {
       logger.debug("Creating a new config.json");
-      json = new Json();
+      json = Json.object();
       save();
     }
   }

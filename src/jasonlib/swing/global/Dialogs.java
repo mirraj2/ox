@@ -1,8 +1,6 @@
 package jasonlib.swing.global;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import jasonlib.swing.component.GButton;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -14,15 +12,14 @@ import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.concurrent.atomic.AtomicReference;
-
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
 import net.miginfocom.swing.MigLayout;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Dialogs {
 
@@ -95,7 +92,7 @@ public class Dialogs {
       @Override
       public void windowActivated(WindowEvent e) {
         dialog.getContentPane().requestFocus();
-        Components.focusBestChild(dialog.getContentPane());
+        GFocus.focusBestChild(dialog.getContentPane());
       }
     });
 

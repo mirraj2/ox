@@ -1,7 +1,6 @@
 package jasonlib.swing.global;
 
 import jasonlib.swing.DragListener;
-
 import java.awt.Component;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -13,7 +12,6 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.io.IOException;
-
 import com.google.common.base.Throwables;
 
 public class DND {
@@ -39,12 +37,16 @@ public class DND {
           throw Throwables.propagate(e);
         }
 
-        dragListener.handleDrop(data);
+        dragListener.handleDrop(data, d.getLocation().x, d.getLocation().y);
       }
 
       @Override
       public void dragOver(DropTargetDragEvent d) {
-        dragListener.dragMoved();
+        if (dragListener.canDrop(d.getLocation().x, d.getLocation().y)) {
+          d.acceptDrag(d.getDropAction());
+        } else {
+          d.rejectDrag();
+        }
       }
 
       @Override
@@ -74,8 +76,10 @@ public class DND {
 
     DataFlavor textFlavor = null;
     for (DataFlavor flavor : flavors) {
-      if (textFlavor == null && flavor.isFlavorTextType()) {
-        textFlavor = flavor;
+      if (flavor.isFlavorTextType()) {
+        if (textFlavor == null && flavor.getRepresentationClass() == String.class) {
+          textFlavor = flavor;
+        }
       }
     }
 

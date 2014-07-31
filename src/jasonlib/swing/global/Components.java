@@ -1,58 +1,44 @@
 package jasonlib.swing.global;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
+import jasonlib.swing.component.GPanel;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Window;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.util.List;
-
+import javax.swing.Box;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
-import javax.swing.text.JTextComponent;
-
 import com.google.common.collect.Lists;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Components {
 
   public static void onShow(final Component c, final Runnable r) {
-    c.addComponentListener(new ComponentAdapter() {
+    // c.addComponentListener(new ComponentAdapter() {
+    // @Override
+    // public void componentShown(ComponentEvent e) {
+    // c.removeComponentListener(this);
+    // r.run();
+    // }
+    // });
+
+    c.addHierarchyListener(new HierarchyListener() {
       @Override
-      public void componentShown(ComponentEvent e) {
-        c.removeComponentListener(this);
-        r.run();
+      public void hierarchyChanged(HierarchyEvent e) {
+        if (c.isVisible()) {
+          c.removeHierarchyListener(this);
+          r.run();
+        }
       }
     });
   }
 
-  public static void focus(JComponent component) {
-    JFrame frame = getAncestorOfClass(JFrame.class, component);
-    if (frame != null) {
-      frame.toFront();
-    }
-
-    component.requestFocusInWindow();
-    component.addHierarchyListener(new HierarchyListener() {
-      @Override
-      public void hierarchyChanged(HierarchyEvent e) {
-        final Component c = e.getComponent();
-        SwingUtilities.invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            c.requestFocusInWindow();
-          }
-        });
-        c.removeHierarchyListener(this);
-      }
-    });
+  public static Window getWindow(Component c) {
+    return getAncestorOfClass(Window.class, c);
   }
 
   @SuppressWarnings("unchecked")
@@ -103,33 +89,12 @@ public class Components {
     }
   }
 
-  public static void focusBestChild(Container component) {
-    List<JComponent> children = Lists.newArrayList();
-    recurse(component, children);
-
-    JComponent toFocus = null;
-    for (JComponent child : children) {
-      if (child instanceof JTextComponent) {
-        toFocus = child;
-        break;
-      }
-    }
-
-    if (toFocus != null) {
-      focus(toFocus);
-    }
-  }
-
-  private static void recurse(Container j, List<JComponent> list) {
-    for (int i = 0; i < j.getComponentCount(); i++) {
-      Component c = j.getComponent(i);
-      if (c instanceof Container) {
-        if (c instanceof JComponent) {
-          list.add((JComponent) c);
-        }
-        recurse((Container) c, list);
-      }
-    }
+  public static JComponent center(Component c) {
+    JComponent ret = new GPanel();
+    ret.add(Box.createHorizontalGlue(), "width 100%, span, wrap");
+    ret.add(Box.createVerticalGlue(), "height 100%");
+    ret.add(c, "alignx center, aligny center, width pref!, height pref!");
+    return ret;
   }
 
   public static void refresh(Container component) {
