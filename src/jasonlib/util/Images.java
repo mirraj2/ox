@@ -1,24 +1,31 @@
 package jasonlib.util;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import jasonlib.IO;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
-
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
-
 import com.google.common.base.Stopwatch;
+import static com.google.common.base.Preconditions.checkArgument;
 
 public class Images {
 
   private static final Logger logger = Logger.getLogger(Images.class);
 
-  private static final String imageName = "out.png";
-  private static final String path = "/Users/jason/Downloads/";
+  private static final String path = "C:/shit/SOTK/sprites/";
+
+  public static boolean isTransparent(BufferedImage bi, int x, int y, int w, int h) {
+    int[] data = bi.getRGB(x, y, w, h, null, 0, w);
+    for (int rgb : data) {
+      int alpha = (rgb >> 24) & 0xff;
+      if (alpha != 0) {
+        return false;
+      }
+    }
+    return true;
+  }
 
   public static void changeAlpha(BufferedImage bi, int rgb, int alpha) {
     checkArgument(bi.getType() == BufferedImage.TYPE_INT_ARGB, "The image must have an alpha channel!");
@@ -55,11 +62,19 @@ public class Images {
   }
 
   private static void makeTransparentBackground() {
-    BufferedImage bi = IO.from(new File(path + imageName)).toImage();
-    bi = withAlpha(bi);
-    changeAlpha(bi, bi.getRGB(0, 0), 0);
-    IO.from(bi).to(new File(path + "out.png"));
+    for (File f : new File(path).listFiles()) {
+      String s = f.getName();
+      if (s.endsWith(".out.png")) {
+        continue;
+      }
 
+      s = s.substring(0, s.length() - 4);
+
+      BufferedImage bi = IO.from(f).toImage();
+      bi = withAlpha(bi);
+      changeAlpha(bi, bi.getRGB(0, 0), 0);
+      IO.from(bi).to(new File(path, s + ".out.png"));
+    }
   }
 
   public static void main(String[] args) {

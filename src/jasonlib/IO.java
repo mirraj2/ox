@@ -9,8 +9,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-import java.util.zip.InflaterInputStream;
-import java.util.zip.InflaterOutputStream;
 import javax.imageio.ImageIO;
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
@@ -37,6 +35,12 @@ public class IO {
     } catch (FileNotFoundException e) {
       throw Throwables.propagate(e);
     }
+  }
+
+  public static Input from(Class<?> loader, String name) {
+    URL url = loader.getResource(name);
+    checkNotNull(url, "Could not find resource: " + name);
+    return from(url);
   }
 
   public static Input fromURL(String url) {
@@ -72,16 +76,14 @@ public class IO {
   }
 
   private static InputStream buffer(InputStream is) {
-    if (!(is instanceof BufferedInputStream || is instanceof ByteArrayInputStream
-    || is instanceof InflaterInputStream)) {
+    if (!(is instanceof BufferedInputStream || is instanceof ByteArrayInputStream)) {
       is = new BufferedInputStream(is);
     }
     return is;
   }
 
   private static OutputStream buffer(OutputStream os) {
-    if (!(os instanceof BufferedOutputStream || os instanceof ByteArrayOutputStream
-    || os instanceof InflaterOutputStream)) {
+    if (!(os instanceof BufferedOutputStream || os instanceof ByteArrayOutputStream)) {
       os = new BufferedOutputStream(os);
     }
     return os;

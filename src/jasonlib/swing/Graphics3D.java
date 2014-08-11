@@ -1,17 +1,8 @@
 package jasonlib.swing;
 
 import jasonlib.Rect;
-import java.awt.AlphaComposite;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.RenderingHints;
-import java.awt.Shape;
-import java.awt.Stroke;
+import java.awt.*;
+import java.awt.geom.AffineTransform;
 
 public class Graphics3D {
 
@@ -23,6 +14,7 @@ public class Graphics3D {
     this.g = g;
 
     g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
     // this makes things SUPER SLOW on Mac OS
     // g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
@@ -122,6 +114,11 @@ public class Graphics3D {
     return this;
   }
 
+  public Graphics3D rotate(double theta, int x, int y) {
+    g.rotate(theta, x, y);
+    return this;
+  }
+
   public Graphics3D copy() {
     return create(g.create());
   }
@@ -140,6 +137,16 @@ public class Graphics3D {
     return this;
   }
 
+  public Graphics3D setPaint(Paint paint) {
+    g.setPaint(paint);
+    return this;
+  }
+
+  public Graphics3D transform(AffineTransform transform) {
+    g.transform(transform);
+    return this;
+  }
+
   public Graphics3D alpha(double alpha) {
     g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) alpha));
     return this;
@@ -151,6 +158,16 @@ public class Graphics3D {
 
   public Graphics3D fill(Rect r) {
     return fill(r.convert());
+  }
+
+  public Graphics3D linearInterpolation() {
+    g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+    return this;
+  }
+
+  public Graphics3D cubicInterpolation() {
+    g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+    return this;
   }
 
   public static Graphics3D create(Graphics g) {

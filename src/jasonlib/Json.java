@@ -23,7 +23,7 @@ public class Json implements Iterable<String> {
 
   private final JsonElement e;
 
-  public Json() {
+  private Json() {
     this.e = new JsonObject();
   }
 
@@ -35,7 +35,7 @@ public class Json implements Iterable<String> {
     this(parser.parse(reader));
   }
 
-  public Json(JsonElement e) {
+  private Json(JsonElement e) {
     this.e = e;
   }
 
@@ -45,6 +45,10 @@ public class Json implements Iterable<String> {
 
   public int getInt(String key) {
     return getElement(key).getAsInt();
+  }
+
+  public long getLong(String key) {
+    return getElement(key).getAsLong();
   }
 
   public double getDouble(String key) {
@@ -122,6 +126,21 @@ public class Json implements Iterable<String> {
     return this;
   }
 
+  public Json add(String s) {
+    e.getAsJsonArray().add(new JsonPrimitive(s));
+    return this;
+  }
+
+  public Json add(Number n) {
+    e.getAsJsonArray().add(new JsonPrimitive(n));
+    return this;
+  }
+
+  public Json remove(String key) {
+    obj().remove(key);
+    return this;
+  }
+
   public JsonObject asJsonObject() {
     return obj();
   }
@@ -163,6 +182,14 @@ public class Json implements Iterable<String> {
     return e.toString();
   }
 
+  public boolean isArray() {
+    return e instanceof JsonArray;
+  }
+
+  public boolean isObject() {
+    return e instanceof JsonObject;
+  }
+
   @Override
   public Iterator<String> iterator() {
     Set<Entry<String, JsonElement>> entries = obj().entrySet();
@@ -179,6 +206,22 @@ public class Json implements Iterable<String> {
 
   public static Json array() {
     return new Json(new JsonArray());
+  }
+
+  public static Json array(String... data) {
+    Json ret = array();
+    for (String s : data) {
+      ret.add(s);
+    }
+    return ret;
+  }
+
+  public static Json array(Iterable<? extends Number> data) {
+    Json ret = array();
+    for (Number n : data) {
+      ret.add(n);
+    }
+    return ret;
   }
 
 }

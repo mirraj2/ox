@@ -2,9 +2,7 @@ package jasonlib;
 
 import java.awt.Rectangle;
 import java.util.Iterator;
-
 import com.google.common.base.Splitter;
-
 import static java.lang.Integer.parseInt;
 
 public class Rect {
@@ -27,10 +25,10 @@ public class Rect {
   }
 
   public boolean intersects(Rect other) {
-    if ((x > other.x + other.w) || (x + w < other.x)) {
+    if ((x >= other.x + other.w) || (x + w <= other.x)) {
       return false;
     }
-    if ((y > other.y + other.h) || (y + h < other.y)) {
+    if ((y >= other.y + other.h) || (y + h <= other.y)) {
       return false;
     }
     return true;
@@ -82,6 +80,10 @@ public class Rect {
 
   public Rect location(double x, double y) {
     return new Rect(x, y, w, h);
+  }
+
+  public Rect scale(double scale) {
+    return new Rect(x * scale, y * scale, w * scale, h * scale);
   }
 
   public int x() {
