@@ -1,12 +1,14 @@
 package jasonlib;
 
 import java.io.Reader;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import com.google.common.base.Charsets;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
@@ -136,9 +138,43 @@ public class Json implements Iterable<String> {
     return this;
   }
 
-  public Json remove(String key) {
-    obj().remove(key);
+  public Json remove(String s) {
+    if (isArray()) {
+      arr().remove(new JsonPrimitive(s));
+    } else {
+      obj().remove(s);
+    }
     return this;
+  }
+
+  public Json remove(int index) {
+    arr().remove(index);
+    return this;
+  }
+
+  public int size() {
+    if (isArray()) {
+      return arr().size();
+    } else {
+      return Iterables.size(this);
+    }
+  }
+
+  public Json clear() {
+    if (isArray()) {
+      while (size() > 0) {
+        arr().remove(0);
+      }
+    } else {
+      for (String key : this) {
+        obj().remove(key);
+      }
+    }
+    return this;
+  }
+
+  public boolean isEmpty() {
+    return size() == 0;
   }
 
   public JsonObject asJsonObject() {
@@ -177,6 +213,10 @@ public class Json implements Iterable<String> {
     return e.getAsJsonObject();
   }
 
+  private JsonArray arr() {
+    return e.getAsJsonArray();
+  }
+
   @Override
   public String toString() {
     return e.toString();
@@ -192,6 +232,10 @@ public class Json implements Iterable<String> {
 
   @Override
   public Iterator<String> iterator() {
+    if (isArray()) {
+      return asStringArray().iterator();
+    }
+
     Set<Entry<String, JsonElement>> entries = obj().entrySet();
     List<String> ret = Lists.newArrayListWithCapacity(entries.size());
     for (Entry<String, JsonElement> e : entries) {
@@ -208,20 +252,24 @@ public class Json implements Iterable<String> {
     return new Json(new JsonArray());
   }
 
-  public static Json array(String... data) {
+  public static Json array(Iterable<?> data) {
     Json ret = array();
-    for (String s : data) {
-      ret.add(s);
+    for (Object o : data) {
+      if (o instanceof String) {
+        ret.add((String) o);
+      } else if (o instanceof Number) {
+        ret.add((Number) o);
+      } else if (o instanceof Json) {
+        ret.add((Json) o);
+      } else {
+        ret.add(o.toString());
+      }
     }
     return ret;
   }
 
-  public static Json array(Iterable<? extends Number> data) {
-    Json ret = array();
-    for (Number n : data) {
-      ret.add(n);
-    }
-    return ret;
+  public static Json array(String... data) {
+    return array(Arrays.asList(data));
   }
 
 }

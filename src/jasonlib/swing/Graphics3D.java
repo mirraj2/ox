@@ -41,9 +41,9 @@ public class Graphics3D {
   public Graphics3D text(String text, Rect r) {
     FontMetrics fm = g.getFontMetrics();
     int w = fm.stringWidth(text);
-    int h = fm.getHeight() - fm.getDescent();
+    int h = fm.getHeight();
 
-    return text(text, r.centerX() - w / 2, r.centerY() + h / 2);
+    return text(text, r.centerX() - w / 2, r.centerY() + h / 2 - fm.getDescent());
   }
 
   public Graphics3D text(String text, double x, double y) {
