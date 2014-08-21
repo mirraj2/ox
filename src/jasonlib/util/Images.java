@@ -1,6 +1,7 @@
 package jasonlib.util;
 
 import jasonlib.IO;
+import jasonlib.swing.Graphics3D;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -15,6 +16,21 @@ public class Images {
   private static final Logger logger = Logger.getLogger(Images.class);
 
   private static final String path = "C:/shit/SOTK/sprites/";
+
+  public static BufferedImage resize(BufferedImage bi, int w, int h) {
+    BufferedImage ret = new BufferedImage(w, h, bi.getType());
+
+    while (bi.getWidth() > w * 2) {
+      bi = resize(bi, w * 2, h * 2);
+    }
+
+    Graphics3D g = Graphics3D.create(ret.createGraphics());
+    g.linearInterpolation();
+    g.draw(bi, 0, 0, w, h);
+    g.dispose();
+
+    return ret;
+  }
 
   public static boolean isTransparent(BufferedImage bi, int x, int y, int w, int h) {
     int[] data = bi.getRGB(x, y, w, h, null, 0, w);

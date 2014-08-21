@@ -11,6 +11,7 @@ import java.awt.event.WindowFocusListener;
 import java.util.List;
 import javax.swing.Box;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JPopupMenu;
 import com.google.common.collect.Lists;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -18,14 +19,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class Components {
 
   public static void onShow(final Component c, final Runnable r) {
-    // c.addComponentListener(new ComponentAdapter() {
-    // @Override
-    // public void componentShown(ComponentEvent e) {
-    // c.removeComponentListener(this);
-    // r.run();
-    // }
-    // });
-
     c.addHierarchyListener(new HierarchyListener() {
       @Override
       public void hierarchyChanged(HierarchyEvent e) {
@@ -39,6 +32,10 @@ public class Components {
 
   public static Window getWindow(Component c) {
     return getAncestorOfClass(Window.class, c);
+  }
+
+  public static JFrame getFrame(Component c) {
+    return getAncestorOfClass(JFrame.class, c);
   }
 
   @SuppressWarnings("unchecked")
