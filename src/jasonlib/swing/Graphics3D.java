@@ -160,6 +160,11 @@ public class Graphics3D {
     return fill(r.convert());
   }
 
+  public Graphics3D fillOval(Rect r){
+    g.fillOval((int) r.x, (int) r.y, (int) r.w, (int) r.h);
+    return this;
+  }
+
   public Graphics3D linearInterpolation() {
     g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
     return this;

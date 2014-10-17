@@ -140,18 +140,26 @@ public class IO {
     }
 
     public byte[] toByteArray() {
-      ByteArrayOutputStream os = new ByteArrayOutputStream();
       try {
-        ByteStreams.copy(asStream(), os);
-      } catch (IOException e) {
-        throw Throwables.propagate(e);
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+          ByteStreams.copy(asStream(), os);
+        } catch (IOException e) {
+          throw Throwables.propagate(e);
+        }
+        return os.toByteArray();
+      } finally {
+        finish();
       }
-      return os.toByteArray();
     }
 
     @Override
     public String toString() {
-      return new String(toByteArray(), Charsets.UTF_8);
+      try {
+        return new String(toByteArray(), Charsets.UTF_8);
+      } finally {
+        finish();
+      }
     }
 
     public Json toJson() {
@@ -222,9 +230,11 @@ public class IO {
         }
       } else {
         close(is);
+        is = null;
       }
       if (os != null) {
         close(os);
+        os = null;
       }
     }
 

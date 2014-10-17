@@ -1,9 +1,11 @@
 package jasonlib.util;
 
+import jasonlib.Log;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.regex.Pattern;
-import org.apache.log4j.Logger;
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
@@ -11,14 +13,12 @@ import com.google.common.io.Files;
 
 public class Utils {
 
-  private static final Logger logger = Logger.getLogger(Utils.class);
-
   private static final Pattern emailPattern = Pattern.compile(
       "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\." +
       "[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$");
 
   public static void debug(Object... objects) {
-    logger.debug(Arrays.toString(objects));
+    Log.debug(Arrays.toString(objects));
   }
 
   public static boolean isValidEmailAddress(String email) {
@@ -59,6 +59,14 @@ public class Utils {
     }
   }
   
+  public static String urlEncode(String s) {
+    try {
+      return URLEncoder.encode(s, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      throw Throwables.propagate(e);
+    }
+  }
+
   public static void main(String[] args) {
     printStats(new File("C:\\Users\\Jason\\workspace"));
   }

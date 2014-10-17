@@ -30,7 +30,11 @@ public class Json implements Iterable<String> {
   }
 
   public Json(byte[] data) {
-    this(parser.parse(new String(data, Charsets.UTF_8)));
+    this(new String(data, Charsets.UTF_8));
+  }
+
+  public Json(String data) {
+    this(parser.parse(data));
   }
 
   public Json(Reader reader) {

@@ -24,6 +24,11 @@ public class GFrame extends JFrame {
     return this;
   }
 
+  public GFrame title(String title) {
+    setTitle(title);
+    return this;
+  }
+
   public GFrame disposeOnClose() {
     setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     return this;
@@ -58,7 +63,7 @@ public class GFrame extends JFrame {
     return this;
   }
 
-  public GFrame create() {
+  public static GFrame create() {
     return new GFrame();
   }
 

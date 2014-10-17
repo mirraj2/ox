@@ -1,7 +1,6 @@
 package jasonlib.swing.global;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
+import jasonlib.Log;
 import java.awt.AWTEvent;
 import java.awt.Component;
 import java.awt.Container;
@@ -13,16 +12,12 @@ import java.awt.event.KeyListener;
 import java.util.Collection;
 import java.util.List;
 import java.util.Stack;
-
-import org.apache.log4j.Logger;
-
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class GKeyboard {
-
-  private static final Logger logger = Logger.getLogger(GKeyboard.class);
 
   private static final Multimap<Component, KeyListener> componentKeyListenerMap = ArrayListMultimap.create();
   private static final List<KeyListener> listeners = Lists.newCopyOnWriteArrayList();
@@ -93,7 +88,7 @@ public class GKeyboard {
       try {
         notifyListener(listener, event);
       } catch (Exception e) {
-        logger.error("", e);
+        Log.error(e);
       }
     }
   }

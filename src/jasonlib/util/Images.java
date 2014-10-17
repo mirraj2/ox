@@ -1,19 +1,16 @@
 package jasonlib.util;
 
 import jasonlib.IO;
+import jasonlib.Log;
 import jasonlib.swing.Graphics3D;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
 import com.google.common.base.Stopwatch;
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class Images {
-
-  private static final Logger logger = Logger.getLogger(Images.class);
 
   private static final String path = "C:/shit/SOTK/sprites/";
 
@@ -63,7 +60,7 @@ public class Images {
       }
     }
     bi.setRGB(0, 0, bi.getWidth(), bi.getHeight(), data, 0, bi.getWidth());
-    logger.debug("Switched " + switched + " pixels in " + watch);
+    Log.debug("Switched " + switched + " pixels in " + watch);
   }
 
   private static BufferedImage withAlpha(BufferedImage bi) {
@@ -94,8 +91,6 @@ public class Images {
   }
 
   public static void main(String[] args) {
-    BasicConfigurator.configure();
-
     makeTransparentBackground();
   }
 

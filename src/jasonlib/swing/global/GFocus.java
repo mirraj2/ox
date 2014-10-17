@@ -1,5 +1,6 @@
 package jasonlib.swing.global;
 
+import jasonlib.Log;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.KeyboardFocusManager;
@@ -9,12 +10,9 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
-import org.apache.log4j.Logger;
 import com.google.common.collect.Lists;
 
 public class GFocus {
-
-  private static final Logger logger = Logger.getLogger(GFocus.class);
 
   private static boolean debug = false;
 
@@ -24,7 +22,7 @@ public class GFocus {
       public void propertyChange(PropertyChangeEvent evt) {
         if (debug) {
           Object newOwner = evt.getNewValue();
-          logger.debug("Focus Owner: " + (newOwner == null ? "null" : newOwner.getClass()));
+          Log.debug("Focus Owner: " + (newOwner == null ? "null" : newOwner.getClass()));
         }
       }
     });

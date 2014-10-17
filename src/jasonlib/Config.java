@@ -1,16 +1,10 @@
 package jasonlib;
 
+import java.io.File;
+import com.google.common.base.Strings;
 import static com.google.common.base.Preconditions.checkArgument;
 
-import java.io.File;
-
-import org.apache.log4j.Logger;
-
-import com.google.common.base.Strings;
-
 public class Config {
-
-  private static final Logger logger = Logger.getLogger(Config.class);
 
   private final File configFile;
   private final Json json;
@@ -21,7 +15,7 @@ public class Config {
     if (configFile.exists()) {
       json = IO.from(configFile).toJson();
     } else {
-      logger.debug("Creating a new config.json -> " + configFile);
+      Log.debug("Creating a new config.json -> " + configFile);
       json = Json.object();
       save();
     }
@@ -35,7 +29,7 @@ public class Config {
     if (configFile.exists()) {
       json = IO.from(configFile).toJson();
     } else {
-      logger.debug("Creating a new config.json");
+      Log.debug("Creating a new config.json");
       json = Json.object();
       save();
     }
