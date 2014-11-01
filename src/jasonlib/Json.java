@@ -1,5 +1,7 @@
 package jasonlib;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.Reader;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -11,13 +13,13 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Json implements Iterable<String> {
 
@@ -151,6 +153,10 @@ public class Json implements Iterable<String> {
     return this;
   }
 
+  public Json getJson(int index) {
+    return new Json(arr().get(index));
+  }
+
   public Json remove(int index) {
     arr().remove(index);
     return this;
@@ -224,6 +230,11 @@ public class Json implements Iterable<String> {
   @Override
   public String toString() {
     return e.toString();
+  }
+
+  public String prettyPrint() {
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    return gson.toJson(e);
   }
 
   public boolean isArray() {

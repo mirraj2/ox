@@ -18,4 +18,9 @@ public class GLabel extends JLabel {
     return this;
   }
 
+  public GLabel center() {
+    setHorizontalAlignment(CENTER);
+    return this;
+  }
+
 }

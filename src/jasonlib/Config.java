@@ -1,8 +1,9 @@
 package jasonlib;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static java.lang.Integer.parseInt;
 import java.io.File;
 import com.google.common.base.Strings;
-import static com.google.common.base.Preconditions.checkArgument;
 
 public class Config {
 
@@ -37,6 +38,11 @@ public class Config {
 
   public String get(String key) {
     return json.getOrNull(key);
+  }
+
+  public int getInt(String key, int defaultValue) {
+    String ret = json.getOrNull(key);
+    return ret == null ? defaultValue : parseInt(ret);
   }
 
   public void put(String key, String value) {
