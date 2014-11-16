@@ -1,5 +1,6 @@
 package jasonlib.swing.global;
 
+import static com.google.common.collect.Iterables.getOnlyElement;
 import jasonlib.swing.DragListener;
 import java.awt.Component;
 import java.awt.datatransfer.DataFlavor;
@@ -12,6 +13,7 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.io.IOException;
+import java.util.Collection;
 import com.google.common.base.Throwables;
 
 public class DND {
@@ -20,24 +22,36 @@ public class DND {
     new DropTarget(c, new DropTargetListener() {
       @Override
       public void drop(DropTargetDropEvent d) {
-        Transferable t = d.getTransferable();
-        DataFlavor flavor = getBestFlavor(t.getTransferDataFlavors());
-
-        if (flavor == null) {
-          d.rejectDrop();
-          return;
-        }
-
-        d.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
-
-        Object data;
         try {
-          data = t.getTransferData(flavor);
-        } catch (UnsupportedFlavorException | IOException e) {
-          throw Throwables.propagate(e);
-        }
+          Transferable t = d.getTransferable();
+          DataFlavor flavor = getBestFlavor(t.getTransferDataFlavors());
 
-        dragListener.handleDrop(data, d.getLocation().x, d.getLocation().y);
+          if (flavor == null) {
+            d.rejectDrop();
+            return;
+          }
+
+          d.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+
+          Object data;
+          try {
+            data = t.getTransferData(flavor);
+          } catch (UnsupportedFlavorException | IOException e) {
+            throw Throwables.propagate(e);
+          }
+
+          if (data instanceof Collection) {
+            Collection<?> c = (Collection<?>) data;
+            if (c.size() == 1) {
+              data = getOnlyElement(c);
+            }
+          }
+
+          dragListener.handleDrop(data, d.getLocation().x, d.getLocation().y);
+        }
+        catch (Exception e) {
+          e.printStackTrace();
+        }
       }
 
       @Override
@@ -74,16 +88,23 @@ public class DND {
       return flavors[0];
     }
 
-    DataFlavor textFlavor = null;
+    DataFlavor ret = null;
+
+    for (DataFlavor flavor : flavors) {
+      if (flavor.isFlavorJavaFileListType()) {
+        return flavor;
+      }
+    }
+
     for (DataFlavor flavor : flavors) {
       if (flavor.isFlavorTextType()) {
-        if (textFlavor == null && flavor.getRepresentationClass() == String.class) {
-          textFlavor = flavor;
+        if (ret == null && flavor.getRepresentationClass() == String.class) {
+          ret = flavor;
         }
       }
     }
 
-    return textFlavor;
+    return ret;
   }
 
 }

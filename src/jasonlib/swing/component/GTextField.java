@@ -18,6 +18,8 @@ public class GTextField extends JTextField {
   public GTextField(String text) {
     super(text);
 
+    setColumns(10);
+
     getDocument().addDocumentListener(new DocumentListener() {
       @Override
       public void removeUpdate(DocumentEvent e) {
@@ -36,8 +38,14 @@ public class GTextField extends JTextField {
     });
   }
 
-  public void addChangeListener(ChangeListener changeListener) {
+  public GTextField columns(int columns) {
+    this.setColumns(columns);
+    return this;
+  }
+
+  public GTextField addChangeListener(ChangeListener changeListener) {
     listeners.add(changeListener);
+    return this;
   }
 
   private void change() {

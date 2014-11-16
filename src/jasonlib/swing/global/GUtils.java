@@ -2,7 +2,6 @@ package jasonlib.swing.global;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import jasonlib.swing.Graphics3D;
-
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -10,10 +9,13 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Window;
 import java.awt.image.BufferedImage;
-
 import javax.swing.JFrame;
 
 public class GUtils {
+
+  public static String capitalize(String s) {
+    return Character.toUpperCase(s.charAt(0)) + s.substring(1);
+  }
 
   public static BufferedImage scale(BufferedImage bi, double scale) {
     int w = (int) (bi.getWidth() * scale);

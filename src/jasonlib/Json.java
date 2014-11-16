@@ -157,6 +157,10 @@ public class Json implements Iterable<String> {
     return new Json(arr().get(index));
   }
 
+  public int getInt(int index) {
+    return arr().get(index).getAsInt();
+  }
+
   public Json remove(int index) {
     arr().remove(index);
     return this;

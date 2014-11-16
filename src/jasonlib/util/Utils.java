@@ -67,6 +67,10 @@ public class Utils {
     }
   }
 
+  public static int signum(double d) {
+    return (int) Math.signum(d);
+  }
+
   public static void main(String[] args) {
     printStats(new File("C:\\Users\\Jason\\workspace"));
   }
