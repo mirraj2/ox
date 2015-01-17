@@ -1,14 +1,13 @@
 package jasonlib.util;
 
-import jasonlib.IO;
+import static com.google.common.base.Preconditions.checkArgument;
 import jasonlib.Log;
 import jasonlib.swing.Graphics3D;
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import com.google.common.base.Stopwatch;
-import static com.google.common.base.Preconditions.checkArgument;
 
 public class Images {
 
@@ -63,35 +62,28 @@ public class Images {
     Log.debug("Switched " + switched + " pixels in " + watch);
   }
 
-  private static BufferedImage withAlpha(BufferedImage bi) {
-    if (bi.getType() == BufferedImage.TYPE_INT_ARGB) {
-      return bi;
+  public static BufferedImage rotate(BufferedImage img, double angle) {
+    if (angle == 0) {
+      return img;
     }
-    BufferedImage ret = new BufferedImage(bi.getWidth(), bi.getHeight(), BufferedImage.TYPE_INT_ARGB);
-    Graphics g = ret.createGraphics();
-    g.drawImage(bi, 0, 0, null);
+
+    double sin = Math.abs(Math.sin(Math.toRadians(angle))), cos = Math.abs(Math.cos(Math.toRadians(angle)));
+
+    int w = img.getWidth(), h = img.getHeight();
+
+    int newWidth = (int) Math.floor(w * cos + h * sin);
+    int newHeight = (int) Math.floor(h * cos + w * sin);
+
+    BufferedImage ret = new BufferedImage(newWidth, newHeight, img.getType());
+    Graphics2D g = ret.createGraphics();
+    g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+
+    g.translate((newWidth - w) / 2, (newHeight - h) / 2);
+    g.rotate(Math.toRadians(angle), w / 2, h / 2);
+    g.drawRenderedImage(img, null);
     g.dispose();
+
     return ret;
-  }
-
-  private static void makeTransparentBackground() {
-    for (File f : new File(path).listFiles()) {
-      String s = f.getName();
-      if (s.endsWith(".out.png")) {
-        continue;
-      }
-
-      s = s.substring(0, s.length() - 4);
-
-      BufferedImage bi = IO.from(f).toImage();
-      bi = withAlpha(bi);
-      changeAlpha(bi, bi.getRGB(0, 0), 0);
-      IO.from(bi).to(new File(path, s + ".out.png"));
-    }
-  }
-
-  public static void main(String[] args) {
-    makeTransparentBackground();
   }
 
 }

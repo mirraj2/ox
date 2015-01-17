@@ -1,9 +1,9 @@
 package jasonlib;
 
+import static java.lang.Integer.parseInt;
 import java.awt.Rectangle;
 import java.util.Iterator;
 import com.google.common.base.Splitter;
-import static java.lang.Integer.parseInt;
 
 public class Rect {
   public final double x, y, w, h;
@@ -137,6 +137,14 @@ public class Rect {
     newX = Math.min(newX, bx + bw - w);
     newY = Math.min(newY, by + bh - h);
     return new Rect(newX, newY, w, h);
+  }
+
+  public Rect expandToInclude(double x, double y) {
+    double fromX = Math.min(this.x, x);
+    double fromY = Math.min(this.y, y);
+    double toX = Math.max(maxX(), x);
+    double toY = Math.max(maxY(), y);
+    return new Rect(fromX, fromY, toX - fromX, toY - fromY);
   }
 
   public String serialize() {

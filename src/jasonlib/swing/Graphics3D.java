@@ -1,7 +1,18 @@
 package jasonlib.swing;
 
 import jasonlib.Rect;
-import java.awt.*;
+import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Paint;
+import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 
 public class Graphics3D {
@@ -162,6 +173,11 @@ public class Graphics3D {
 
   public Graphics3D fillOval(Rect r){
     g.fillOval((int) r.x, (int) r.y, (int) r.w, (int) r.h);
+    return this;
+  }
+
+  public Graphics3D drawOval(Rect r) {
+    g.drawOval((int) r.x, (int) r.y, (int) r.w, (int) r.h);
     return this;
   }
 

@@ -21,6 +21,13 @@ public class Utils {
     Log.debug(Arrays.toString(objects));
   }
 
+  public static <T extends Enum<T>> T parseEnum(String s, Class<T> enumType) {
+    if (s == null) {
+      return null;
+    }
+    return Enum.valueOf(enumType, s);
+  }
+
   public static boolean isValidEmailAddress(String email) {
     return emailPattern.matcher(email).matches();
   }
@@ -72,7 +79,7 @@ public class Utils {
   }
 
   public static void main(String[] args) {
-    printStats(new File("C:\\Users\\Jason\\workspace"));
+    printStats(new File("/users/jason/workspace/Mirrus"));
   }
 
 }

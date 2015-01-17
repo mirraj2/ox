@@ -1,5 +1,6 @@
 package jasonlib.swing.global;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import jasonlib.swing.component.GPanel;
 import java.awt.Component;
 import java.awt.Container;
@@ -14,7 +15,6 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPopupMenu;
 import com.google.common.collect.Lists;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Components {
 
@@ -28,6 +28,12 @@ public class Components {
         }
       }
     });
+  }
+
+  public static void setContent(Container a, JComponent b) {
+    a.removeAll();
+    a.add(b);
+    refresh(a);
   }
 
   public static Window getWindow(Component c) {

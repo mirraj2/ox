@@ -1,9 +1,22 @@
 package jasonlib;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -13,7 +26,6 @@ import javax.imageio.ImageIO;
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.io.ByteStreams;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public class IO {
 
@@ -96,14 +108,22 @@ public class IO {
     private OutputStream os;
     private boolean gzipInput, gzipOutput;
     private String imageFormat;
+    private boolean keepAlive = false;
 
     private Input(Object o) {
       this.o = checkNotNull(o);
     }
 
+    public Input keepAlive() {
+      keepAlive = true;
+      return this;
+    }
+
     public void to(File file) {
       if (o instanceof RenderedImage) {
-        imageFormat = getImageType(file);
+        if (imageFormat == null) {
+          imageFormat = getImageType(file);
+        }
       }
       try {
         to(new FileOutputStream(file));
@@ -223,6 +243,11 @@ public class IO {
       return this;
     }
 
+    public Input imageFormat(String format) {
+      this.imageFormat = format;
+      return this;
+    }
+
     private void finish() {
       if (is == null) {
         if (o instanceof Closeable) {
@@ -233,8 +258,16 @@ public class IO {
         is = null;
       }
       if (os != null) {
-        close(os);
-        os = null;
+        if (keepAlive) {
+          try {
+            os.flush();
+          } catch (IOException e) {
+            throw Throwables.propagate(e);
+          }
+        } else {
+          close(os);
+          os = null;
+        }
       }
     }
 
