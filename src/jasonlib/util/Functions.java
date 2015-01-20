@@ -2,6 +2,7 @@ package jasonlib.util;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,7 @@ import com.google.common.collect.Maps;
 
 public final class Functions {
 
-  public static <A, B> List<B> map(List<A> list, Function<A, B> function) {
+  public static <A, B> List<B> map(Collection<A> list, Function<A, B> function) {
     checkNotNull(list, "list");
     checkNotNull(function, "function");
 

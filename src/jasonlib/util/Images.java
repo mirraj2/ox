@@ -11,8 +11,6 @@ import com.google.common.base.Stopwatch;
 
 public class Images {
 
-  private static final String path = "C:/shit/SOTK/sprites/";
-
   public static BufferedImage resize(BufferedImage bi, int w, int h) {
     BufferedImage ret = new BufferedImage(w, h, bi.getType());
 

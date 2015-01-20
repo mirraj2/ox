@@ -2,13 +2,16 @@ package jasonlib;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static jasonlib.util.Functions.map;
 import java.io.Reader;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.Function;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -285,6 +288,10 @@ public class Json implements Iterable<String> {
       }
     }
     return ret;
+  }
+
+  public static <T> Json array(Collection<T> data, Function<T, Json> mapper) {
+    return array(map(data, mapper));
   }
 
   public static Json array(String... data) {
