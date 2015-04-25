@@ -26,3 +26,28 @@ IO.from("Coding is fun!").to(new File("output.txt"));
 //Write an image to a File
 IO.from(myImage).to(new File("img.png"));
 ```
+
+## Json
+
+Here are some examples of the Json API
+
+```java
+//parse Json from a String
+Json json = new Json(s);
+
+//construct a Json Object
+Json json = Json.object()
+  .with("name","Kvothe")
+  .with("age", 16);
+  
+//make an array
+Json json = Json.array().add("Gold").add("Pearls").add("Diamonds");
+
+//Read some values from a Json object
+String name = json.get("name");
+int age = json.getInt("age");
+
+//Loop through a Json Array
+for(String value : json){
+}
+```
