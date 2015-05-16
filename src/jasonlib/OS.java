@@ -26,7 +26,7 @@ public final class OS {
 
   private OS() {}
 
-  public static File getLocalAppFolder(String appName) {
+  public static File getAppFolder(String appName) {
     String ret;
     if (type == OS_Type.WINDOWS) {
       ret = System.getenv("LOCALAPPDATA");

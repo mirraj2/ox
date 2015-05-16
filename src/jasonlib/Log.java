@@ -16,6 +16,12 @@ public class Log {
       o = "null";
     }
 
+    if (o instanceof Throwable) {
+      Throwable t = (Throwable) o;
+      t.printStackTrace(out);
+      return;
+    }
+
     if (args == null) {
       if (o.getClass().isArray()) {
         o = arrayToString(o);
@@ -60,6 +66,21 @@ public class Log {
 
   public static void error(Object o) {
     log(o);
+  }
+
+  public static void dumpSwingThread() {
+    Thread.getAllStackTraces().forEach((thread, trace) -> {
+      if (thread.getName().equals("AWT-EventQueue-0")) {
+        Log.debug("Dumping Swing Thread");
+        for (StackTraceElement e : trace) {
+          if (e.isNativeMethod() || e.getClassName().contains("EventDispatchThread")) {
+            continue;
+          }
+          Log.debug(e);
+        }
+        Log.debug("");
+      }
+    });
   }
 
 }

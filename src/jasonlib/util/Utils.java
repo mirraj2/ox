@@ -1,12 +1,16 @@
 package jasonlib.util;
 
 import jasonlib.Log;
+import java.awt.Color;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 import com.google.common.base.Charsets;
+import com.google.common.base.Enums;
+import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
@@ -17,6 +21,34 @@ public class Utils {
       "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\." +
       "[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$");
 
+  public static final DecimalFormat decimalFormat = new DecimalFormat("#,##0.00#########");
+  public static final DecimalFormat decimalFormat2 = new DecimalFormat("#,##0.00");
+  public static final DecimalFormat noDecimalFormat = new DecimalFormat("#,##0");
+
+  public static String capitalize(String s) {
+    return Character.toUpperCase(s.charAt(0)) + s.substring(1);
+  }
+
+  public static String formatBytes(long size) {
+    if (size <= 0)
+      return "0";
+    final String[] units = new String[] { "B", "kB", "MB", "GB", "TB" };
+    int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+    return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+  }
+
+  public static String format(double d) {
+    return noDecimalFormat.format(d);
+  }
+
+  public static String formatDecimal(double d) {
+    return decimalFormat.format(d);
+  }
+
+  public static String formatDecimal2(double d) {
+    return decimalFormat2.format(d);
+  }
+
   public static void debug(Object... objects) {
     Log.debug(Arrays.toString(objects));
   }
@@ -25,11 +57,30 @@ public class Utils {
     if (s == null) {
       return null;
     }
-    return Enum.valueOf(enumType, s);
+    Optional<T> o = Enums.getIfPresent(enumType, s);
+    if (o.isPresent()) {
+      return o.get();
+    }
+    T[] constants = enumType.getEnumConstants();
+    for (T constant : constants) {
+      if (constant.toString().equalsIgnoreCase(s)) {
+        return constant;
+      }
+    }
+    throw new IllegalArgumentException("No enum: " + enumType + "." + s);
   }
 
   public static boolean isValidEmailAddress(String email) {
     return emailPattern.matcher(email).matches();
+  }
+
+  public static boolean isAlphaNumeric(String s) {
+    for (int i = 0; i < s.length(); i++) {
+      if (!Character.isLetterOrDigit(s.charAt(i))) {
+        return false;
+      }
+    }
+    return true;
   }
 
   public static void printStats(File dir) {
@@ -78,8 +129,24 @@ public class Utils {
     return (int) Math.signum(d);
   }
 
-  public static void main(String[] args) {
-    printStats(new File("/users/jason/workspace/Mirrus"));
+  public static int random(int n) {
+    return (int) (Math.random() * n);
+  }
+
+  public static <T> T random(T[] array) {
+    return array[random(array.length)];
+  }
+
+  public static Color withAlpha(Color c, int alpha) {
+    return new Color(c.getRed(), c.getGreen(), c.getBlue(), alpha);
+  }
+
+  public static void sleep(int millis) {
+    try {
+      Thread.sleep(millis);
+    } catch (InterruptedException e) {
+      throw Throwables.propagate(e);
+    }
   }
 
 }

@@ -15,19 +15,23 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipInputStream;
 import javax.imageio.ImageIO;
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.io.ByteStreams;
 
 public class IO {
+
+  public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 " +
+      "(KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36";
 
   public static Input from(Json json) {
     return from(json.toString());
@@ -41,6 +45,10 @@ public class IO {
     return from(new ByteArrayInputStream(data));
   }
 
+  public static Input from(File parent, String childName) {
+    return from(new File(parent, childName));
+  }
+
   public static Input from(File file) {
     try {
       return from(new FileInputStream(file));
@@ -50,6 +58,8 @@ public class IO {
   }
 
   public static Input from(Class<?> loader, String name) {
+    checkNotNull(name);
+
     URL url = loader.getResource(name);
     checkNotNull(url, "Could not find resource: " + name);
     return from(url);
@@ -64,7 +74,11 @@ public class IO {
   }
 
   public static Input from(InputStream is) {
-    return new Input(buffer(is));
+    Input ret = new Input(buffer(is));
+    if (is instanceof ZipInputStream) {
+      ret.keepInputAlive();
+    }
+    return ret;
   }
 
   public static Input from(RenderedImage image) {
@@ -108,14 +122,21 @@ public class IO {
     private OutputStream os;
     private boolean gzipInput, gzipOutput;
     private String imageFormat;
-    private boolean keepAlive = false;
+    private boolean keepOutputAlive = false, keepInputAlive = false;
+    private Integer timeout = null;
+    private String method;
 
     private Input(Object o) {
       this.o = checkNotNull(o);
     }
 
-    public Input keepAlive() {
-      keepAlive = true;
+    public Input keepInputAlive() {
+      keepInputAlive = true;
+      return this;
+    }
+
+    public Input keepOutputAlive() {
+      keepOutputAlive = true;
       return this;
     }
 
@@ -163,7 +184,11 @@ public class IO {
       try {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try {
-          ByteStreams.copy(asStream(), os);
+          if (o instanceof RenderedImage) {
+            ImageIO.write((RenderedImage) o, imageFormat, os);
+          } else {
+            ByteStreams.copy(asStream(), os);
+          }
         } catch (IOException e) {
           throw Throwables.propagate(e);
         }
@@ -183,10 +208,13 @@ public class IO {
     }
 
     public Json toJson() {
-      InputStreamReader reader = new InputStreamReader(asStream(), Charsets.UTF_8);
-      Json ret = new Json(reader);
-      close(reader);
-      return ret;
+      String s = toString();
+      try {
+        return new Json(s);
+      } catch (Exception e) {
+        Log.error("Problem parsing json: " + s);
+        throw Throwables.propagate(e);
+      }
     }
 
     public BufferedImage toImage() {
@@ -213,12 +241,7 @@ public class IO {
         if (o instanceof InputStream) {
           ret = (InputStream) o;
         } else if (o instanceof URL) {
-          URL url = (URL) o;
-          URLConnection conn = url.openConnection();
-          conn.setRequestProperty("User-Agent",
-              "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 " +
-                  "(KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36");
-          ret = conn.getInputStream();
+          ret = asStream((URL) o);
         }
         if (ret == null) {
           throw new RuntimeException("Don't know how to turn " + o.getClass() + " into a stream.");
@@ -231,6 +254,36 @@ public class IO {
       } catch (Exception e) {
         throw Throwables.propagate(e);
       }
+    }
+
+    private InputStream asStream(URL url) throws Exception {
+      URLConnection conn = url.openConnection();
+      HttpURLConnection httpConn = conn instanceof HttpURLConnection ? (HttpURLConnection) conn : null;
+
+      if (timeout != null) {
+        conn.setConnectTimeout(timeout);
+      }
+
+      if (httpConn != null && method != null) {
+        httpConn.setRequestMethod(method);
+      }
+
+      conn.setRequestProperty("User-Agent", USER_AGENT);
+
+      if (httpConn != null) {
+        int code = httpConn.getResponseCode();
+        if (code == HttpURLConnection.HTTP_MOVED_TEMP || code == HttpURLConnection.HTTP_MOVED_PERM
+            || code == HttpURLConnection.HTTP_SEE_OTHER) {
+          // redirected
+          String location = conn.getHeaderField("Location");
+          if (location != null) {
+            httpConn.disconnect();
+            return asStream(new URL(location));
+          }
+        }
+      }
+
+      return conn.getInputStream();
     }
 
     public Input gzipInput() {
@@ -248,17 +301,29 @@ public class IO {
       return this;
     }
 
+    public Input httpPost() {
+      this.method = "POST";
+      return this;
+    }
+
+    public Input timeout(Integer timeout) {
+      this.timeout = timeout;
+      return this;
+    }
+
     private void finish() {
       if (is == null) {
         if (o instanceof Closeable) {
           close((Closeable) o);
         }
       } else {
-        close(is);
-        is = null;
+        if (!keepInputAlive) {
+          close(is);
+          is = null;
+        }
       }
       if (os != null) {
-        if (keepAlive) {
+        if (keepOutputAlive) {
           try {
             os.flush();
           } catch (IOException e) {

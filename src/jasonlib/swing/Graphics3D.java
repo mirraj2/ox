@@ -25,9 +25,11 @@ public class Graphics3D {
     this.g = g;
 
     g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-    g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
-    // this makes things SUPER SLOW on Mac OS
+    // this makes images take much longer to render on the first pass on OSX
+    // g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+
+    // this makes things SUPER SLOW on OSX
     // g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
   }
 
@@ -50,6 +52,10 @@ public class Graphics3D {
   }
 
   public Graphics3D text(String text, Rect r) {
+    if (text == null) {
+      return this;
+    }
+
     FontMetrics fm = g.getFontMetrics();
     int w = fm.stringWidth(text);
     int h = fm.getHeight();
@@ -110,8 +116,23 @@ public class Graphics3D {
     return this;
   }
 
+  public Graphics3D fillRoundRect(double x, double y, double w, double h, double arcWidth, double arcHeight) {
+    g.fillRoundRect((int) x, (int) y, (int) w, (int) h, (int) arcWidth, (int) arcHeight);
+    return this;
+  }
+
+  public Graphics3D drawRoundRect(double x, double y, double w, double h, double arcWidth, double arcHeight) {
+    g.drawRoundRect((int) x, (int) y, (int) w, (int) h, (int) arcWidth, (int) arcHeight);
+    return this;
+  }
+
   public Graphics3D translate(double x, double y) {
     g.translate(x, y);
+    return this;
+  }
+
+  public Graphics3D zoom(double zoom) {
+    g.scale(zoom, zoom);
     return this;
   }
 
@@ -171,6 +192,10 @@ public class Graphics3D {
     return fill(r.convert());
   }
 
+  public Graphics3D drawRoundRect(Rect r, int arcWidth, int arcHeight) {
+    return drawRoundRect(r.x, r.y, r.w, r.h, arcWidth, arcHeight);
+  }
+
   public Graphics3D fillOval(Rect r){
     g.fillOval((int) r.x, (int) r.y, (int) r.w, (int) r.h);
     return this;
@@ -178,6 +203,11 @@ public class Graphics3D {
 
   public Graphics3D drawOval(Rect r) {
     g.drawOval((int) r.x, (int) r.y, (int) r.w, (int) r.h);
+    return this;
+  }
+
+  public Graphics3D nearestNeighborInterpolation() {
+    g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
     return this;
   }
 

@@ -13,10 +13,6 @@ import javax.swing.JFrame;
 
 public class GUtils {
 
-  public static String capitalize(String s) {
-    return Character.toUpperCase(s.charAt(0)) + s.substring(1);
-  }
-
   public static BufferedImage scale(BufferedImage bi, double scale) {
     int w = (int) (bi.getWidth() * scale);
     int h = (int) (bi.getHeight() * scale);

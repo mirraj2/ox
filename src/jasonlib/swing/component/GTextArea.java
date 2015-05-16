@@ -5,14 +5,13 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JTextArea;
 import javax.swing.border.Border;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import com.google.common.collect.Lists;
 
 public class GTextArea extends JTextArea {
 
-  private List<ChangeListener> listeners = Lists.newArrayListWithCapacity(1);
+  private List<Runnable> listeners = Lists.newArrayList();
 
   public GTextArea() {
     this(null);
@@ -27,17 +26,17 @@ public class GTextArea extends JTextArea {
     getDocument().addDocumentListener(new DocumentListener() {
       @Override
       public void removeUpdate(DocumentEvent e) {
-        change();
+        notifyChange();
       }
 
       @Override
       public void insertUpdate(DocumentEvent e) {
-        change();
+        notifyChange();
       }
 
       @Override
       public void changedUpdate(DocumentEvent e) {
-        change();
+        notifyChange();
       }
     });
   }
@@ -59,19 +58,24 @@ public class GTextArea extends JTextArea {
     return this;
   }
 
-  public void addChangeListener(ChangeListener changeListener) {
-    listeners.add(changeListener);
+  private void notifyChange() {
+    for (Runnable r : listeners) {
+      r.run();
+    }
   }
 
-  private void change() {
-    for (ChangeListener c : listeners) {
-      c.stateChanged(null);
-    }
+  public void change(Runnable callback) {
+    listeners.add(callback);
   }
 
   @Override
   public String getText() {
     return super.getText().trim();
+  }
+
+  public GTextArea scrollToBottom() {
+    setCaretPosition(getDocument().getLength());
+    return this;
   }
 
 }

@@ -1,5 +1,7 @@
 package jasonlib.swing.component;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Vector;
@@ -25,6 +27,15 @@ public class GComboBox<T> extends JComboBox<T> {
   public GComboBox<T> select(T item) {
     setSelectedItem(item);
     return this;
+  }
+
+  public void onChange(Runnable callback) {
+    addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        callback.run();
+      }
+    });
   }
 
 }

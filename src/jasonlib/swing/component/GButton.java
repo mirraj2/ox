@@ -35,5 +35,4 @@ public class GButton extends JButton {
 
   public void setDefault(boolean b) {
   }
-
 }

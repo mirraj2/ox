@@ -54,10 +54,6 @@ public class Rect {
     return new Rect(xx - w / 2, yy - h / 2, w, h);
   }
 
-  public Rect doubleSize() {
-    return new Rect(x - w / 2, y - h / 2, w * 2, h * 2);
-  }
-
   public Rect grow(double vx, double vy) {
     return new Rect(x - vx, y - vy, w + vx * 2, h + vy * 2);
   }
@@ -74,6 +70,14 @@ public class Rect {
     return new Rect(x, y, Math.min(w, ww), Math.min(h, hh));
   }
 
+  public Rect constrain(double xx, double yy, double ww, double hh) {
+    double newX = Math.max(x, xx);
+    double newY = Math.max(y, yy);
+    double newW = Math.min(x + w, xx + ww) - newX;
+    double newH = Math.min(y + h, yy + hh) - newY;
+    return new Rect(newX, newY, newW, newH);
+  }
+
   public Rect translate(double dx, double dy) {
     return new Rect(x + dx, y + dy, w, h);
   }
@@ -84,6 +88,17 @@ public class Rect {
 
   public Rect scale(double scale) {
     return new Rect(x * scale, y * scale, w * scale, h * scale);
+  }
+
+  public Rect changeSize(double dw, double dh) {
+    return new Rect(x, y, w + dw, h + dh);
+  }
+
+  public Rect union(Rect r) {
+    if (r == null) {
+      return this;
+    }
+    return expandToInclude(r.x, r.y).expandToInclude(r.maxX(), r.maxY());
   }
 
   public int x() {
@@ -155,6 +170,10 @@ public class Rect {
     Iterator<String> iter = Splitter.on(' ').split(s).iterator();
     return new Rect(parseInt(iter.next()), parseInt(iter.next()), parseInt(iter.next()),
         parseInt(iter.next()));
+  }
+
+  public static Rect create(double x1, double y1, double x2, double y2) {
+    return new Rect(Math.min(x1, x2), Math.min(y1, y2), Math.abs(x2 - x1), Math.abs(y2 - y1));
   }
 
 }

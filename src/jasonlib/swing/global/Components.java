@@ -60,9 +60,9 @@ public class Components {
     return (T) comp;
   }
 
-  public static <T> T getChildOfClass(Class<T> c, Container parent) {
+  public static <T extends Component> T getChildOfClass(Class<T> c, Component parent) {
     List<T> ret = Lists.newArrayList();
-    getChildrenOfClass(c, parent, ret);
+    getChildrenOfClass(c, (Container) parent, ret);
     if (ret.isEmpty()) {
       return null;
     }
@@ -100,7 +100,7 @@ public class Components {
     return ret;
   }
 
-  public static void refresh(Container component) {
+  public static void refresh(Component component) {
     component.revalidate();
     component.validate();
     component.repaint();

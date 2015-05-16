@@ -1,7 +1,10 @@
 package jasonlib.swing.component;
 
+import jasonlib.swing.global.GFocus;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
@@ -21,6 +24,7 @@ public class GFrame extends JFrame {
 
   public GFrame start() {
     setVisible(true);
+    GFocus.focus(getContentPane());
     return this;
   }
 
@@ -31,6 +35,16 @@ public class GFrame extends JFrame {
 
   public GFrame disposeOnClose() {
     setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+    return this;
+  }
+
+  public GFrame doNothingOnClose() {
+    setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+    return this;
+  }
+
+  public GFrame alwaysOnTop() {
+    setAlwaysOnTop(true);
     return this;
   }
 
@@ -60,6 +74,16 @@ public class GFrame extends JFrame {
 
   public GFrame resizable(boolean b) {
     setResizable(b);
+    return this;
+  }
+
+  public GFrame onClose(Runnable r) {
+    addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosed(WindowEvent e) {
+        r.run();
+      }
+    });
     return this;
   }
 

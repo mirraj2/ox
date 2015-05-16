@@ -11,6 +11,43 @@ import com.google.common.base.Stopwatch;
 
 public class Images {
 
+  // public static void main(String[] args) {
+  // File dir = new File("/users/jason/desktop/forge/rez");
+  // File target = new File("/Users/jason/.forge/armory/0.png");
+  // BufferedImage bigImage = IO.from(target).toImage();
+  //
+  // for (int id : new int[] { 6, 8, 9, 10 }) {
+  // File f = new File(dir, id + ".png");
+  // BufferedImage bi = IO.from(f).toImage();
+  // bigImage = appendToBottom(bigImage, bi);
+  // }
+  // IO.from(bigImage).to(target);
+  // }
+
+  private static BufferedImage appendToBottom(BufferedImage a, BufferedImage b) {
+    BufferedImage bi = new BufferedImage(a.getWidth(), a.getHeight() + b.getHeight(), BufferedImage.TYPE_INT_ARGB);
+    Graphics2D g = bi.createGraphics();
+    g.drawImage(a, 0, 0, null);
+    g.drawImage(b, 0, a.getHeight(), null);
+    g.dispose();
+    return bi;
+  }
+
+  /**
+   * Corrects the type to INT_ARGB
+   */
+  public static BufferedImage convertType(BufferedImage bi) {
+    if (bi.getType() == BufferedImage.TYPE_INT_ARGB) {
+      return bi;
+    }
+
+    BufferedImage ret = new BufferedImage(bi.getWidth(), bi.getHeight(), BufferedImage.TYPE_INT_ARGB);
+    Graphics2D g = ret.createGraphics();
+    g.drawImage(bi, 0, 0, null);
+    g.dispose();
+    return ret;
+  }
+
   public static BufferedImage resize(BufferedImage bi, int w, int h) {
     BufferedImage ret = new BufferedImage(w, h, bi.getType());
 

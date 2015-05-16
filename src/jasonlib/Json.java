@@ -1,6 +1,5 @@
 package jasonlib;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static jasonlib.util.Functions.map;
 import java.io.Reader;
@@ -51,59 +50,92 @@ public class Json implements Iterable<String> {
   }
 
   public String get(String key) {
-    return getElement(key).getAsString();
+    JsonElement e = getElement(key);
+    return e == null ? null : e.getAsString();
   }
 
-  public int getInt(String key) {
-    return getElement(key).getAsInt();
+  public Integer getInt(String key) {
+    String s = get(key);
+    return s == null || s.isEmpty() ? null : Integer.valueOf(s);
   }
 
-  public long getLong(String key) {
-    return getElement(key).getAsLong();
+  public Long getLong(String key) {
+    String s = get(key);
+    return s == null || s.isEmpty() ? null : Long.valueOf(s);
   }
 
-  public double getDouble(String key) {
-    return getElement(key).getAsDouble();
+  public Double getDouble(String key) {
+    String s = get(key);
+    return s == null || s.isEmpty() ? null : Double.valueOf(s.replace(",", ""));
   }
 
-  public boolean getBoolean(String key) {
-    return getElement(key).getAsBoolean();
+  public Boolean getBoolean(String key) {
+    String s = get(key);
+    return s == null || s.isEmpty() ? null : Boolean.valueOf(s);
   }
 
   public Json getJson(String key) {
-    return new Json(getElement(key));
+    JsonElement e = getElement(key);
+    return e == null ? null : new Json(e);
+  }
+
+  public Object getObject(String key) {
+    JsonElement e = getElement(key);
+    if (e == null) {
+      return null;
+    }
+    if (e.isJsonObject() || e.isJsonArray()) {
+      return getJson(key);
+    } else if (e.isJsonPrimitive()) {
+      JsonPrimitive jp = e.getAsJsonPrimitive();
+      if (jp.isNumber()) {
+        return jp.getAsNumber();
+      } else if (jp.isBoolean()) {
+        return jp.getAsBoolean();
+      } else if (jp.isString()) {
+        return jp.getAsString();
+      } else{
+        throw new IllegalStateException(this + "");
+      }
+    } else {
+      throw new IllegalStateException(this + "");
+    }
   }
 
   private JsonElement getElement(String key) {
-    JsonElement ret = obj().get(key);
-    checkArgument(ret != null, "Field not found: " + key);
-    return ret;
-  }
-
-  public String getOrNull(String key) {
-    if (!has(key)) {
-      return null;
-    }
-    return get(key);
+    return obj().get(key);
   }
 
   public boolean has(String key) {
-    return obj().has(key);
+    JsonElement e = getElement(key);
+    if (e == null) {
+      return false;
+    }
+    if (e.isJsonPrimitive()) {
+      return !e.getAsString().isEmpty();
+    }
+    return true;
+  }
+
+  /**
+   * Unlike 'has', this will return true if there is a key with an empty value.
+   */
+  public boolean hasKey(String key) {
+    JsonElement e = getElement(key);
+    return e != null;
   }
 
   public Json with(String key, String value) {
-    checkNotNull(value, "Tried to associate null with field: " + key);
-    obj().addProperty(key, value);
+    if (value != null) {
+      obj().addProperty(key, value);
+    }
     return this;
   }
 
-  public Json with(String key, int value) {
-    obj().addProperty(key, value);
-    return this;
-  }
-
-  public Json with(String key, double value) {
-    obj().addProperty(key, value);
+  public Json with(String key, Number value) {
+    if (value != null) {
+      obj().addProperty(key, value);
+    }
     return this;
   }
 
@@ -114,7 +146,7 @@ public class Json implements Iterable<String> {
 
   public Json with(String key, Enum<?> value) {
     checkNotNull(value, "Tried to associate null with field: " + key);
-    return with(key, value.name());
+    return with(key, value.toString());
   }
 
   public Json with(String key, Json value) {
@@ -134,6 +166,11 @@ public class Json implements Iterable<String> {
 
   public Json add(Json element) {
     e.getAsJsonArray().add(element.e);
+    return this;
+  }
+
+  public Json add(Boolean b) {
+    e.getAsJsonArray().add(new JsonPrimitive(b));
     return this;
   }
 
@@ -162,6 +199,10 @@ public class Json implements Iterable<String> {
 
   public int getInt(int index) {
     return arr().get(index).getAsInt();
+  }
+
+  public String get(int index) {
+    return arr().get(index).getAsString();
   }
 
   public Json remove(int index) {
@@ -206,6 +247,22 @@ public class Json implements Iterable<String> {
     List<String> ret = Lists.newArrayListWithCapacity(e.getAsJsonArray().size());
     for (JsonElement item : e.getAsJsonArray()) {
       ret.add(item.getAsString());
+    }
+    return ret;
+  }
+
+  public List<Integer> asIntArray() {
+    List<Integer> ret = Lists.newArrayListWithCapacity(e.getAsJsonArray().size());
+    for (JsonElement item : e.getAsJsonArray()) {
+      ret.add(item.getAsInt());
+    }
+    return ret;
+  }
+
+  public List<Long> asLongArray() {
+    List<Long> ret = Lists.newArrayListWithCapacity(e.getAsJsonArray().size());
+    for (JsonElement item : e.getAsJsonArray()) {
+      ret.add(item.getAsLong());
     }
     return ret;
   }
@@ -290,11 +347,11 @@ public class Json implements Iterable<String> {
     return ret;
   }
 
-  public static <T> Json array(Collection<T> data, Function<T, Json> mapper) {
+  public static <T> Json array(Collection<T> data, Function<T, ?> mapper) {
     return array(map(data, mapper));
   }
 
-  public static Json array(String... data) {
+  public static Json array(Object... data) {
     return array(Arrays.asList(data));
   }
 

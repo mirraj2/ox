@@ -24,7 +24,7 @@ public class Config {
   private Config(String appName) {
     checkArgument(!Strings.isNullOrEmpty(appName));
 
-    configFile = new File(OS.getLocalAppFolder(appName), "config.json");
+    configFile = new File(OS.getAppFolder(appName), "config.json");
 
     if (configFile.exists()) {
       json = IO.from(configFile).toJson();
@@ -36,28 +36,22 @@ public class Config {
   }
 
   public String get(String key) {
-    return json.getOrNull(key);
+    return json.get(key);
   }
 
   public String get(String key, String defaultValue) {
-    if (json.has(key)) {
-      return json.get(key);
-    }
-    return defaultValue;
+    String ret = json.get(key);
+    return ret == null ? defaultValue : ret;
   }
 
   public int getInt(String key, int defaultValue) {
-    if (json.has(key)) {
-      return json.getInt(key);
-    }
-    return defaultValue;
+    Integer ret = json.getInt(key);
+    return ret == null ? defaultValue : ret;
   }
 
   public boolean getBoolean(String key, boolean defaultValue) {
-    if (json.has(key)) {
-      return json.getBoolean(key);
-    }
-    return defaultValue;
+    Boolean ret = json.getBoolean(key);
+    return ret == null ? defaultValue : ret;
   }
 
   public void put(String key, String value) {
@@ -76,7 +70,7 @@ public class Config {
   public static Config load(String appName) {
     checkArgument(!Strings.isNullOrEmpty(appName));
 
-    return new Config(OS.getLocalAppFolder(appName));
+    return new Config(OS.getAppFolder(appName));
   }
 
 }

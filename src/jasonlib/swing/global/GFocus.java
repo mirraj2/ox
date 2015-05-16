@@ -15,17 +15,19 @@ import com.google.common.collect.Lists;
 public class GFocus {
 
   private static boolean debug = false;
+  public static Object currentFocusOwner;
 
   static {
-    KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", new PropertyChangeListener() {
-      @Override
-      public void propertyChange(PropertyChangeEvent evt) {
-        if (debug) {
-          Object newOwner = evt.getNewValue();
-          Log.debug("Focus Owner: " + (newOwner == null ? "null" : newOwner.getClass()));
-        }
-      }
-    });
+    KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner",
+        new PropertyChangeListener() {
+          @Override
+          public void propertyChange(PropertyChangeEvent evt) {
+            currentFocusOwner = evt.getNewValue();
+            if (debug) {
+              Log.debug("Focus Owner: " + (currentFocusOwner == null ? "null" : currentFocusOwner.getClass()));
+            }
+          }
+        });
   }
 
   public static void debug() {

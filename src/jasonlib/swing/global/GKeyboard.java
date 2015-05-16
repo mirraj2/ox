@@ -1,5 +1,6 @@
 package jasonlib.swing.global;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import jasonlib.Log;
 import java.awt.AWTEvent;
 import java.awt.Component;
@@ -15,7 +16,6 @@ import java.util.Stack;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public class GKeyboard {
 
@@ -118,9 +118,9 @@ public class GKeyboard {
     addListener(new KeyAdapter() {
       @Override
       public void keyPressed(KeyEvent e) {
-        if (isSystemShortcut(e.getModifiers())) {
-          return;
-        }
+        // if (isSystemShortcut(e.getModifiers())) {
+        // return;
+        // }
 
         int code = e.getKeyCode();
         if (code >= 0 && code < keys.length) {
