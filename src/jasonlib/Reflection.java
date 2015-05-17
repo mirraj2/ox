@@ -67,8 +67,17 @@ public class Reflection {
 
   public static Object call(Object o, String methodName) {
     try {
-      Method m = o.getClass().getDeclaredMethod(methodName);
-      return m.invoke(o);
+      for (Method m : o.getClass().getDeclaredMethods()) {
+        if (m.getName().equals(methodName)) {
+          return m.invoke(o);
+        }
+      }
+      for (Method m : o.getClass().getMethods()) {
+        if (m.getName().equals(methodName)) {
+          return m.invoke(o);
+        }
+      }
+      throw new RuntimeException("Method not found: " + methodName);
     } catch (Exception e) {
       throw Throwables.propagate(e);
     }
