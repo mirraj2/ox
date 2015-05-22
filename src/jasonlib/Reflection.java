@@ -4,6 +4,7 @@ import jasonlib.util.Utils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.time.LocalDateTime;
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
 import com.google.common.base.Throwables;
@@ -56,8 +57,12 @@ public class Reflection {
       modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
 
       Class<?> type = field.getType();
-      if (type.isEnum() && value instanceof String) {
-        value = Utils.parseEnum((String) value, (Class<? extends Enum>) type);
+      if (value instanceof String) {
+        if (type.isEnum()) {
+          value = Utils.parseEnum((String) value, (Class<? extends Enum>) type);
+        } else if (type == LocalDateTime.class) {
+          value = LocalDateTime.parse((String) value);
+        }
       }
       field.set(o, value);
     } catch (Exception e) {

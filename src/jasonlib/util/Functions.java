@@ -6,11 +6,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import com.google.common.collect.Maps;
 
 public final class Functions {
 
@@ -26,12 +24,6 @@ public final class Functions {
     for (A element : list) {
       ret.add(function.apply(element));
     }
-    return ret;
-  }
-
-  public static <A, B, C> Map<B, C> transformKeys(Map<A, C> input, Function<A, B> transformer) {
-    Map<B, C> ret = Maps.newHashMap();
-    input.forEach((key, value) -> ret.put(transformer.apply(key), value));
     return ret;
   }
 
