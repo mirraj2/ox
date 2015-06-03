@@ -172,9 +172,23 @@ public class IO {
       }
     }
 
+    public void toUrl(String url) {
+      try {
+        to(new URL(url));
+      } catch (Exception e) {
+        throw Throwables.propagate(e);
+      }
+    }
+
     public void to(URL url) {
       try {
-        to(new File(url.toURI()));
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.setDoOutput(true);
+        conn.setDoInput(true);
+        to(conn.getOutputStream());
+        conn.getInputStream().close();
       } catch (Exception e) {
         throw Throwables.propagate(e);
       }
@@ -269,6 +283,9 @@ public class IO {
       }
 
       conn.setRequestProperty("User-Agent", USER_AGENT);
+      if (gzipInput) {
+        conn.setRequestProperty("Accept-Encoding", "gzip");
+      }
 
       if (httpConn != null) {
         int code = httpConn.getResponseCode();

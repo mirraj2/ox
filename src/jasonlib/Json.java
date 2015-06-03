@@ -155,15 +155,6 @@ public class Json implements Iterable<String> {
     return this;
   }
 
-  public Json with(String key, Iterable<?> items) {
-    JsonArray array = new JsonArray();
-    for (Object e : items) {
-      array.add(new JsonPrimitive(e.toString()));
-    }
-    obj().add(key, array);
-    return this;
-  }
-
   public Json add(Json element) {
     e.getAsJsonArray().add(element.e);
     return this;

@@ -8,9 +8,11 @@ import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.regex.Pattern;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Charsets;
@@ -146,6 +148,13 @@ public class Utils {
 
   public static <T> T random(T[] array) {
     return array[random(array.length)];
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T> T[] toArray(Collection<T> data, Class<T> c) {
+    T[] ret = (T[]) Array.newInstance(c, data.size());
+    data.toArray(ret);
+    return ret;
   }
 
   public static Color withAlpha(Color c, int alpha) {
