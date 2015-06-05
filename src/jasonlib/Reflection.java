@@ -62,6 +62,8 @@ public class Reflection {
           value = Utils.parseEnum((String) value, (Class<? extends Enum>) type);
         } else if (type == LocalDateTime.class) {
           value = LocalDateTime.parse((String) value);
+        } else if (type == Json.class) {
+          value = new Json((String) value);
         }
       }
       field.set(o, value);
