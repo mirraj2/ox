@@ -24,14 +24,14 @@ public class Images {
   // IO.from(bigImage).to(target);
   // }
 
-  private static BufferedImage appendToBottom(BufferedImage a, BufferedImage b) {
-    BufferedImage bi = new BufferedImage(a.getWidth(), a.getHeight() + b.getHeight(), BufferedImage.TYPE_INT_ARGB);
-    Graphics2D g = bi.createGraphics();
-    g.drawImage(a, 0, 0, null);
-    g.drawImage(b, 0, a.getHeight(), null);
-    g.dispose();
-    return bi;
-  }
+  // private static BufferedImage appendToBottom(BufferedImage a, BufferedImage b) {
+  // BufferedImage bi = new BufferedImage(a.getWidth(), a.getHeight() + b.getHeight(), BufferedImage.TYPE_INT_ARGB);
+  // Graphics2D g = bi.createGraphics();
+  // g.drawImage(a, 0, 0, null);
+  // g.drawImage(b, 0, a.getHeight(), null);
+  // g.dispose();
+  // return bi;
+  // }
 
   /**
    * Corrects the type to INT_ARGB

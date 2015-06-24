@@ -288,7 +288,10 @@ public class Json implements Iterable<String> {
   }
 
   public String prettyPrint() {
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    Gson gson = new GsonBuilder()
+        .setPrettyPrinting()
+        .disableHtmlEscaping()
+        .create();
     return gson.toJson(e);
   }
 

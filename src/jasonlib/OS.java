@@ -2,6 +2,7 @@
 
 package jasonlib;
 
+import static com.google.common.base.Preconditions.checkState;
 import java.io.File;
 
 public final class OS {
@@ -36,6 +37,7 @@ public final class OS {
                 + File.separatorChar + "Application Data";
       }
     } else {
+      checkState(!appName.startsWith("."), "The app name should not start with a period!");
       appName = "." + appName;
       ret = System.getProperty("user.home");
     }
@@ -86,6 +88,10 @@ public final class OS {
     }
     t += "Desktop" + File.separatorChar;
     return new File(t);
+  }
+
+  public static File getHomeFolder() {
+    return new File(System.getProperty("user.home"));
   }
 
   public static String getUserName() {

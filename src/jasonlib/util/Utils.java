@@ -45,8 +45,13 @@ public class Utils {
   }
 
   public static double parseMoney(String s) {
-    CharMatcher matcher = CharMatcher.anyOf("$ ,");
-    return parseDouble(matcher.removeFrom(s));
+    s = s.trim();
+    CharMatcher matcher = CharMatcher.anyOf("$£€ ,-–");
+    double ret = parseDouble(matcher.removeFrom(s));
+    if (s.charAt(0) == '-' || s.charAt(0) == '–') {
+      ret = -ret;
+    }
+    return ret;
   }
 
   public static String format(double d) {
