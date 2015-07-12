@@ -1,9 +1,9 @@
 package jasonlib.util;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Iterables.size;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -16,11 +16,11 @@ public final class Functions {
     return map(Arrays.asList(array), function);
   }
 
-  public static <A, B> List<B> map(Collection<A> list, Function<A, B> function) {
+  public static <A, B> List<B> map(Iterable<A> list, Function<A, B> function) {
     checkNotNull(list, "list");
     checkNotNull(function, "function");
 
-    List<B> ret = new ArrayList<B>(list.size());
+    List<B> ret = new ArrayList<B>(size(list));
     for (A element : list) {
       ret.add(function.apply(element));
     }

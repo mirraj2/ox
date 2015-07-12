@@ -24,6 +24,10 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipInputStream;
 import javax.imageio.ImageIO;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.io.ByteStreams;
@@ -120,14 +124,19 @@ public class IO {
     private final Object o;
     private InputStream is;
     private OutputStream os;
-    private boolean gzipInput, gzipOutput;
+    private boolean zipInput, gzipInput, gzipOutput;
     private String imageFormat;
     private boolean keepOutputAlive = false, keepInputAlive = false;
     private Integer timeout = null;
     private String method;
+    private boolean acceptAllCerts = false;
 
     private Input(Object o) {
       this.o = checkNotNull(o);
+
+      if (o.toString().endsWith(".zip")) {
+        zipInput = true;
+      }
     }
 
     public Input keepInputAlive() {
@@ -137,6 +146,11 @@ public class IO {
 
     public Input keepOutputAlive() {
       keepOutputAlive = true;
+      return this;
+    }
+
+    public Input acceptAllCerts() {
+      this.acceptAllCerts = true;
       return this;
     }
 
@@ -183,6 +197,12 @@ public class IO {
     public void to(URL url) {
       try {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        if (acceptAllCerts && conn instanceof HttpsURLConnection) {
+          HttpsURLConnection https = (HttpsURLConnection) conn;
+          SSLContext ctx = SSLContext.getInstance("SSLv3");
+          ctx.init(null, new TrustManager[] { ACCEPT_ALL }, null);
+          https.setSSLSocketFactory(ctx.getSocketFactory());
+        }
         conn.setRequestMethod("POST");
         conn.setRequestProperty("Content-Type", "application/json");
         conn.setDoOutput(true);
@@ -262,6 +282,9 @@ public class IO {
         }
         if (gzipInput) {
           ret = new GZIPInputStream(ret);
+        } else if (zipInput) {
+          ret = new ZipInputStream(ret);
+          ((ZipInputStream) ret).getNextEntry();
         }
         ret = is = buffer(ret);
         return ret;
@@ -305,6 +328,11 @@ public class IO {
 
     public Input gzipInput() {
       gzipInput = true;
+      return this;
+    }
+
+    public Input zipInput() {
+      zipInput = true;
       return this;
     }
 
@@ -362,5 +390,22 @@ public class IO {
       return s.substring(i + 1);
     }
   }
+
+  private static final X509TrustManager ACCEPT_ALL = new X509TrustManager() {
+    @Override
+    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+      return null;
+    }
+
+    @Override
+    public void checkClientTrusted(
+        java.security.cert.X509Certificate[] certs, String authType) {
+    }
+
+    @Override
+    public void checkServerTrusted(
+        java.security.cert.X509Certificate[] certs, String authType) {
+    }
+  };
 
 }

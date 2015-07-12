@@ -3,18 +3,15 @@ package jasonlib;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static jasonlib.util.Functions.map;
 import java.io.Reader;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.function.Function;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -94,7 +91,7 @@ public class Json implements Iterable<String> {
         return jp.getAsBoolean();
       } else if (jp.isString()) {
         return jp.getAsString();
-      } else{
+      } else {
         throw new IllegalStateException(this + "");
       }
     } else {
@@ -123,6 +120,29 @@ public class Json implements Iterable<String> {
   public boolean hasKey(String key) {
     JsonElement e = getElement(key);
     return e != null;
+  }
+
+  public Json with(String key, Object value) {
+    if (value == null) {
+      return this;
+    }
+    if (value instanceof String) {
+      return with(key, (String) value);
+    } else if (value instanceof Number) {
+      return with(key, (Number) value);
+    } else if (value instanceof Boolean) {
+      return with(key, value);
+    } else if(value instanceof LocalDate){
+      return with(key, value.toString());
+    } else if (value instanceof Json) {
+      return with(key, (Json) value);
+    } else if (value.getClass().isEnum()) {
+      return with(key, (Enum<?>) value);
+    } else if (value instanceof Iterable) {
+      return with(key, Json.array((Iterable<?>) value));
+    } else {
+      throw new RuntimeException("Unhandled type: " + value.getClass().getSimpleName());
+    }
   }
 
   public Json with(String key, String value) {
@@ -235,43 +255,23 @@ public class Json implements Iterable<String> {
   }
 
   public List<String> asStringArray() {
-    List<String> ret = Lists.newArrayListWithCapacity(e.getAsJsonArray().size());
-    for (JsonElement item : e.getAsJsonArray()) {
-      ret.add(item.getAsString());
-    }
-    return ret;
+    return map(e.getAsJsonArray(), JsonElement::getAsString);
   }
 
   public List<Integer> asIntArray() {
-    List<Integer> ret = Lists.newArrayListWithCapacity(e.getAsJsonArray().size());
-    for (JsonElement item : e.getAsJsonArray()) {
-      ret.add(item.getAsInt());
-    }
-    return ret;
+    return map(e.getAsJsonArray(), JsonElement::getAsInt);
   }
 
   public List<Long> asLongArray() {
-    List<Long> ret = Lists.newArrayListWithCapacity(e.getAsJsonArray().size());
-    for (JsonElement item : e.getAsJsonArray()) {
-      ret.add(item.getAsLong());
-    }
-    return ret;
+    return map(e.getAsJsonArray(), JsonElement::getAsLong);
+  }
+
+  public List<Double> asDoubleArray() {
+    return map(e.getAsJsonArray(), JsonElement::getAsDouble);
   }
 
   public List<Json> asJsonArray() {
-    List<Json> ret = Lists.newArrayListWithCapacity(e.getAsJsonArray().size());
-    for (JsonElement item : e.getAsJsonArray()) {
-      ret.add(new Json(item));
-    }
-    return ret;
-  }
-
-  public Map<String, String> asStringMap() {
-    Map<String, String> ret = Maps.newHashMap();
-    for (String key : this) {
-      ret.put(key, get(key));
-    }
-    return ret;
+    return map(e.getAsJsonArray(), Json::new);
   }
 
   private JsonObject obj() {
@@ -309,12 +309,7 @@ public class Json implements Iterable<String> {
       return asStringArray().iterator();
     }
 
-    Set<Entry<String, JsonElement>> entries = obj().entrySet();
-    List<String> ret = Lists.newArrayListWithCapacity(entries.size());
-    for (Entry<String, JsonElement> e : entries) {
-      ret.add(e.getKey());
-    }
-    return ret.iterator();
+    return map(obj().entrySet(), Entry::getKey).iterator();
   }
 
   public static Json object() {

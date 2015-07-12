@@ -13,6 +13,7 @@ import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.regex.Pattern;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Charsets;
@@ -33,12 +34,24 @@ public class Utils {
   public static final DecimalFormat noDecimalFormat = new DecimalFormat("#,##0");
 
   public static String capitalize(String s) {
-    return Character.toUpperCase(s.charAt(0)) + s.substring(1);
+    StringBuilder sb = new StringBuilder(s.toLowerCase());
+    boolean up = true;
+    for (int i = 0; i < sb.length(); i++) {
+      char c = sb.charAt(i);
+      if (c == ' ') {
+        up = true;
+      } else if (up) {
+        sb.setCharAt(i, Character.toUpperCase(c));
+        up = false;
+      }
+    }
+    return sb.toString();
   }
 
   public static String formatBytes(long size) {
-    if (size <= 0)
+    if (size <= 0) {
       return "0";
+    }
     final String[] units = new String[] { "B", "kB", "MB", "GB", "TB" };
     int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
     return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
@@ -78,8 +91,7 @@ public class Utils {
     if (o.isPresent()) {
       return o.get();
     }
-    T[] constants = enumType.getEnumConstants();
-    for (T constant : constants) {
+    for (T constant : enumType.getEnumConstants()) {
       if (constant.toString().equalsIgnoreCase(s)) {
         return constant;
       }
@@ -155,6 +167,10 @@ public class Utils {
     return array[random(array.length)];
   }
 
+  public static <T> T random(List<T> list) {
+    return list.get(random(list.size()));
+  }
+
   @SuppressWarnings("unchecked")
   public static <T> T[] toArray(Collection<T> data, Class<T> c) {
     T[] ret = (T[]) Array.newInstance(c, data.size());
@@ -170,17 +186,22 @@ public class Utils {
     StringBuilder sb = new StringBuilder();
     for (int i = 0; i < s.length(); i++) {
       char c = s.charAt(i);
-      if (c >= 'a' && c <= 'm')
+      if (c >= 'a' && c <= 'm') {
         c += 13;
-      else if (c >= 'A' && c <= 'M')
+      } else if (c >= 'A' && c <= 'M') {
         c += 13;
-      else if (c >= 'n' && c <= 'z')
+      } else if (c >= 'n' && c <= 'z') {
         c -= 13;
-      else if (c >= 'N' && c <= 'Z')
+      } else if (c >= 'N' && c <= 'Z') {
         c -= 13;
+      }
       sb.append(c);
     }
     return sb.toString();
+  }
+
+  public static String normalize(String s) {
+    return s == null ? "" : s;
   }
 
   public static void sleep(int millis) {

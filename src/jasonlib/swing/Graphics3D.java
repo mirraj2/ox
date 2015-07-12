@@ -24,7 +24,7 @@ public class Graphics3D {
   private Graphics3D(Graphics2D g) {
     this.g = g;
 
-    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    antialias(true);
 
     // this makes images take much longer to render on the first pass on OSX
     // g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
@@ -116,6 +116,10 @@ public class Graphics3D {
     return this;
   }
 
+  public Graphics3D fillRoundRect(Rect r, int arcWidth, int arcHeight) {
+    return fillRoundRect(r.x, r.y, r.w, r.h, arcWidth, arcHeight);
+  }
+
   public Graphics3D fillRoundRect(double x, double y, double w, double h, double arcWidth, double arcHeight) {
     g.fillRoundRect((int) x, (int) y, (int) w, (int) h, (int) arcWidth, (int) arcHeight);
     return this;
@@ -160,6 +164,11 @@ public class Graphics3D {
     return this;
   }
 
+  public Graphics3D stroke(Stroke stroke) {
+    g.setStroke(stroke);
+    return this;
+  }
+
   public Graphics3D setStroke(double thickness) {
     if (thickness == 1) {
       g.setStroke(NORMAL_STROKE);
@@ -197,7 +206,11 @@ public class Graphics3D {
   }
 
   public Graphics3D fillOval(Rect r){
-    g.fillOval((int) r.x, (int) r.y, (int) r.w, (int) r.h);
+    return fillOval(r.x, r.y, r.w, r.h);
+  }
+
+  public Graphics3D fillOval(double x, double y, double w, double h) {
+    g.fillOval((int) x, (int) y, (int) w, (int) h);
     return this;
   }
 
@@ -218,6 +231,12 @@ public class Graphics3D {
 
   public Graphics3D cubicInterpolation() {
     g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+    return this;
+  }
+
+  public Graphics3D antialias(boolean b) {
+    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, b ? RenderingHints.VALUE_ANTIALIAS_ON
+        : RenderingHints.VALUE_ANTIALIAS_OFF);
     return this;
   }
 

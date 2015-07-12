@@ -3,6 +3,8 @@ package jasonlib.swing.component;
 import jasonlib.swing.global.GFocus;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JComponent;
@@ -61,6 +63,13 @@ public class GFrame extends JFrame {
   public GFrame size(int width, int height) {
     setSize(width, height);
     centerOn(null);
+    return this;
+  }
+
+  public GFrame maximize() {
+    Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+    setSize(dim.width, dim.height);
+    setExtendedState(JFrame.MAXIMIZED_BOTH);
     return this;
   }
 
