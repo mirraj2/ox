@@ -131,7 +131,7 @@ public class Json implements Iterable<String> {
     } else if (value instanceof Number) {
       return with(key, (Number) value);
     } else if (value instanceof Boolean) {
-      return with(key, value);
+      return with(key, ((Boolean) value).booleanValue());
     } else if(value instanceof LocalDate){
       return with(key, value.toString());
     } else if (value instanceof Json) {

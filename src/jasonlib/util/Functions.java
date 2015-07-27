@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import com.google.common.collect.Lists;
 
 public final class Functions {
 
@@ -23,6 +24,35 @@ public final class Functions {
     List<B> ret = new ArrayList<B>(size(list));
     for (A element : list) {
       ret.add(function.apply(element));
+    }
+    return ret;
+  }
+
+  public static <T> List<T> filter(Iterable<T> input, Function<T, Boolean> filter) {
+    List<T> ret = Lists.newArrayList();
+    for (T t : input) {
+      if (filter.apply(t)) {
+        ret.add(t);
+      }
+    }
+    return ret;
+  }
+
+  public static double sum(Iterable<? extends Number> input) {
+    double ret = 0;
+    for (Number n : input) {
+      ret += n.doubleValue();
+    }
+    return ret;
+  }
+
+  public static <T> double sum(Iterable<T> input, Function<T, Number> function) {
+    double ret = 0;
+    for (T t : input) {
+      Number n = function.apply(t);
+      if (n != null) {
+        ret += n.doubleValue();
+      }
     }
     return ret;
   }

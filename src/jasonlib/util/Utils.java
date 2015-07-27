@@ -99,6 +99,10 @@ public class Utils {
     throw new IllegalArgumentException("No enum: " + enumType + "." + s);
   }
 
+  public static boolean isValidPhoneNumber(String phoneNumber) {
+    return true; // TODO
+  }
+
   public static boolean isValidEmailAddress(String email) {
     return emailPattern.matcher(email).matches();
   }
@@ -180,24 +184,6 @@ public class Utils {
 
   public static Color withAlpha(Color c, int alpha) {
     return new Color(c.getRed(), c.getGreen(), c.getBlue(), alpha);
-  }
-
-  public static String rot13(String s) {
-    StringBuilder sb = new StringBuilder();
-    for (int i = 0; i < s.length(); i++) {
-      char c = s.charAt(i);
-      if (c >= 'a' && c <= 'm') {
-        c += 13;
-      } else if (c >= 'A' && c <= 'M') {
-        c += 13;
-      } else if (c >= 'n' && c <= 'z') {
-        c -= 13;
-      } else if (c >= 'N' && c <= 'Z') {
-        c -= 13;
-      }
-      sb.append(c);
-    }
-    return sb.toString();
   }
 
   public static String normalize(String s) {

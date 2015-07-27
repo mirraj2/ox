@@ -80,6 +80,7 @@ import javax.net.ssl.X509TrustManager;
 import com.google.common.base.Charsets;
 import com.google.common.io.BaseEncoding;
 
+//taken from https://github.com/kevinsawicki/http-request
 public class HttpRequest {
 
   public static final String CHARSET_UTF8 = "UTF-8";
@@ -156,10 +157,11 @@ public class HttpRequest {
   private static HostnameVerifier TRUSTED_VERIFIER;
 
   private static String getValidCharset(final String charset) {
-    if (charset != null && charset.length() > 0)
+    if (charset != null && charset.length() > 0) {
       return charset;
-    else
+    } else {
       return CHARSET_UTF8;
+    }
   }
 
   private static SSLSocketFactory getTrustedFactory()
@@ -198,7 +200,7 @@ public class HttpRequest {
   }
 
   private static HostnameVerifier getTrustedVerifier() {
-    if (TRUSTED_VERIFIER == null)
+    if (TRUSTED_VERIFIER == null) {
       TRUSTED_VERIFIER = new HostnameVerifier() {
 
         @Override
@@ -206,6 +208,7 @@ public class HttpRequest {
           return true;
         }
       };
+    }
 
     return TRUSTED_VERIFIER;
   }
@@ -216,8 +219,9 @@ public class HttpRequest {
     //
     // The following test is checking for the last slash not being part of
     // the protocol to host separator: '://'.
-    if (baseUrl.indexOf(':') + 2 == baseUrl.lastIndexOf('/'))
+    if (baseUrl.indexOf(':') + 2 == baseUrl.lastIndexOf('/')) {
       result.append('/');
+    }
     return result;
   }
 
@@ -226,17 +230,19 @@ public class HttpRequest {
     // Add '?' if missing and add '&' if params already exist in base url
     final int queryStart = baseUrl.indexOf('?');
     final int lastChar = result.length() - 1;
-    if (queryStart == -1)
+    if (queryStart == -1) {
       result.append('?');
-    else if (queryStart < lastChar && baseUrl.charAt(lastChar) != '&')
+    } else if (queryStart < lastChar && baseUrl.charAt(lastChar) != '&') {
       result.append('&');
+    }
     return result;
   }
 
   private static StringBuilder addParam(final Object key, Object value,
       final StringBuilder result) {
-    if (value != null && value.getClass().isArray())
+    if (value != null && value.getClass().isArray()) {
       value = arrayToList(value);
+    }
 
     if (value instanceof Iterable<?>) {
       Iterator<?> iterator = ((Iterable<?>) value).iterator();
@@ -244,16 +250,19 @@ public class HttpRequest {
         result.append(key);
         result.append("[]=");
         Object element = iterator.next();
-        if (element != null)
+        if (element != null) {
           result.append(element);
-        if (iterator.hasNext())
+        }
+        if (iterator.hasNext()) {
           result.append("&");
+        }
       }
     } else {
       result.append(key);
       result.append("=");
-      if (value != null)
+      if (value != null) {
         result.append(value);
+      }
     }
 
     return result;
@@ -281,10 +290,11 @@ public class HttpRequest {
   private static ConnectionFactory CONNECTION_FACTORY = ConnectionFactory.DEFAULT;
 
   public static void setConnectionFactory(final ConnectionFactory connectionFactory) {
-    if (connectionFactory == null)
+    if (connectionFactory == null) {
       CONNECTION_FACTORY = ConnectionFactory.DEFAULT;
-    else
+    } else {
       CONNECTION_FACTORY = connectionFactory;
+    }
   }
 
   public interface UploadProgress {
@@ -333,8 +343,9 @@ public class HttpRequest {
         try {
           done();
         } catch (IOException e) {
-          if (!thrown)
+          if (!thrown) {
             throw new HttpRequestException(e);
+          }
         }
       }
     }
@@ -354,16 +365,18 @@ public class HttpRequest {
 
     @Override
     protected void done() throws IOException {
-      if (closeable instanceof Flushable)
+      if (closeable instanceof Flushable) {
         ((Flushable) closeable).flush();
-      if (ignoreCloseExceptions)
+      }
+      if (ignoreCloseExceptions) {
         try {
           closeable.close();
         } catch (IOException e) {
           // Ignored
         }
-      else
+      } else {
         closeable.close();
+      }
     }
   }
 
@@ -402,35 +415,45 @@ public class HttpRequest {
   }
 
   private static List<Object> arrayToList(final Object array) {
-    if (array instanceof Object[])
+    if (array instanceof Object[]) {
       return Arrays.asList((Object[]) array);
+    }
 
     List<Object> result = new ArrayList<Object>();
     // Arrays of the primitive types can't be cast to array of Object, so this:
-    if (array instanceof int[])
-      for (int value : (int[]) array)
+    if (array instanceof int[]) {
+      for (int value : (int[]) array) {
         result.add(value);
-    else if (array instanceof boolean[])
-      for (boolean value : (boolean[]) array)
+      }
+    } else if (array instanceof boolean[]) {
+      for (boolean value : (boolean[]) array) {
         result.add(value);
-    else if (array instanceof long[])
-      for (long value : (long[]) array)
+      }
+    } else if (array instanceof long[]) {
+      for (long value : (long[]) array) {
         result.add(value);
-    else if (array instanceof float[])
-      for (float value : (float[]) array)
+      }
+    } else if (array instanceof float[]) {
+      for (float value : (float[]) array) {
         result.add(value);
-    else if (array instanceof double[])
-      for (double value : (double[]) array)
+      }
+    } else if (array instanceof double[]) {
+      for (double value : (double[]) array) {
         result.add(value);
-    else if (array instanceof short[])
-      for (short value : (short[]) array)
+      }
+    } else if (array instanceof short[]) {
+      for (short value : (short[]) array) {
         result.add(value);
-    else if (array instanceof byte[])
-      for (byte value : (byte[]) array)
+      }
+    } else if (array instanceof byte[]) {
+      for (byte value : (byte[]) array) {
         result.add(value);
-    else if (array instanceof char[])
-      for (char value : (char[]) array)
+      }
+    } else if (array instanceof char[]) {
+      for (char value : (char[]) array) {
         result.add(value);
+      }
+    }
     return result;
   }
 
@@ -445,16 +468,18 @@ public class HttpRequest {
 
     String host = parsed.getHost();
     int port = parsed.getPort();
-    if (port != -1)
+    if (port != -1) {
       host = host + ':' + Integer.toString(port);
+    }
 
     try {
       String encoded = new URI(parsed.getProtocol(), host, parsed.getPath(),
           parsed.getQuery(), null).toASCIIString();
       int paramsStart = encoded.indexOf('?');
-      if (paramsStart > 0 && paramsStart + 1 < encoded.length())
+      if (paramsStart > 0 && paramsStart + 1 < encoded.length()) {
         encoded = encoded.substring(0, paramsStart + 1)
             + encoded.substring(paramsStart + 1).replace("+", "%2B");
+      }
       return encoded;
     } catch (URISyntaxException e) {
       IOException io = new IOException("Parsing URI failed");
@@ -465,8 +490,9 @@ public class HttpRequest {
 
   public static String append(final CharSequence url, final Map<?, ?> params) {
     final String baseUrl = url.toString();
-    if (params == null || params.isEmpty())
+    if (params == null || params.isEmpty()) {
       return baseUrl;
+    }
 
     final StringBuilder result = new StringBuilder(baseUrl);
 
@@ -489,12 +515,14 @@ public class HttpRequest {
 
   public static String append(final CharSequence url, final Object... params) {
     final String baseUrl = url.toString();
-    if (params == null || params.length == 0)
+    if (params == null || params.length == 0) {
       return baseUrl;
+    }
 
-    if (params.length % 2 != 0)
+    if (params.length % 2 != 0) {
       throw new IllegalArgumentException(
           "Must specify an even number of parameter names/values");
+    }
 
     final StringBuilder result = new StringBuilder(baseUrl);
 
@@ -657,17 +685,19 @@ public class HttpRequest {
     if (hosts != null && hosts.length > 0) {
       StringBuilder separated = new StringBuilder();
       int last = hosts.length - 1;
-      for (int i = 0; i < last; i++)
+      for (int i = 0; i < last; i++) {
         separated.append(hosts[i]).append('|');
+      }
       separated.append(hosts[last]);
       setProperty("http.nonProxyHosts", separated.toString());
-    } else
+    } else {
       setProperty("http.nonProxyHosts", null);
+    }
   }
 
   private static String setProperty(final String name, final String value) {
     final PrivilegedAction<String> action;
-    if (value != null)
+    if (value != null) {
       action = new PrivilegedAction<String>() {
 
         @Override
@@ -675,7 +705,7 @@ public class HttpRequest {
           return System.setProperty(name, value);
         }
       };
-    else
+    } else {
       action = new PrivilegedAction<String>() {
 
         @Override
@@ -683,6 +713,7 @@ public class HttpRequest {
           return System.clearProperty(name);
         }
       };
+    }
     return AccessController.doPrivileged(action);
   }
 
@@ -737,10 +768,11 @@ public class HttpRequest {
   private HttpURLConnection createConnection() {
     try {
       final HttpURLConnection connection;
-      if (httpProxyHost != null)
+      if (httpProxyHost != null) {
         connection = CONNECTION_FACTORY.create(url, createProxy());
-      else
+      } else {
         connection = CONNECTION_FACTORY.create(url);
+      }
       connection.setRequestMethod(requestMethod);
       return connection;
     } catch (IOException e) {
@@ -754,8 +786,9 @@ public class HttpRequest {
   }
 
   public HttpURLConnection getConnection() {
-    if (connection == null)
+    if (connection == null) {
       connection = createConnection();
+    }
     return connection;
   }
 
@@ -797,8 +830,9 @@ public class HttpRequest {
   }
 
   public HttpRequest bufferSize(final int size) {
-    if (size < 1)
+    if (size < 1) {
       throw new IllegalArgumentException("Size must be greater than zero");
+    }
     bufferSize = size;
     return this;
   }
@@ -814,10 +848,11 @@ public class HttpRequest {
 
   protected ByteArrayOutputStream byteStream() {
     final int size = contentLength();
-    if (size > 0)
+    if (size > 0) {
       return new ByteArrayOutputStream(size);
-    else
+    } else {
       return new ByteArrayOutputStream();
+    }
   }
 
   public String body(final String charset) throws HttpRequestException {
@@ -850,33 +885,36 @@ public class HttpRequest {
 
   public InputStream stream() throws HttpRequestException {
     InputStream stream;
-    if (code() < HTTP_BAD_REQUEST)
+    if (code() < HTTP_BAD_REQUEST) {
       try {
         stream = getConnection().getInputStream();
       } catch (IOException e) {
         throw new HttpRequestException(e);
       }
-    else {
+    } else {
       stream = getConnection().getErrorStream();
-      if (stream == null)
+      if (stream == null) {
         try {
           stream = getConnection().getInputStream();
         } catch (IOException e) {
-          if (contentLength() > 0)
+          if (contentLength() > 0) {
             throw new HttpRequestException(e);
-          else
+          } else {
             stream = new ByteArrayInputStream(new byte[0]);
+          }
         }
+      }
     }
 
-    if (!uncompress || !ENCODING_GZIP.equals(contentEncoding()))
+    if (!uncompress || !ENCODING_GZIP.equals(contentEncoding())) {
       return stream;
-    else
+    } else {
       try {
         return new GZIPInputStream(stream);
       } catch (IOException e) {
         throw new HttpRequestException(e);
       }
+    }
   }
 
   public InputStreamReader reader(final String charset)
@@ -980,9 +1018,11 @@ public class HttpRequest {
   }
 
   public HttpRequest headers(final Map<String, String> headers) {
-    if (!headers.isEmpty())
-      for (Entry<String, String> header : headers.entrySet())
+    if (!headers.isEmpty()) {
+      for (Entry<String, String> header : headers.entrySet()) {
         header(header);
+      }
+    }
     return this;
   }
 
@@ -1022,14 +1062,16 @@ public class HttpRequest {
 
   public String[] headers(final String name) {
     final Map<String, List<String>> headers = headers();
-    if (headers == null || headers.isEmpty())
+    if (headers == null || headers.isEmpty()) {
       return EMPTY_STRINGS;
+    }
 
     final List<String> values = headers.get(name);
-    if (values != null && !values.isEmpty())
+    if (values != null && !values.isEmpty()) {
       return values.toArray(new String[values.size()]);
-    else
+    } else {
       return EMPTY_STRINGS;
+    }
   }
 
   public String parameter(final String headerName, final String paramName) {
@@ -1041,17 +1083,20 @@ public class HttpRequest {
   }
 
   protected Map<String, String> getParams(final String header) {
-    if (header == null || header.length() == 0)
+    if (header == null || header.length() == 0) {
       return Collections.emptyMap();
+    }
 
     final int headerLength = header.length();
     int start = header.indexOf(';') + 1;
-    if (start == 0 || start == headerLength)
+    if (start == 0 || start == headerLength) {
       return Collections.emptyMap();
+    }
 
     int end = header.indexOf(';', start);
-    if (end == -1)
+    if (end == -1) {
       end = headerLength;
+    }
 
     Map<String, String> params = new LinkedHashMap<String, String>();
     while (start < end) {
@@ -1061,36 +1106,42 @@ public class HttpRequest {
         if (name.length() > 0) {
           String value = header.substring(nameEnd + 1, end).trim();
           int length = value.length();
-          if (length != 0)
+          if (length != 0) {
             if (length > 2 && '"' == value.charAt(0)
-                && '"' == value.charAt(length - 1))
+                && '"' == value.charAt(length - 1)) {
               params.put(name, value.substring(1, length - 1));
-            else
+            } else {
               params.put(name, value);
+            }
+          }
         }
       }
 
       start = end + 1;
       end = header.indexOf(';', start);
-      if (end == -1)
+      if (end == -1) {
         end = headerLength;
+      }
     }
 
     return params;
   }
 
   protected String getParam(final String value, final String paramName) {
-    if (value == null || value.length() == 0)
+    if (value == null || value.length() == 0) {
       return null;
+    }
 
     final int length = value.length();
     int start = value.indexOf(';') + 1;
-    if (start == 0 || start == length)
+    if (start == 0 || start == length) {
       return null;
+    }
 
     int end = value.indexOf(';', start);
-    if (end == -1)
+    if (end == -1) {
       end = length;
+    }
 
     while (start < end) {
       int nameEnd = value.indexOf('=', start);
@@ -1098,18 +1149,21 @@ public class HttpRequest {
           && paramName.equals(value.substring(start, nameEnd).trim())) {
         String paramValue = value.substring(nameEnd + 1, end).trim();
         int valueLength = paramValue.length();
-        if (valueLength != 0)
+        if (valueLength != 0) {
           if (valueLength > 2 && '"' == paramValue.charAt(0)
-              && '"' == paramValue.charAt(valueLength - 1))
+              && '"' == paramValue.charAt(valueLength - 1)) {
             return paramValue.substring(1, valueLength - 1);
-          else
+          } else {
             return paramValue;
+          }
+        }
       }
 
       start = end + 1;
       end = value.indexOf(';', start);
-      if (end == -1)
+      if (end == -1) {
         end = length;
+      }
     }
 
     return null;
@@ -1211,8 +1265,9 @@ public class HttpRequest {
     if (charset != null && charset.length() > 0) {
       final String separator = "; " + PARAM_CHARSET + '=';
       return header(HEADER_CONTENT_TYPE, contentType + separator + charset);
-    } else
+    } else {
       return header(HEADER_CONTENT_TYPE, contentType);
+    }
   }
 
   public String contentType() {
@@ -1277,34 +1332,39 @@ public class HttpRequest {
   }
 
   public HttpRequest progress(final UploadProgress callback) {
-    if (callback == null)
+    if (callback == null) {
       progress = UploadProgress.DEFAULT;
-    else
+    } else {
       progress = callback;
+    }
     return this;
   }
 
   private HttpRequest incrementTotalSize(final long size) {
-    if (totalSize == -1)
+    if (totalSize == -1) {
       totalSize = 0;
+    }
     totalSize += size;
     return this;
   }
 
   protected HttpRequest closeOutput() throws IOException {
     progress(null);
-    if (output == null)
+    if (output == null) {
       return this;
-    if (multipart)
+    }
+    if (multipart) {
       output.write(CRLF + "--" + BOUNDARY + "--" + CRLF);
-    if (ignoreCloseExceptions)
+    }
+    if (ignoreCloseExceptions) {
       try {
         output.close();
       } catch (IOException ignored) {
         // Ignored
       }
-    else
+    } else {
       output.close();
+    }
     output = null;
     return this;
   }
@@ -1318,8 +1378,9 @@ public class HttpRequest {
   }
 
   protected HttpRequest openOutput() throws IOException {
-    if (output != null)
+    if (output != null) {
       return this;
+    }
     getConnection().setDoOutput(true);
     final String charset = getParam(
         getConnection().getRequestProperty(HEADER_CONTENT_TYPE), PARAM_CHARSET);
@@ -1333,8 +1394,9 @@ public class HttpRequest {
       multipart = true;
       contentType(CONTENT_TYPE_MULTIPART).openOutput();
       output.write("--" + BOUNDARY + CRLF);
-    } else
+    } else {
       output.write(CRLF + "--" + BOUNDARY + CRLF);
+    }
     return this;
   }
 
@@ -1347,12 +1409,14 @@ public class HttpRequest {
       final String filename, final String contentType) throws IOException {
     final StringBuilder partBuffer = new StringBuilder();
     partBuffer.append("form-data; name=\"").append(name);
-    if (filename != null)
+    if (filename != null) {
       partBuffer.append("\"; filename=\"").append(filename);
+    }
     partBuffer.append('"');
     partHeader("Content-Disposition", partBuffer.toString());
-    if (contentType != null)
+    if (contentType != null) {
       partHeader(HEADER_CONTENT_TYPE, contentType);
+    }
     return send(CRLF);
   }
 
@@ -1444,8 +1508,9 @@ public class HttpRequest {
   }
 
   public HttpRequest send(final byte[] input) throws HttpRequestException {
-    if (input != null)
+    if (input != null) {
       incrementTotalSize(input.length);
+    }
     return send(new ByteArrayInputStream(input));
   }
 
@@ -1523,12 +1588,14 @@ public class HttpRequest {
     charset = getValidCharset(charset);
     try {
       openOutput();
-      if (!first)
+      if (!first) {
         output.write('&');
+      }
       output.write(URLEncoder.encode(name.toString(), charset));
       output.write('=');
-      if (value != null)
+      if (value != null) {
         output.write(URLEncoder.encode(value.toString(), charset));
+      }
     } catch (IOException e) {
       throw new HttpRequestException(e);
     }
@@ -1537,25 +1604,29 @@ public class HttpRequest {
 
   public HttpRequest form(final Map<?, ?> values, final String charset)
       throws HttpRequestException {
-    if (!values.isEmpty())
-      for (Entry<?, ?> entry : values.entrySet())
+    if (!values.isEmpty()) {
+      for (Entry<?, ?> entry : values.entrySet()) {
         form(entry, charset);
+      }
+    }
     return this;
   }
 
   public HttpRequest trustAllCerts() throws HttpRequestException {
     final HttpURLConnection connection = getConnection();
-    if (connection instanceof HttpsURLConnection)
+    if (connection instanceof HttpsURLConnection) {
       ((HttpsURLConnection) connection)
           .setSSLSocketFactory(getTrustedFactory());
+    }
     return this;
   }
 
   public HttpRequest trustAllHosts() {
     final HttpURLConnection connection = getConnection();
-    if (connection instanceof HttpsURLConnection)
+    if (connection instanceof HttpsURLConnection) {
       ((HttpsURLConnection) connection)
           .setHostnameVerifier(getTrustedVerifier());
+    }
     return this;
   }
 
@@ -1568,9 +1639,10 @@ public class HttpRequest {
   }
 
   public HttpRequest useProxy(final String proxyHost, final int proxyPort) {
-    if (connection != null)
+    if (connection != null) {
       throw new IllegalStateException(
           "The connection has already been created. This method must be called before reading or writing to the request.");
+    }
 
     this.httpProxyHost = proxyHost;
     this.httpProxyPort = proxyPort;
