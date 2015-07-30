@@ -2,6 +2,9 @@ package ox;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.BufferedInputStream;
@@ -230,6 +233,12 @@ public class IO {
       } finally {
         finish();
       }
+    }
+
+    public void toClipboard() {
+      StringSelection stringSelection = new StringSelection(toString());
+      Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
+      clpbrd.setContents(stringSelection, null);
     }
 
     @Override
