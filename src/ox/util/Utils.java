@@ -58,13 +58,22 @@ public class Utils {
   }
 
   public static double parseMoney(String s) {
-    s = s.trim();
+    s = trim(s);
     CharMatcher matcher = CharMatcher.anyOf("$£€ ,-–");
     double ret = parseDouble(matcher.removeFrom(s));
     if (s.charAt(0) == '-' || s.charAt(0) == '–') {
       ret = -ret;
     }
     return ret;
+  }
+
+  public static String money(double d) {
+    boolean negative = d < 0;
+    if (negative) {
+      return "-$" + formatDecimal2(-d);
+    } else {
+      return "$" + formatDecimal2(d);
+    }
   }
 
   public static String format(double d) {
