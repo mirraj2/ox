@@ -1,11 +1,42 @@
 package ox;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Array;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import ox.util.SplitOutputStream;
+import com.google.common.base.Throwables;
 
 public class Log {
 
-  private static final PrintStream out = System.out;
+  public static final ZoneId PACIFIC_TIME = ZoneId.of("America/Los_Angeles");
+
+  private static PrintStream out = System.out;
+
+  public static void logToFolder(File folder) {
+    try {
+      folder.mkdirs();
+      File file = new File(folder, LocalDate.now(PACIFIC_TIME) + ".log");
+      OutputStream os = new BufferedOutputStream(new FileOutputStream(file, true));
+      System.setOut(new PrintStream(new SplitOutputStream(System.out, os)));
+      System.setErr(new PrintStream(new SplitOutputStream(System.err, os)));
+
+      out = System.out;
+
+      Executors.newScheduledThreadPool(1).scheduleAtFixedRate(() -> {
+        System.out.flush();
+        System.err.flush();
+      }, 0, 100, TimeUnit.MILLISECONDS);
+    } catch (Exception e) {
+      throw Throwables.propagate(e);
+    }
+  }
 
   private static void log(Object o) {
     log(o, (Object[]) null);
@@ -31,7 +62,7 @@ public class Log {
       out.println(String.format(String.valueOf(o), args));
     }
   }
-  
+
   private static String arrayToString(Object array) {
     StringBuilder sb = new StringBuilder();
     sb.append('[');
