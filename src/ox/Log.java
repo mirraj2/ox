@@ -58,6 +58,7 @@ public class Log {
       OutputStream os = new BufferedOutputStream(new FileOutputStream(file, true));
       System.setOut(new PrintStream(new SplitOutputStream(originalOut, os)));
       System.setErr(new PrintStream(new SplitOutputStream(originalErr, os)));
+      out = System.out;
     } catch (Exception e) {
       throw Throwables.propagate(e);
     }
