@@ -9,6 +9,7 @@ import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import ox.util.SplitOutputStream;
 import com.google.common.base.Throwables;
@@ -17,22 +18,46 @@ public class Log {
 
   public static final ZoneId PACIFIC_TIME = ZoneId.of("America/Los_Angeles");
 
-  private static PrintStream out = System.out;
+  private static PrintStream originalOut = System.out;
+  private static PrintStream originalErr = System.err;
+
+  private static PrintStream out = originalOut;
+
+  private static File logFolder;
+  private static LocalDate currentLogDate;
 
   public static void logToFolder(File folder) {
+    logFolder = folder;
+    logFolder.mkdirs();
+
+    currentLogDate = LocalDate.now(PACIFIC_TIME);
+    logToFile(new File(logFolder, currentLogDate + ".log"));
+
+    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+    
+    executor.scheduleAtFixedRate(() -> {
+      System.out.flush();
+      System.err.flush();
+    }, 0, 100, TimeUnit.MILLISECONDS);
+    
+    executor.scheduleAtFixedRate(Log::rolloverLog, 1, 1, TimeUnit.MINUTES);
+  }
+
+  private static void rolloverLog() {
+    LocalDate now = LocalDate.now(PACIFIC_TIME);
+    if (now.equals(currentLogDate)) {
+      return;
+    }
+    Log.info("Rolling over log to the next day.");
+    currentLogDate = now;
+    logToFile(new File(logFolder, currentLogDate + ".log"));
+  }
+
+  private static void logToFile(File file) {
     try {
-      folder.mkdirs();
-      File file = new File(folder, LocalDate.now(PACIFIC_TIME) + ".log");
       OutputStream os = new BufferedOutputStream(new FileOutputStream(file, true));
-      System.setOut(new PrintStream(new SplitOutputStream(System.out, os)));
-      System.setErr(new PrintStream(new SplitOutputStream(System.err, os)));
-
-      out = System.out;
-
-      Executors.newScheduledThreadPool(1).scheduleAtFixedRate(() -> {
-        System.out.flush();
-        System.err.flush();
-      }, 0, 100, TimeUnit.MILLISECONDS);
+      System.setOut(new PrintStream(new SplitOutputStream(originalOut, os)));
+      System.setErr(new PrintStream(new SplitOutputStream(originalErr, os)));
     } catch (Exception e) {
       throw Throwables.propagate(e);
     }
