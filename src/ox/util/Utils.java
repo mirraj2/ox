@@ -32,6 +32,7 @@ public class Utils {
   public static final DecimalFormat decimalFormat = new DecimalFormat("#,##0.00#########");
   public static final DecimalFormat decimalFormat2 = new DecimalFormat("#,##0.00");
   public static final DecimalFormat noDecimalFormat = new DecimalFormat("#,##0");
+  private static final CharMatcher moneyMatcher = CharMatcher.anyOf("$£€ ,-–()").precomputed();
 
   public static String capitalize(String s) {
     StringBuilder sb = new StringBuilder(s.toLowerCase());
@@ -59,9 +60,8 @@ public class Utils {
 
   public static double parseMoney(String s) {
     s = trim(s);
-    CharMatcher matcher = CharMatcher.anyOf("$£€ ,-–");
-    double ret = parseDouble(matcher.removeFrom(s));
-    if (s.charAt(0) == '-' || s.charAt(0) == '–') {
+    double ret = parseDouble(moneyMatcher.removeFrom(s));
+    if (s.charAt(0) == '-' || s.charAt(0) == '–' || s.charAt(0) == '(') {
       ret = -ret;
     }
     return ret;
