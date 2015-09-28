@@ -284,6 +284,12 @@ public class Json implements Iterable<String> {
 
   @Override
   public String toString() {
+    if (e.isJsonPrimitive()) {
+      JsonPrimitive p = (JsonPrimitive) e;
+      if (p.isString()) {
+        return p.getAsString();
+      }
+    }
     return e.toString();
   }
 
@@ -310,6 +316,10 @@ public class Json implements Iterable<String> {
     }
 
     return map(obj().entrySet(), Entry::getKey).iterator();
+  }
+
+  public Json copy() {
+    return new Json(toString());
   }
 
   public static Json object() {

@@ -191,6 +191,10 @@ public class Utils {
     return ret;
   }
 
+  public static <T> T first(Collection<T> c) {
+    return c.iterator().next();
+  }
+
   public static Color withAlpha(Color c, int alpha) {
     return new Color(c.getRed(), c.getGreen(), c.getBlue(), alpha);
   }
