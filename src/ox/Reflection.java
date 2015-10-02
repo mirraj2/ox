@@ -3,6 +3,7 @@ package ox;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
@@ -64,6 +65,10 @@ public class Reflection {
           value = LocalDateTime.parse((String) value);
         } else if (type == Json.class) {
           value = new Json((String) value);
+        }
+      } else if (value instanceof java.sql.Date) {
+        if (type == LocalDate.class) {
+          value = ((java.sql.Date) value).toLocalDate();
         }
       }
       field.set(o, value);

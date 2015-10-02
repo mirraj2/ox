@@ -203,6 +203,14 @@ public class Utils {
     return s == null ? "" : s;
   }
 
+  public static Double normalize(Double d) {
+    return d == null ? 0.0 : d;
+  }
+
+  public static Integer normalize(Integer i) {
+    return i == null ? 0 : i;
+  }
+
   public static void sleep(int millis) {
     try {
       Thread.sleep(millis);
