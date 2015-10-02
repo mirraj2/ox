@@ -5,14 +5,6 @@
               directory with the processing instruction <?eclipse.ant.import?>
               as the first entry and export the buildfile again. --><project basedir="." default="build" name="Ox">
     <property environment="env"/>
-    <property name="Bowser.location" value="../Bowser"/>
-    <property name="EZDB.location" value="../EZDB"/>
-    <property name="JasonMirra.location" value="../JasonMirra"/>
-    <property name="float-common.location" value="../float-common"/>
-    <property name="float-compute.location" value="../float-compute"/>
-    <property name="float-log.location" value="../float-log"/>
-    <property name="float-render.location" value="../float-render"/>
-    <property name="gremlin.location" value="../gremlin"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.8"/>
     <property name="source" value="1.8"/>
@@ -43,23 +35,5 @@
             <src path="src"/>
             <classpath refid="Ox.classpath"/>
         </javac>
-    </target>
-    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects">
-        <ant antfile="build.xml" dir="${Bowser.location}" inheritAll="false" target="clean"/>
-        <ant antfile="build.xml" dir="${Bowser.location}" inheritAll="false" target="build"/>
-        <ant antfile="build.xml" dir="${EZDB.location}" inheritAll="false" target="clean"/>
-        <ant antfile="build.xml" dir="${EZDB.location}" inheritAll="false" target="build"/>
-        <ant antfile="build.xml" dir="${JasonMirra.location}" inheritAll="false" target="clean"/>
-        <ant antfile="build.xml" dir="${JasonMirra.location}" inheritAll="false" target="build"/>
-        <ant antfile="build.xml" dir="${float-common.location}" inheritAll="false" target="clean"/>
-        <ant antfile="build.xml" dir="${float-common.location}" inheritAll="false" target="build"/>
-        <ant antfile="build.xml" dir="${float-compute.location}" inheritAll="false" target="clean"/>
-        <ant antfile="build.xml" dir="${float-compute.location}" inheritAll="false" target="build"/>
-        <ant antfile="build.xml" dir="${float-log.location}" inheritAll="false" target="clean"/>
-        <ant antfile="build.xml" dir="${float-log.location}" inheritAll="false" target="build"/>
-        <ant antfile="build.xml" dir="${float-render.location}" inheritAll="false" target="clean"/>
-        <ant antfile="build.xml" dir="${float-render.location}" inheritAll="false" target="build"/>
-        <ant antfile="build.xml" dir="${gremlin.location}" inheritAll="false" target="clean"/>
-        <ant antfile="build.xml" dir="${gremlin.location}" inheritAll="false" target="build"/>
     </target>
 </project>
