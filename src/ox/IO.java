@@ -31,6 +31,7 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import ox.util.Images;
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.io.ByteStreams;
@@ -178,7 +179,11 @@ public class IO {
         }
         this.os = os;
         if (o instanceof RenderedImage) {
-          ImageIO.write((RenderedImage) o, imageFormat, os);
+          RenderedImage r = (RenderedImage) o;
+          if (r instanceof BufferedImage && imageFormat.equals("jpg")) {
+            r = Images.withType((BufferedImage) o, BufferedImage.TYPE_INT_RGB);
+          }
+          ImageIO.write(r, imageFormat, os);
         } else {
           ByteStreams.copy(asStream(), os);
         }

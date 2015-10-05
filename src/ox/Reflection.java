@@ -89,7 +89,7 @@ public class Reflection {
           return m.invoke(o);
         }
       }
-      throw new RuntimeException("Method not found: " + methodName);
+      throw new RuntimeException("Method not found: " + o.getClass().getSimpleName() + "." + methodName);
     } catch (Exception e) {
       throw Throwables.propagate(e);
     }

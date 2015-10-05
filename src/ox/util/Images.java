@@ -33,15 +33,12 @@ public class Images {
   // return bi;
   // }
 
-  /**
-   * Corrects the type to INT_ARGB
-   */
-  public static BufferedImage convertType(BufferedImage bi) {
-    if (bi.getType() == BufferedImage.TYPE_INT_ARGB) {
+  public static BufferedImage withType(BufferedImage bi, int type) {
+    if (bi.getType() == type) {
       return bi;
     }
 
-    BufferedImage ret = new BufferedImage(bi.getWidth(), bi.getHeight(), BufferedImage.TYPE_INT_ARGB);
+    BufferedImage ret = new BufferedImage(bi.getWidth(), bi.getHeight(), type);
     Graphics2D g = ret.createGraphics();
     g.drawImage(bi, 0, 0, null);
     g.dispose();
