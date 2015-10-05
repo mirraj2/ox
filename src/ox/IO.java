@@ -223,21 +223,9 @@ public class IO {
     }
 
     public byte[] toByteArray() {
-      try {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        try {
-          if (o instanceof RenderedImage) {
-            ImageIO.write((RenderedImage) o, imageFormat, os);
-          } else {
-            ByteStreams.copy(asStream(), os);
-          }
-        } catch (IOException e) {
-          throw Throwables.propagate(e);
-        }
-        return os.toByteArray();
-      } finally {
-        finish();
-      }
+      ByteArrayOutputStream os = new ByteArrayOutputStream();
+      to(os);
+      return os.toByteArray();
     }
 
     public void toClipboard() {
