@@ -68,11 +68,16 @@ public class Utils {
   }
 
   public static String money(double d) {
+    return money(d, true);
+  }
+
+  public static String money(double d, boolean decimals) {
     boolean negative = d < 0;
+    DecimalFormat format = decimals ? decimalFormat2 : noDecimalFormat;
     if (negative) {
-      return "-$" + formatDecimal2(-d);
+      return "-$" + format.format(-d);
     } else {
-      return "$" + formatDecimal2(d);
+      return "$" + format.format(d);
     }
   }
 
