@@ -102,6 +102,7 @@ public class Utils {
     if (s == null) {
       return null;
     }
+    s = s.replace(' ', '_');
     Optional<T> o = Enums.getIfPresent(enumType, s);
     if (o.isPresent()) {
       return o.get();
