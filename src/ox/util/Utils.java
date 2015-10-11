@@ -21,6 +21,7 @@ import com.google.common.base.Enums;
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 
 public class Utils {
@@ -187,6 +188,14 @@ public class Utils {
 
   public static <T> T random(List<T> list) {
     return list.get(random(list.size()));
+  }
+
+  public static List<Integer> count(int from, int to) {
+    List<Integer> ret = Lists.newArrayList();
+    for (int i = from; i <= to; i++) {
+      ret.add(i);
+    }
+    return ret;
   }
 
   @SuppressWarnings("unchecked")
