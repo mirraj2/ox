@@ -48,7 +48,7 @@ public class Json implements Iterable<String> {
 
   public String get(String key) {
     JsonElement e = getElement(key);
-    return e == null ? null : e.getAsString();
+    return e == null || e.isJsonNull() ? null : e.getAsString();
   }
 
   public Integer getInt(String key) {
