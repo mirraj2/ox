@@ -226,6 +226,10 @@ public class Utils {
     return i == null ? 0 : i;
   }
 
+  public static Boolean normalize(Boolean b) {
+    return b == null ? Boolean.FALSE : b;
+  }
+
   public static void sleep(int millis) {
     try {
       Thread.sleep(millis);
