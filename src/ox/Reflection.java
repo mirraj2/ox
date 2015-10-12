@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
 import ox.util.Utils;
@@ -65,6 +66,8 @@ public class Reflection {
           value = LocalDateTime.parse((String) value);
         } else if (type == Json.class) {
           value = new Json((String) value);
+        } else if (type == UUID.class) {
+          value = UUID.fromString((String) value);
         }
       } else if (value instanceof java.sql.Date) {
         if (type == LocalDate.class) {
