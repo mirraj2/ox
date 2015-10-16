@@ -1,5 +1,6 @@
 package ox.util;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.Double.parseDouble;
 import java.awt.Color;
 import java.io.File;
@@ -207,6 +208,14 @@ public class Utils {
   }
 
   public static <T> T first(Collection<T> c) {
+    return c.iterator().next();
+  }
+
+  public static <T> T only(Collection<T> c) {
+    if (c.isEmpty()) {
+      return null;
+    }
+    checkArgument(c.size() == 1, "Expected one element, but found " + c.size() + " :: " + c);
     return c.iterator().next();
   }
 
