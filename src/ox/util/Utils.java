@@ -224,7 +224,7 @@ public class Utils {
   }
 
   public static String normalize(String s) {
-    return s == null ? "" : s;
+    return s == null ? "" : s.trim();
   }
 
   public static Double normalize(Double d) {
