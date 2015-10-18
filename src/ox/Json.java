@@ -2,6 +2,7 @@ package ox;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static ox.util.Functions.map;
+import static ox.util.Utils.parseEnum;
 import java.io.Reader;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -69,6 +70,11 @@ public class Json implements Iterable<String> {
   public Boolean getBoolean(String key) {
     String s = get(key);
     return s == null || s.isEmpty() ? null : Boolean.valueOf(s);
+  }
+
+  public <T extends Enum<T>> T getEnum(String key, Class<T> enumType) {
+    String s = get(key);
+    return s == null || s.isEmpty() ? null : parseEnum(s, enumType);
   }
 
   public Json getJson(String key) {
