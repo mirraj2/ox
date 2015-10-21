@@ -208,6 +208,9 @@ public class Utils {
   }
 
   public static <T> T first(Collection<T> c) {
+    if (c.isEmpty()) {
+      return null;
+    }
     return c.iterator().next();
   }
 
