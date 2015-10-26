@@ -801,7 +801,7 @@ public class HttpRequest {
     return ignoreCloseExceptions;
   }
 
-  public int code() throws HttpRequestException {
+  public int status() throws HttpRequestException {
     try {
       closeOutput();
       return getConnection().getResponseCode();
@@ -885,7 +885,7 @@ public class HttpRequest {
 
   public InputStream stream() throws HttpRequestException {
     InputStream stream;
-    if (code() < HTTP_BAD_REQUEST) {
+    if (status() < HTTP_BAD_REQUEST) {
       try {
         stream = getConnection().getInputStream();
       } catch (IOException e) {

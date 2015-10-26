@@ -200,6 +200,14 @@ public class Utils {
     return ret;
   }
 
+  public static List<Double> count(double from, double to, double step){
+    List<Double> ret = Lists.newArrayList();
+    for (double i = from; i <= to; i += step) {
+      ret.add(i);
+    }
+    return ret;
+  }
+
   @SuppressWarnings("unchecked")
   public static <T> T[] toArray(Collection<T> data, Class<T> c) {
     T[] ret = (T[]) Array.newInstance(c, data.size());
