@@ -1,6 +1,7 @@
 package ox.util;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.collect.Iterables.getLast;
 import static java.lang.Double.parseDouble;
 import java.awt.Color;
 import java.io.File;
@@ -220,6 +221,13 @@ public class Utils {
       return null;
     }
     return c.iterator().next();
+  }
+
+  public static <T> T last(Collection<T> c) {
+    if (c.isEmpty()) {
+      return null;
+    }
+    return getLast(c);
   }
 
   public static <T> T only(Collection<T> c) {
