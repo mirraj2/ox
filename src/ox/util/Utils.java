@@ -243,7 +243,7 @@ public class Utils {
   }
 
   public static String normalize(String s) {
-    return s == null ? "" : s.trim();
+    return s == null ? "" : trim(s);
   }
 
   public static Double normalize(Double d) {
