@@ -12,6 +12,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -175,6 +176,10 @@ public class Utils {
     } catch (UnsupportedEncodingException e) {
       throw Throwables.propagate(e);
     }
+  }
+
+  public static LocalDate min(LocalDate a, LocalDate b) {
+    return a.isBefore(b) ? a : b;
   }
 
   public static int signum(double d) {
