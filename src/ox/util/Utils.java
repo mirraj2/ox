@@ -3,6 +3,7 @@ package ox.util;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Iterables.getLast;
 import static java.lang.Double.parseDouble;
+import static java.lang.Integer.parseInt;
 import java.awt.Color;
 import java.io.File;
 import java.io.FilterOutputStream;
@@ -261,6 +262,10 @@ public class Utils {
 
   public static Boolean normalize(Boolean b) {
     return b == null ? Boolean.FALSE : b;
+  }
+
+  public static Integer toInt(String s) {
+    return s == null ? null : parseInt(s);
   }
 
   public static void sleep(int millis) {
