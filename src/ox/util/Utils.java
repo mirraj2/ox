@@ -1,6 +1,8 @@
 package ox.util;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Iterables.getLast;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
@@ -196,6 +198,9 @@ public class Utils {
   }
 
   public static <T> T random(List<T> list) {
+    if(list.isEmpty()){
+      throw new IllegalStateException("Can't select a random element from an empty list!");
+    }
     return list.get(random(list.size()));
   }
 
@@ -262,6 +267,12 @@ public class Utils {
 
   public static Boolean normalize(Boolean b) {
     return b == null ? Boolean.FALSE : b;
+  }
+
+  public static String checkNotEmpty(String s) {
+    checkNotNull(s);
+    checkState(!s.isEmpty());
+    return s;
   }
 
   public static Integer toInt(String s) {

@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import com.google.common.collect.Lists;
+import java.util.function.Predicate;
 
 public final class Functions {
 
@@ -19,30 +19,32 @@ public final class Functions {
     return map(Arrays.asList(array), function);
   }
 
-  public static <A, B> List<B> map(Iterable<A> list, Function<A, B> function) {
-    checkNotNull(list, "list");
+  public static <A, B> List<B> map(Iterable<A> input, Function<A, B> function) {
+    checkNotNull(input, "input");
     checkNotNull(function, "function");
 
-    List<B> ret = new ArrayList<>(size(list));
-    for (A element : list) {
+    List<B> ret = new ArrayList<>(size(input));
+    for (A element : input) {
       ret.add(function.apply(element));
     }
     return ret;
   }
 
-  public static <A, B> Set<B> toSet(Iterable<A> list, Function<A, B> function) {
-    checkNotNull(list, "list");
+  public static <A, B> Set<B> toSet(Iterable<A> input, Function<A, B> function) {
+    checkNotNull(input, "input");
     checkNotNull(function, "function");
 
-    Set<B> ret = new HashSet<>(size(list));
-    for (A element : list) {
+    Set<B> ret = new HashSet<>(size(input));
+    for (A element : input) {
       ret.add(function.apply(element));
     }
     return ret;
   }
 
   public static <T> List<T> filter(Iterable<T> input, Function<T, Boolean> filter) {
-    List<T> ret = Lists.newArrayList();
+    checkNotNull(input, "input");
+    checkNotNull(filter, "filter");
+    List<T> ret = new ArrayList<>(size(input));
     for (T t : input) {
       if (filter.apply(t)) {
         ret.add(t);
@@ -76,6 +78,10 @@ public final class Functions {
       public void accept(T t) {
       }
     };
+  }
+
+  public static <T> Predicate<T> not(Predicate<T> t) {
+    return t.negate();
   }
 
   /**
