@@ -31,10 +31,10 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import ox.util.Images;
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.io.ByteStreams;
+import ox.util.Images;
 
 public class IO {
 
@@ -70,6 +70,7 @@ public class IO {
 
     URL url = loader.getResource(name);
     checkNotNull(url, "Could not find resource: " + name);
+
     return from(url);
   }
 
@@ -140,6 +141,8 @@ public class IO {
 
       if (o.toString().endsWith(".zip")) {
         zipInput = true;
+      } else if (o.toString().endsWith(".gzip")) {
+        gzipInput = true;
       }
     }
 
@@ -163,6 +166,9 @@ public class IO {
         if (imageFormat == null) {
           imageFormat = getImageType(file);
         }
+      }
+      if (file.getName().endsWith(".gzip")) {
+        gzipOutput = true;
       }
       try {
         to(new FileOutputStream(file));
