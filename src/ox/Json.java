@@ -138,7 +138,7 @@ public class Json implements Iterable<String> {
       return with(key, (Number) value);
     } else if (value instanceof Boolean) {
       return with(key, ((Boolean) value).booleanValue());
-    } else if(value instanceof LocalDate){
+    } else if (value instanceof LocalDate) {
       return with(key, value.toString());
     } else if (value instanceof Json) {
       return with(key, (Json) value);
@@ -176,8 +176,9 @@ public class Json implements Iterable<String> {
   }
 
   public Json with(String key, Json value) {
-    checkNotNull(value);
-    obj().add(key, value.e);
+    if (value != null) {
+      obj().add(key, value.e);
+    }
     return this;
   }
 
