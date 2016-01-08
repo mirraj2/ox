@@ -15,12 +15,13 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
-import ox.Log;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Charsets;
 import com.google.common.base.Enums;
@@ -29,6 +30,7 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
+import ox.Log;
 
 public class Utils {
 
@@ -277,6 +279,10 @@ public class Utils {
 
   public static Integer toInt(String s) {
     return s == null ? null : parseInt(s);
+  }
+
+  public static int daysSince(long timestamp) {
+    return (int) ChronoUnit.DAYS.between(Instant.ofEpochMilli(timestamp), Instant.now());
   }
 
   public static void sleep(int millis) {
