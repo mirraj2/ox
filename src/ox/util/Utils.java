@@ -124,7 +124,7 @@ public class Utils {
   }
 
   public static boolean isValidPhoneNumber(String phoneNumber) {
-    return true; // TODO
+    return phoneNumber.length() >= 7; // TODO
   }
 
   public static boolean isValidEmailAddress(String email) {
