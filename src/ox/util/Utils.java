@@ -1,7 +1,6 @@
 package ox.util;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Iterables.getLast;
 import static java.lang.Double.parseDouble;
@@ -273,21 +272,24 @@ public class Utils {
   }
 
   public static String checkNotEmpty(String s) {
-    checkNotNull(s);
-    checkState(!s.isEmpty());
+    checkState(!isNullOrEmpty(s));
     return s;
   }
 
+  public static boolean isNullOrEmpty(String s) {
+    return s == null || s.isEmpty();
+  }
+
   public static Integer toInt(String s) {
-    return s == null ? null : parseInt(s);
+    return isNullOrEmpty(s) ? null : parseInt(s);
   }
 
   public static Long toLong(String s) {
-    return s == null ? null : parseLong(s);
+    return isNullOrEmpty(s) ? null : parseLong(s);
   }
 
   public static Boolean toBoolean(String s) {
-    return s == null ? null : Boolean.parseBoolean(s);
+    return isNullOrEmpty(s) ? null : Boolean.parseBoolean(s);
   }
 
   public static int daysSince(long timestamp) {
