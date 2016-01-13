@@ -285,6 +285,10 @@ public class Utils {
     return (int) ChronoUnit.DAYS.between(Instant.ofEpochMilli(timestamp), Instant.now());
   }
 
+  public static int minutesSince(long timestamp) {
+    return (int) ChronoUnit.MINUTES.between(Instant.ofEpochMilli(timestamp), Instant.now());
+  }
+
   public static void sleep(int millis) {
     try {
       Thread.sleep(millis);
