@@ -6,6 +6,7 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Iterables.getLast;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
+import static java.lang.Long.parseLong;
 import java.awt.Color;
 import java.io.File;
 import java.io.FilterOutputStream;
@@ -279,6 +280,14 @@ public class Utils {
 
   public static Integer toInt(String s) {
     return s == null ? null : parseInt(s);
+  }
+
+  public static Long toLong(String s) {
+    return s == null ? null : parseLong(s);
+  }
+
+  public static Boolean toBoolean(String s) {
+    return s == null ? null : Boolean.parseBoolean(s);
   }
 
   public static int daysSince(long timestamp) {
