@@ -284,6 +284,10 @@ public class Utils {
     return isNullOrEmpty(s) ? null : parseInt(s);
   }
 
+  public static Double toDouble(String s) {
+    return isNullOrEmpty(s) ? null : parseDouble(s);
+  }
+
   public static Long toLong(String s) {
     return isNullOrEmpty(s) ? null : parseLong(s);
   }

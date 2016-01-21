@@ -731,8 +731,6 @@ public class HttpRequest {
 
   private boolean ignoreCloseExceptions = true;
 
-  private boolean uncompress = false;
-
   private int bufferSize = 8192;
 
   private long totalSize = -1;
@@ -841,11 +839,6 @@ public class HttpRequest {
     return bufferSize;
   }
 
-  public HttpRequest uncompress(final boolean uncompress) {
-    this.uncompress = uncompress;
-    return this;
-  }
-
   protected ByteArrayOutputStream byteStream() {
     final int size = contentLength();
     if (size > 0) {
@@ -906,14 +899,14 @@ public class HttpRequest {
       }
     }
 
-    if (!uncompress || !ENCODING_GZIP.equals(contentEncoding())) {
-      return stream;
-    } else {
+    if (ENCODING_GZIP.equals(contentEncoding())) {
       try {
         return new GZIPInputStream(stream);
       } catch (IOException e) {
         throw new HttpRequestException(e);
       }
+    } else {
+      return stream;
     }
   }
 
