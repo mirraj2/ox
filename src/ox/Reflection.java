@@ -5,15 +5,18 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.UUID;
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
-import ox.util.Utils;
 import com.google.common.base.Throwables;
+import com.google.common.collect.Maps;
+import ox.util.Utils;
 
 public class Reflection {
 
   private static final Objenesis objenesis = new ObjenesisStd(true);
+  private static final Map<String, Field> fieldCache = Maps.newHashMap();
   private static final Field modifiersField;
 
   static {
@@ -103,11 +106,14 @@ public class Reflection {
   }
 
   private static Field getField(Class<?> c, String fieldName) {
-    try {
-      return c.getDeclaredField(fieldName);
-    } catch (Exception e) {
-      return null;
-    }
+    String key = c.getName() + fieldName;
+    return fieldCache.computeIfAbsent(key, k -> {
+      try {
+        return c.getDeclaredField(fieldName);
+      } catch (Exception e) {
+        return null;
+      }
+    });
   }
 
 }
