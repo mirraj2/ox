@@ -44,6 +44,7 @@ public final class Functions {
   public static <T> List<T> filter(Iterable<T> input, Function<T, Boolean> filter) {
     checkNotNull(input, "input");
     checkNotNull(filter, "filter");
+
     List<T> ret = new ArrayList<>(size(input));
     for (T t : input) {
       if (filter.apply(t)) {

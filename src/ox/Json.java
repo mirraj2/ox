@@ -6,7 +6,6 @@ import static ox.util.Utils.parseEnum;
 import java.io.Reader;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -353,7 +352,7 @@ public class Json implements Iterable<String> {
     return ret;
   }
 
-  public static <T> Json array(Collection<T> data, Function<T, ?> mapper) {
+  public static <T> Json array(Iterable<T> data, Function<T, ?> mapper) {
     return array(map(data, mapper));
   }
 

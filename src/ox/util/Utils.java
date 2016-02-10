@@ -50,6 +50,9 @@ public class Utils {
       char c = sb.charAt(i);
       if (c == ' ') {
         up = true;
+      } else if (c == '_') {
+        up = true;
+        sb.setCharAt(i, ' ');
       } else if (up) {
         sb.setCharAt(i, Character.toUpperCase(c));
         up = false;
