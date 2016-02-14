@@ -5,11 +5,13 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
 import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import ox.util.Utils;
 
@@ -114,6 +116,10 @@ public class Reflection {
         return null;
       }
     });
+  }
+
+  public static List<Field> getFields(Class<?> c) {
+    return ImmutableList.copyOf(c.getDeclaredFields());
   }
 
 }
