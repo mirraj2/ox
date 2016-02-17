@@ -299,6 +299,10 @@ public class Utils {
     return isNullOrEmpty(s) ? null : Boolean.parseBoolean(s);
   }
 
+  public static LocalDate toDate(String s) {
+    return isNullOrEmpty(s) ? null : LocalDate.parse(s);
+  }
+
   public static int daysSince(long timestamp) {
     return (int) ChronoUnit.DAYS.between(Instant.ofEpochMilli(timestamp), Instant.now());
   }
