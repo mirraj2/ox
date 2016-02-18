@@ -21,6 +21,7 @@
  */
 package ox;
 
+import static com.google.common.base.Preconditions.checkState;
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 import static java.net.Proxy.Type.HTTP;
 import java.io.BufferedInputStream;
@@ -1644,6 +1645,12 @@ public class HttpRequest {
 
   public HttpRequest followRedirects(final boolean followRedirects) {
     getConnection().setInstanceFollowRedirects(followRedirects);
+    return this;
+  }
+
+  public HttpRequest checkStatus() {
+    int status = status();
+    checkState(status >= 200 && status < 300, "Error status: " + status);
     return this;
   }
 }
