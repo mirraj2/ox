@@ -863,6 +863,10 @@ public class HttpRequest {
     return body(charset());
   }
 
+  public Json json() {
+    return new Json(body());
+  }
+
   public byte[] bytes() throws HttpRequestException {
     final ByteArrayOutputStream output = byteStream();
     try {
