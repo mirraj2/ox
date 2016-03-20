@@ -7,11 +7,13 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import com.google.common.collect.Maps;
 
 public final class Functions {
 
@@ -39,6 +41,10 @@ public final class Functions {
       ret.add(function.apply(element));
     }
     return ret;
+  }
+
+  public static <K, V> Map<K, V> index(Iterable<V> input, Function<V, K> function) {
+    return Maps.uniqueIndex(input, function::apply);
   }
 
   public static <T> List<T> filter(Iterable<T> input, Function<T, Boolean> filter) {
