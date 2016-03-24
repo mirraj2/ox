@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.List;
 import java.util.function.Consumer;
 import com.google.common.base.Throwables;
@@ -19,7 +20,11 @@ public class CSVReader {
   private char escape = '"';
 
   public CSVReader(InputStream is) {
-    br = new BufferedReader(new InputStreamReader(is));
+    this(new InputStreamReader(is));
+  }
+
+  public CSVReader(Reader reader) {
+    br = new BufferedReader(reader);
   }
 
   public void forEach(Consumer<List<String>> callback) {
@@ -28,6 +33,12 @@ public class CSVReader {
       callback.accept(m);
       m = nextLine();
     }
+  }
+
+  public List<List<String>> getLines() {
+    List<List<String>> ret = Lists.newArrayList();
+    forEach(ret::add);
+    return ret;
   }
 
   public List<String> nextLine() {
