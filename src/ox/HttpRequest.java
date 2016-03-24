@@ -21,7 +21,6 @@
  */
 package ox;
 
-import static com.google.common.base.Preconditions.checkState;
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 import static java.net.Proxy.Type.HTTP;
 import java.io.BufferedInputStream;
@@ -1478,7 +1477,7 @@ public class HttpRequest {
 
   public HttpRequest part(final String name, final String filename,
       final String contentType, final InputStream part)
-      throws HttpRequestException {
+          throws HttpRequestException {
     try {
       startPart();
       writePartHeader(name, filename, contentType);
@@ -1654,7 +1653,13 @@ public class HttpRequest {
 
   public HttpRequest checkStatus() {
     int status = status();
-    checkState(status >= 200 && status < 300, "Error status: " + status);
+    if (status < 200 || status >= 300) {
+      try {
+        Log.error(body());
+      } catch (Throwable t) {
+      }
+      throw new IllegalStateException("Error status: " + status);
+    }
     return this;
   }
 }
