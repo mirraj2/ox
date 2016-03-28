@@ -1,35 +1,23 @@
 package ox;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import java.io.File;
-import com.google.common.base.Strings;
+import java.util.Map;
+import com.google.common.collect.Maps;
 
 public class Config {
+
+  private static final Map<String, Config> configCache = Maps.newConcurrentMap();
 
   private final File configFile;
   private final Json json;
 
-  private Config(File dir) {
-    configFile = new File(dir, "config.json");
+  private Config(File file) {
+    this.configFile = file;
 
     if (configFile.exists()) {
       json = IO.from(configFile).toJson();
     } else {
       Log.debug("Creating a new config.json -> " + configFile);
-      json = Json.object();
-      save();
-    }
-  }
-
-  private Config(String appName) {
-    checkArgument(!Strings.isNullOrEmpty(appName));
-
-    configFile = new File(OS.getAppFolder(appName), "config.json");
-
-    if (configFile.exists()) {
-      json = IO.from(configFile).toJson();
-    } else {
-      Log.debug("Creating a new config.json");
       json = Json.object();
       save();
     }
@@ -63,14 +51,12 @@ public class Config {
     IO.from(json).to(configFile);
   }
 
-  public static Config load(File dir) {
-    return new Config(dir);
+  public static Config load(String appName) {
+    return load(new File(OS.getAppFolder(appName), "config.json"));
   }
 
-  public static Config load(String appName) {
-    checkArgument(!Strings.isNullOrEmpty(appName));
-
-    return new Config(OS.getAppFolder(appName));
+  public static Config load(File file) {
+    return configCache.computeIfAbsent(file.getPath(), s -> new Config(file));
   }
 
 }
