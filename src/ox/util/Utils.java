@@ -105,6 +105,15 @@ public class Utils {
     return decimalFormat2.format(d);
   }
 
+  public static String formatDecimal(double d, int decimalPlaces) {
+    StringBuilder pattern = new StringBuilder("#,##0.");
+    for (int i = 0; i < decimalPlaces; i++) {
+      pattern.append("0");
+    }
+    DecimalFormat format = new DecimalFormat(pattern.toString());
+    return format.format(d);
+  }
+
   public static void debug(Object... objects) {
     Log.debug(Arrays.toString(objects));
   }
@@ -203,7 +212,7 @@ public class Utils {
   }
 
   public static <T> T random(List<T> list) {
-    if(list.isEmpty()){
+    if (list.isEmpty()) {
       throw new IllegalStateException("Can't select a random element from an empty list!");
     }
     return list.get(random(list.size()));
@@ -217,7 +226,7 @@ public class Utils {
     return ret;
   }
 
-  public static List<Double> count(double from, double to, double step){
+  public static List<Double> count(double from, double to, double step) {
     List<Double> ret = Lists.newArrayList();
     for (double i = from; i <= to; i += step) {
       ret.add(i);
