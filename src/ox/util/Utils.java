@@ -71,12 +71,15 @@ public class Utils {
   }
 
   public static double parseMoney(String s) {
-    s = trim(s);
     double ret = parseDouble(moneyMatcher.removeFrom(s));
     if (s.charAt(0) == '-' || s.charAt(0) == '–' || s.charAt(0) == '(') {
       ret = -ret;
     }
     return ret;
+  }
+
+  public static double parsePercent(String s) {
+    return parseDouble(s.replace("%", ""));
   }
 
   public static String money(double d) {
