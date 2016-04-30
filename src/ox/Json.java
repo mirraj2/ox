@@ -338,6 +338,10 @@ public class Json implements Iterable<String> {
 
   public static Json array(Iterable<?> data) {
     Json ret = array();
+    if (data instanceof Json) {
+      ret.add((Json) data);
+      return ret;
+    }
     for (Object o : data) {
       if (o instanceof String) {
         ret.add((String) o);
