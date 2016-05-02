@@ -141,6 +141,9 @@ public class Utils {
   }
 
   public static boolean isValidEmailAddress(String email) {
+    if (isNullOrEmpty(email)) {
+      return false;
+    }
     return emailPattern.matcher(email).matches();
   }
 
