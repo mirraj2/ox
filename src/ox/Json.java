@@ -182,22 +182,27 @@ public class Json implements Iterable<String> {
   }
 
   public Json add(Json element) {
-    e.getAsJsonArray().add(element.e);
+    arr().add(element.e);
     return this;
   }
 
   public Json add(Boolean b) {
-    e.getAsJsonArray().add(new JsonPrimitive(b));
+    arr().add(new JsonPrimitive(b));
     return this;
   }
 
   public Json add(String s) {
-    e.getAsJsonArray().add(new JsonPrimitive(s));
+    arr().add(new JsonPrimitive(s));
     return this;
   }
 
   public Json add(Number n) {
-    e.getAsJsonArray().add(new JsonPrimitive(n));
+    arr().add(new JsonPrimitive(n));
+    return this;
+  }
+
+  public Json set(int index, String s) {
+    arr().set(index, new JsonPrimitive(s));
     return this;
   }
 
@@ -322,6 +327,11 @@ public class Json implements Iterable<String> {
     }
 
     return map(obj().entrySet(), Entry::getKey).iterator();
+  }
+
+  public Json appendTo(Json object, String key) {
+    object.with(key, this);
+    return this;
   }
 
   public Json copy() {

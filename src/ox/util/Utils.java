@@ -15,9 +15,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -198,10 +196,6 @@ public class Utils {
     }
   }
 
-  public static LocalDate min(LocalDate a, LocalDate b) {
-    return a.isBefore(b) ? a : b;
-  }
-
   public static int signum(double d) {
     return (int) Math.signum(d);
   }
@@ -313,14 +307,6 @@ public class Utils {
 
   public static LocalDate toDate(String s) {
     return isNullOrEmpty(s) ? null : LocalDate.parse(s);
-  }
-
-  public static int daysSince(long timestamp) {
-    return (int) ChronoUnit.DAYS.between(Instant.ofEpochMilli(timestamp), Instant.now());
-  }
-
-  public static int minutesSince(long timestamp) {
-    return (int) ChronoUnit.MINUTES.between(Instant.ofEpochMilli(timestamp), Instant.now());
   }
 
   public static void sleep(int millis) {
