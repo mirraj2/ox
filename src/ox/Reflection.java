@@ -99,6 +99,7 @@ public class Reflection {
       }
       throw new RuntimeException("Method not found: " + o.getClass().getSimpleName() + "." + methodName);
     } catch (Exception e) {
+      Log.error("Problem calling method: " + methodName);
       throw Throwables.propagate(e);
     }
   }
