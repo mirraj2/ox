@@ -137,7 +137,8 @@ public class Utils {
   }
 
   public static boolean isValidPhoneNumber(String phoneNumber) {
-    return phoneNumber.length() >= 7; // TODO
+    String digits = CharMatcher.JAVA_DIGIT.retainFrom(phoneNumber);
+    return digits.length() >= 10; // TODO
   }
 
   public static boolean isValidEmailAddress(String email) {
