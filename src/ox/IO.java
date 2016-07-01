@@ -38,8 +38,8 @@ import ox.util.Images;
 
 public class IO {
 
-  public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 " +
-      "(KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36";
+  public static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) "
+      + "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36";
 
   public static Input from(Json json) {
     return from(json.toString());

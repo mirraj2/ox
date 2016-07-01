@@ -23,6 +23,7 @@ package ox;
 
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 import static java.net.Proxy.Type.HTTP;
+import static ox.util.Utils.urlEncode;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -47,8 +48,6 @@ import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.Proxy;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.ByteBuffer;
@@ -457,38 +456,7 @@ public class HttpRequest {
     return result;
   }
 
-  public static String encode(final CharSequence url)
-      throws HttpRequestException {
-    URL parsed;
-    try {
-      parsed = new URL(url.toString());
-    } catch (IOException e) {
-      throw new HttpRequestException(e);
-    }
-
-    String host = parsed.getHost();
-    int port = parsed.getPort();
-    if (port != -1) {
-      host = host + ':' + Integer.toString(port);
-    }
-
-    try {
-      String encoded = new URI(parsed.getProtocol(), host, parsed.getPath(),
-          parsed.getQuery(), null).toASCIIString();
-      int paramsStart = encoded.indexOf('?');
-      if (paramsStart > 0 && paramsStart + 1 < encoded.length()) {
-        encoded = encoded.substring(0, paramsStart + 1)
-            + encoded.substring(paramsStart + 1).replace("+", "%2B");
-      }
-      return encoded;
-    } catch (URISyntaxException e) {
-      IOException io = new IOException("Parsing URI failed");
-      io.initCause(e);
-      throw new HttpRequestException(io);
-    }
-  }
-
-  public static String append(final CharSequence url, final Map<?, ?> params) {
+  public static String append(final CharSequence url, final Map<?, ?> params, boolean encode) {
     final String baseUrl = url.toString();
     if (params == null || params.isEmpty()) {
       return baseUrl;
@@ -499,15 +467,12 @@ public class HttpRequest {
     addPathSeparator(baseUrl, result);
     addParamPrefix(baseUrl, result);
 
-    Entry<?, ?> entry;
-    Iterator<?> iterator = params.entrySet().iterator();
-    entry = (Entry<?, ?>) iterator.next();
-    addParam(entry.getKey().toString(), entry.getValue(), result);
-
-    while (iterator.hasNext()) {
-      result.append('&');
-      entry = (Entry<?, ?>) iterator.next();
-      addParam(entry.getKey().toString(), entry.getValue(), result);
+    if (!params.isEmpty()) {
+      params.forEach((k, v) -> {
+        addParam(urlEncode(k.toString()), urlEncode(v.toString()), result);
+        result.append("&");
+      });
+      result.setLength(result.length() - 1);
     }
 
     return result.toString();
@@ -550,14 +515,14 @@ public class HttpRequest {
 
   public static HttpRequest get(final CharSequence baseUrl,
       final Map<?, ?> params, final boolean encode) {
-    String url = append(baseUrl, params);
-    return get(encode ? encode(url) : url);
+    String url = append(baseUrl, params, encode);
+    return get(url);
   }
 
   public static HttpRequest get(final CharSequence baseUrl,
       final boolean encode, final Object... params) {
-    String url = append(baseUrl, params);
-    return get(encode ? encode(url) : url);
+    String url = append(baseUrl, encode, params);
+    return get(url);
   }
 
   public static HttpRequest post(final CharSequence url)
@@ -571,14 +536,14 @@ public class HttpRequest {
 
   public static HttpRequest post(final CharSequence baseUrl,
       final Map<?, ?> params, final boolean encode) {
-    String url = append(baseUrl, params);
-    return post(encode ? encode(url) : url);
+    String url = append(baseUrl, params, encode);
+    return post(url);
   }
 
   public static HttpRequest post(final CharSequence baseUrl,
       final boolean encode, final Object... params) {
-    String url = append(baseUrl, params);
-    return post(encode ? encode(url) : url);
+    String url = append(baseUrl, encode, params);
+    return post(url);
   }
 
   public static HttpRequest put(final CharSequence url)
@@ -592,14 +557,14 @@ public class HttpRequest {
 
   public static HttpRequest put(final CharSequence baseUrl,
       final Map<?, ?> params, final boolean encode) {
-    String url = append(baseUrl, params);
-    return put(encode ? encode(url) : url);
+    String url = append(baseUrl, params, encode);
+    return put(url);
   }
 
   public static HttpRequest put(final CharSequence baseUrl,
       final boolean encode, final Object... params) {
-    String url = append(baseUrl, params);
-    return put(encode ? encode(url) : url);
+    String url = append(baseUrl, encode, params);
+    return put(url);
   }
 
   public static HttpRequest delete(final CharSequence url)
@@ -613,35 +578,14 @@ public class HttpRequest {
 
   public static HttpRequest delete(final CharSequence baseUrl,
       final Map<?, ?> params, final boolean encode) {
-    String url = append(baseUrl, params);
-    return delete(encode ? encode(url) : url);
+    String url = append(baseUrl, params, encode);
+    return delete(url);
   }
 
   public static HttpRequest delete(final CharSequence baseUrl,
       final boolean encode, final Object... params) {
-    String url = append(baseUrl, params);
-    return delete(encode ? encode(url) : url);
-  }
-
-  public static HttpRequest head(final CharSequence url)
-      throws HttpRequestException {
-    return new HttpRequest(url, METHOD_HEAD);
-  }
-
-  public static HttpRequest head(final URL url) throws HttpRequestException {
-    return new HttpRequest(url, METHOD_HEAD);
-  }
-
-  public static HttpRequest head(final CharSequence baseUrl,
-      final Map<?, ?> params, final boolean encode) {
-    String url = append(baseUrl, params);
-    return head(encode ? encode(url) : url);
-  }
-
-  public static HttpRequest head(final CharSequence baseUrl,
-      final boolean encode, final Object... params) {
-    String url = append(baseUrl, params);
-    return head(encode ? encode(url) : url);
+    String url = append(baseUrl, encode, params);
+    return delete(url);
   }
 
   public static HttpRequest options(final CharSequence url)
