@@ -538,7 +538,7 @@ public class HttpRequest {
   }
 
   public static HttpRequest post(String url, Map<?, ?> params) {
-    return post(url, params);
+    return post(url, params, true);
   }
 
   public static HttpRequest post(String url, Map<?, ?> params, boolean encode) {
