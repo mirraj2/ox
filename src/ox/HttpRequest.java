@@ -513,8 +513,11 @@ public class HttpRequest {
     return new HttpRequest(url, METHOD_GET);
   }
 
-  public static HttpRequest get(final CharSequence baseUrl,
-      final Map<?, ?> params, final boolean encode) {
+  public static HttpRequest get(CharSequence baseUrl, Map<?, ?> params) {
+    return get(baseUrl, params, true);
+  }
+
+  public static HttpRequest get(CharSequence baseUrl, Map<?, ?> params, boolean encode) {
     String url = append(baseUrl, params, encode);
     return get(url);
   }
