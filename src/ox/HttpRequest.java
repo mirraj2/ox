@@ -537,14 +537,16 @@ public class HttpRequest {
     return new HttpRequest(url, METHOD_POST);
   }
 
-  public static HttpRequest post(final CharSequence baseUrl,
-      final Map<?, ?> params, final boolean encode) {
-    String url = append(baseUrl, params, encode);
+  public static HttpRequest post(String url, Map<?, ?> params) {
+    return post(url, params);
+  }
+
+  public static HttpRequest post(String url, Map<?, ?> params, boolean encode) {
+    url = append(url, params, encode);
     return post(url);
   }
 
-  public static HttpRequest post(final CharSequence baseUrl,
-      final boolean encode, final Object... params) {
+  public static HttpRequest post(String baseUrl, boolean encode, Object... params) {
     String url = append(baseUrl, encode, params);
     return post(url);
   }
@@ -1424,7 +1426,7 @@ public class HttpRequest {
 
   public HttpRequest part(final String name, final String filename,
       final String contentType, final InputStream part)
-          throws HttpRequestException {
+      throws HttpRequestException {
     try {
       startPart();
       writePartHeader(name, filename, contentType);
