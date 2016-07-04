@@ -1,6 +1,5 @@
 package ox;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static ox.util.Functions.map;
 import static ox.util.Utils.parseEnum;
 import java.io.Reader;
@@ -170,7 +169,6 @@ public class Json implements Iterable<String> {
   }
 
   public Json with(String key, Enum<?> value) {
-    checkNotNull(value, "Tried to associate null with field: " + key);
     return with(key, value.toString());
   }
 
