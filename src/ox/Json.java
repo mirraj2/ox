@@ -169,7 +169,10 @@ public class Json implements Iterable<String> {
   }
 
   public Json with(String key, Enum<?> value) {
-    return with(key, value.toString());
+    if (value != null) {
+      with(key, value.toString());
+    }
+    return this;
   }
 
   public Json with(String key, Json value) {
