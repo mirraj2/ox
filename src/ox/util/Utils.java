@@ -313,6 +313,10 @@ public class Utils {
     return isNullOrEmpty(s) ? null : LocalDate.parse(s);
   }
 
+  public static Double toMoney(String s) {
+    return isNullOrEmpty(s) ? null : parseMoney(s);
+  }
+
   public static void sleep(int millis) {
     try {
       Thread.sleep(millis);
