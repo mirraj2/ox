@@ -469,7 +469,12 @@ public class HttpRequest {
 
     if (!params.isEmpty()) {
       params.forEach((k, v) -> {
-        addParam(urlEncode(k.toString()), urlEncode(v.toString()), result);
+        Object a = k, b = v;
+        if (encode) {
+          a = urlEncode(k.toString());
+          b = urlEncode(v.toString());
+        }
+        addParam(a, b, result);
         result.append("&");
       });
       result.setLength(result.length() - 1);
@@ -478,7 +483,7 @@ public class HttpRequest {
     return result.toString();
   }
 
-  public static String append(final CharSequence url, final Object... params) {
+  public static String append(final CharSequence url, boolean encode, final Object... params) {
     final String baseUrl = url.toString();
     if (params == null || params.length == 0) {
       return baseUrl;
@@ -498,7 +503,13 @@ public class HttpRequest {
 
     for (int i = 2; i < params.length; i += 2) {
       result.append('&');
-      addParam(params[i], params[i + 1], result);
+      Object k = params[i];
+      Object v = params[i + 1];
+      if (encode) {
+        k = urlEncode(k.toString());
+        v = urlEncode(v.toString());
+      }
+      addParam(k, v, result);
     }
 
     return result.toString();
