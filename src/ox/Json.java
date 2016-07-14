@@ -335,6 +335,12 @@ public class Json implements Iterable<String> {
     return this;
   }
 
+  public Json rename(String oldKeyName, String newKeyName) {
+    JsonElement e = obj().remove(oldKeyName);
+    obj().add(newKeyName, e);
+    return this;
+  }
+
   public Json copy() {
     return new Json(toString());
   }
