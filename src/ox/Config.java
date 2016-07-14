@@ -48,7 +48,7 @@ public class Config {
   }
 
   private void save() {
-    IO.from(json).to(configFile);
+    IO.from(json.prettyPrint()).to(configFile);
   }
 
   public static Config load(String appName) {
