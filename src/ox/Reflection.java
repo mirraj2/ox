@@ -3,6 +3,8 @@ package ox;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -121,6 +123,22 @@ public class Reflection {
 
   public static List<Field> getFields(Class<?> c) {
     return ImmutableList.copyOf(c.getDeclaredFields());
+  }
+
+  /**
+   * For example:<br>
+   * public abstract class AbstractDB<T><br>
+   * public class UserDB extends AbstractDB<User> <br>
+   * <br>
+   * If this method is given UserDB.class as input, it will return User.class
+   */
+  public static Class<?> getGenericClass(Class<?> c) {
+    Type t = c.getGenericSuperclass();
+    if (t instanceof ParameterizedType) {
+      return (Class<?>) ((ParameterizedType) t).getActualTypeArguments()[0];
+    } else {
+      return null;
+    }
   }
 
 }
