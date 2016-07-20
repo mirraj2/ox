@@ -379,6 +379,16 @@ public class Json implements Iterable<String> {
     return array(map(data, mapper));
   }
 
+  public static Json array(double[] data) {
+    Json ret = Json.array();
+    if (data != null) {
+      for (double d : data) {
+        ret.add(d);
+      }
+    }
+    return ret;
+  }
+
   public static Json array(Object... data) {
     return array(Arrays.asList(data));
   }
