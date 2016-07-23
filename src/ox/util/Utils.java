@@ -123,7 +123,7 @@ public class Utils {
     if (s == null) {
       return null;
     }
-    Optional<T> o = Enums.getIfPresent(enumType, s.replace(' ', '_'));
+    Optional<T> o = Enums.getIfPresent(enumType, s.replace(' ', '_').replace('-', '_').toUpperCase());
     if (o.isPresent()) {
       return o.get();
     }

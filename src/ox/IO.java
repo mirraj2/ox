@@ -141,7 +141,7 @@ public class IO {
 
       if (o.toString().endsWith(".zip")) {
         zipInput = true;
-      } else if (o.toString().endsWith(".gzip")) {
+      } else if (o.toString().endsWith(".gzip") || o.toString().endsWith(".gz")) {
         gzipInput = true;
       }
     }
