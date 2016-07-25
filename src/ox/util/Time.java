@@ -4,12 +4,15 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 public class Time {
 
   public static final ZoneId PACIFIC_TIME = ZoneId.of("America/Los_Angeles");
   public static final ZoneId NEW_YORK = ZoneId.of("America/New_York");
+
+  private static final DateTimeFormatter slashFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
   public static long timestamp(ZonedDateTime zdt) {
     return zdt.toInstant().toEpochMilli();
@@ -29,6 +32,10 @@ public class Time {
 
   public static int minutesSince(long timestamp) {
     return (int) ChronoUnit.MINUTES.between(Instant.ofEpochMilli(timestamp), Instant.now());
+  }
+
+  public static String slashFormat(LocalDate date) {
+    return date == null ? "" : date.format(slashFormat);
   }
 
 }
