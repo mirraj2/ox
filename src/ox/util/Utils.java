@@ -140,6 +140,10 @@ public class Utils {
     return digits.length() >= 10; // TODO
   }
 
+  public static String formatPhone(String phoneNumber) {
+    return "(" + phoneNumber.substring(0, 3) + ") " + phoneNumber.substring(3, 6) + "-" + phoneNumber.substring(6, 10);
+  }
+
   public static boolean isValidEmailAddress(String email) {
     if (isNullOrEmpty(email)) {
       return false;

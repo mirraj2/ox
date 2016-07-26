@@ -13,6 +13,7 @@ public class Time {
   public static final ZoneId NEW_YORK = ZoneId.of("America/New_York");
 
   private static final DateTimeFormatter slashFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+  private static final DateTimeFormatter longFormat = DateTimeFormatter.ofPattern("MMM d, yyyy");
 
   public static long timestamp(ZonedDateTime zdt) {
     return zdt.toInstant().toEpochMilli();
@@ -36,6 +37,10 @@ public class Time {
 
   public static String slashFormat(LocalDate date) {
     return date == null ? "" : date.format(slashFormat);
+  }
+
+  public static String longFormat(LocalDate date) {
+    return date == null ? "" : date.format(longFormat);
   }
 
 }
