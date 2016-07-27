@@ -27,6 +27,10 @@ public class Time {
     return a.isBefore(b) ? a : b;
   }
 
+  public static LocalDate now() {
+    return LocalDate.now(PACIFIC_TIME);
+  }
+
   public static int daysSince(long timestamp) {
     return (int) ChronoUnit.DAYS.between(Instant.ofEpochMilli(timestamp), Instant.now());
   }
