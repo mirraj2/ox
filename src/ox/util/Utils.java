@@ -80,6 +80,10 @@ public class Utils {
     return parseDouble(s.replace("%", ""));
   }
 
+  public static String percent(double d) {
+    return format(d * 100) + "%";
+  }
+
   public static String money(double d) {
     return money(d, true);
   }
