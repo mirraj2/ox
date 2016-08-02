@@ -81,7 +81,15 @@ public class Utils {
   }
 
   public static String percent(double d) {
-    return format(d * 100) + "%";
+    return percent(d, false);
+  }
+
+  public static String percent(double d, boolean decimals) {
+    if (decimals) {
+      return formatDecimal2(d * 100) + "%";
+    } else {
+      return format(d * 100) + "%";
+    }
   }
 
   public static String money(double d) {
