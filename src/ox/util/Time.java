@@ -12,7 +12,7 @@ public class Time {
   public static final ZoneId PACIFIC_TIME = ZoneId.of("America/Los_Angeles");
   public static final ZoneId NEW_YORK = ZoneId.of("America/New_York");
 
-  private static final DateTimeFormatter slashFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+  public static final DateTimeFormatter slashFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
   private static final DateTimeFormatter longFormat = DateTimeFormatter.ofPattern("MMM d, yyyy");
 
   public static long timestamp(ZonedDateTime zdt) {

@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="lib/miglayout-4.0-swing.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/gson-2.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/gson-2.3.jar" sourcepath="open_src/gson-2.3-srouces.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/guava-18.0.jar" sourcepath="open_src/guava-17.0-sources.jar"/>
 	<classpathentry kind="lib" path="lib/objenesis-2.1.jar" sourcepath="open_src/objenesis-2.1-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
