@@ -335,6 +335,14 @@ public class Utils {
     return isNullOrEmpty(s) ? null : parseMoney(s);
   }
 
+  public static String getExtension(String path) {
+    int i = path.lastIndexOf(".");
+    if (i == -1) {
+      return "";
+    }
+    return path.substring(i + 1);
+  }
+
   public static void sleep(int millis) {
     try {
       Thread.sleep(millis);
