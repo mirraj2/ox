@@ -11,8 +11,8 @@ import java.time.ZoneId;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import ox.util.SplitOutputStream;
 import com.google.common.base.Throwables;
+import ox.util.SplitOutputStream;
 
 public class Log {
 
@@ -34,12 +34,12 @@ public class Log {
     logToFile(new File(logFolder, currentLogDate + ".log"));
 
     ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-    
+
     executor.scheduleAtFixedRate(() -> {
       System.out.flush();
       System.err.flush();
     }, 0, 100, TimeUnit.MILLISECONDS);
-    
+
     executor.scheduleAtFixedRate(Log::rolloverLog, 1, 1, TimeUnit.MINUTES);
   }
 
@@ -96,7 +96,9 @@ public class Log {
     for (int i = 0; i < len; i++) {
       sb.append(Array.get(array, i)).append(", ");
     }
-    sb.setLength(sb.length() - 2);
+    if (sb.length() > 2) {
+      sb.setLength(sb.length() - 2);
+    }
     sb.append(']');
     return sb.toString();
   }
