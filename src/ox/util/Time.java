@@ -6,6 +6,9 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAccessor;
+import java.util.Map;
+import com.google.common.collect.Maps;
 
 public class Time {
 
@@ -14,6 +17,8 @@ public class Time {
 
   public static final DateTimeFormatter slashFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
   private static final DateTimeFormatter longFormat = DateTimeFormatter.ofPattern("MMM d, yyyy");
+
+  private static final Map<String, DateTimeFormatter> formatCache = Maps.newHashMap();
 
   public static long timestamp(ZonedDateTime zdt) {
     return zdt.toInstant().toEpochMilli();
@@ -39,12 +44,17 @@ public class Time {
     return (int) ChronoUnit.MINUTES.between(Instant.ofEpochMilli(timestamp), Instant.now());
   }
 
-  public static String slashFormat(LocalDate date) {
-    return date == null ? "" : date.format(slashFormat);
+  public static String slashFormat(TemporalAccessor date) {
+    return date == null ? "" : slashFormat.format(date);
   }
 
-  public static String longFormat(LocalDate date) {
-    return date == null ? "" : date.format(longFormat);
+  public static String longFormat(TemporalAccessor date) {
+    return date == null ? "" : longFormat.format(date);
+  }
+
+  public static String format(TemporalAccessor date, String format) {
+    DateTimeFormatter dtf = formatCache.computeIfAbsent(format, DateTimeFormatter::ofPattern);
+    return dtf.format(date);
   }
 
 }
