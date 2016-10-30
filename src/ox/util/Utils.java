@@ -311,6 +311,16 @@ public class Utils {
     return s == null || s.isEmpty();
   }
 
+  public static String first(String s, String delimiter) {
+    int i = s.indexOf(delimiter);
+    return s.substring(0, i);
+  }
+
+  public static String second(String s, String delimiter) {
+    int i = s.indexOf(delimiter);
+    return s.substring(i + delimiter.length());
+  }
+
   public static Integer toInt(String s) {
     return isNullOrEmpty(s) ? null : parseInt(s);
   }
