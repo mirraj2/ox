@@ -53,6 +53,9 @@ public class Time {
   }
 
   public static String format(TemporalAccessor date, String format) {
+    if (date == null) {
+      return "";
+    }
     DateTimeFormatter dtf = formatCache.computeIfAbsent(format, DateTimeFormatter::ofPattern);
     return dtf.format(date);
   }
