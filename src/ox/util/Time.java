@@ -1,5 +1,6 @@
 package ox.util;
 
+import static ox.util.Utils.isNullOrEmpty;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -58,6 +59,14 @@ public class Time {
     }
     DateTimeFormatter dtf = formatCache.computeIfAbsent(format, DateTimeFormatter::ofPattern);
     return dtf.format(date);
+  }
+
+  public static LocalDate parseDate(String s, String format) {
+    if (isNullOrEmpty(s)) {
+      return null;
+    }
+    DateTimeFormatter dtf = formatCache.computeIfAbsent(format, DateTimeFormatter::ofPattern);
+    return LocalDate.parse(s, dtf);
   }
 
 }

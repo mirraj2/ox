@@ -5,9 +5,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import ox.Log;
-import ox.swing.Graphics3D;
 import com.google.common.base.Stopwatch;
+import ox.Log;
 
 public class Images {
 
@@ -52,9 +51,9 @@ public class Images {
       bi = resize(bi, w * 2, h * 2);
     }
 
-    Graphics3D g = Graphics3D.create(ret.createGraphics());
-    g.linearInterpolation();
-    g.draw(bi, 0, 0, w, h);
+    Graphics2D g = ret.createGraphics();
+    g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+    g.drawImage(bi, 0, 0, w, h, null);
     g.dispose();
 
     return ret;
