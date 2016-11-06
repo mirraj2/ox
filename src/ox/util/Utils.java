@@ -19,6 +19,8 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Charsets;
@@ -27,6 +29,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import ox.Log;
 
@@ -40,6 +43,7 @@ public class Utils {
   public static final DecimalFormat decimalFormat2 = new DecimalFormat("#,##0.00");
   public static final DecimalFormat noDecimalFormat = new DecimalFormat("#,##0");
   private static final CharMatcher moneyMatcher = CharMatcher.anyOf("$£€ ,-–()").precomputed();
+  private static final Map<String, Pattern> patternCache = Maps.newConcurrentMap();
 
   public static String capitalize(String s) {
     StringBuilder sb = new StringBuilder(s.toLowerCase());
@@ -343,6 +347,15 @@ public class Utils {
 
   public static Double toMoney(String s) {
     return isNullOrEmpty(s) ? null : parseMoney(s);
+  }
+
+  public static String regexMatch(String pattern, String document) {
+    Pattern p = patternCache.computeIfAbsent(pattern, Pattern::compile);
+    Matcher m = p.matcher(document);
+    if (!m.find()) {
+      return null;
+    }
+    return m.group(1);
   }
 
   public static String getExtension(String path) {
