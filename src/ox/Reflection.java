@@ -80,6 +80,8 @@ public class Reflection {
         if (type == LocalDate.class) {
           value = ((java.sql.Date) value).toLocalDate();
         }
+      } else if (type == Money.class && value instanceof Integer) {
+        value = Money.fromInt((Integer) value);
       }
       field.set(o, value);
     } catch (Exception e) {
