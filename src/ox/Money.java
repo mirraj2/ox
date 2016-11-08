@@ -6,6 +6,8 @@ import java.util.function.Function;
 
 public class Money {
 
+  public static final Money ZERO = Money.dollars(0);
+
   private final int cents;
 
   private Money(int cents) {
@@ -14,6 +16,10 @@ public class Money {
 
   public Money negate(){
     return new Money(-cents);
+  }
+
+  public Money add(Money m) {
+    return new Money(cents + m.cents);
   }
 
   public boolean isGreaterThan(Money m) {
@@ -35,6 +41,14 @@ public class Money {
   @Override
   public String toString() {
     return money(toDouble());
+  }
+
+  public int getDollars() {
+    return cents / 100;
+  }
+
+  public int getCents() {
+    return cents % 100;
   }
 
   public static <T> Money sum(Iterable<T> items, Function<T, Money> mappingFunction) {
