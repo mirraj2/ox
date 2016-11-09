@@ -22,6 +22,18 @@ public class Money {
     return new Money(cents + m.cents);
   }
 
+  public Money multiply(int n) {
+    return new Money(cents * n);
+  }
+
+  public Money multiply(double n) {
+    return new Money((int) (cents * n));
+  }
+
+  public Money divide(int n) {
+    return new Money(cents / n);
+  }
+
   public boolean isGreaterThan(Money m) {
     return this.cents > m.cents;
   }
