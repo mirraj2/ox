@@ -3,7 +3,6 @@ package ox;
 import static ox.util.Functions.map;
 import static ox.util.Utils.parseEnum;
 import java.io.Reader;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -136,8 +135,6 @@ public class Json implements Iterable<String> {
       return with(key, (Number) value);
     } else if (value instanceof Boolean) {
       return with(key, ((Boolean) value).booleanValue());
-    } else if (value instanceof LocalDate) {
-      return with(key, value.toString());
     } else if (value instanceof Json) {
       return with(key, (Json) value);
     } else if (value.getClass().isEnum()) {
@@ -145,7 +142,7 @@ public class Json implements Iterable<String> {
     } else if (value instanceof Iterable) {
       return with(key, Json.array((Iterable<?>) value));
     } else {
-      throw new RuntimeException("Unhandled type: " + value.getClass().getSimpleName());
+      return with(key, value.toString());
     }
   }
 
