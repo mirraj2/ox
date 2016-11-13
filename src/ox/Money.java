@@ -1,5 +1,6 @@
 package ox;
 
+import static ox.util.Utils.format;
 import static ox.util.Utils.money;
 import static ox.util.Utils.parseMoney;
 import java.util.function.Function;
@@ -14,7 +15,7 @@ public class Money {
     this.cents = cents;
   }
 
-  public Money negate(){
+  public Money negate() {
     return new Money(-cents);
   }
 
@@ -65,6 +66,15 @@ public class Money {
 
   public int getCents() {
     return cents % 100;
+  }
+
+  public String dollarsFormatted() {
+    return format(getDollars());
+  }
+
+  public String centsFormatted() {
+    int n = getCents();
+    return n < 100 ? "0" + n : "" + n;
   }
 
   public static <T> Money sum(Iterable<T> items, Function<T, Money> mappingFunction) {
