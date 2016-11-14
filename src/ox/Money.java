@@ -74,7 +74,7 @@ public class Money {
 
   public String centsFormatted() {
     int n = getCents();
-    return n < 100 ? "0" + n : "" + n;
+    return n < 10 ? "0" + n : "" + n;
   }
 
   public static <T> Money sum(Iterable<T> items, Function<T, Money> mappingFunction) {
