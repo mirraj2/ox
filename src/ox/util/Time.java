@@ -26,7 +26,11 @@ public class Time {
   }
 
   public static LocalDate toDate(long timestamp) {
-    return Instant.ofEpochMilli(timestamp).atZone(PACIFIC_TIME).toLocalDate();
+    return toDateTime(timestamp).toLocalDate();
+  }
+
+  public static ZonedDateTime toDateTime(long timestamp) {
+    return Instant.ofEpochMilli(timestamp).atZone(PACIFIC_TIME);
   }
 
   public static LocalDate min(LocalDate a, LocalDate b) {
