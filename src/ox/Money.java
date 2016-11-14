@@ -65,7 +65,7 @@ public class Money {
   }
 
   public int getCents() {
-    return cents % 100;
+    return Math.abs(cents % 100);
   }
 
   public String dollarsFormatted() {
