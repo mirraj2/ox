@@ -8,9 +8,6 @@ import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
 import java.awt.Color;
 import java.io.File;
-import java.io.FilterOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.net.URLEncoder;
@@ -372,18 +369,6 @@ public class Utils {
     } catch (InterruptedException e) {
       throw Throwables.propagate(e);
     }
-  }
-
-  public static void logLoggers() {
-    System.setErr(new PrintStream(new FilterOutputStream(System.out) {
-      @Override
-      public void write(int b) throws IOException {
-
-        for (StackTraceElement e : Thread.currentThread().getStackTrace()) {
-          System.out.println(e);
-        }
-      }
-    }));
   }
 
 }

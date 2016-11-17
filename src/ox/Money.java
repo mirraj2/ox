@@ -47,6 +47,10 @@ public class Money {
     return this.cents > 0;
   }
 
+  public boolean isZero() {
+    return this.cents == 0;
+  }
+
   public int toInt() {
     return cents;
   }
