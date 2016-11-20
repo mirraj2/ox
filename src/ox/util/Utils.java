@@ -308,6 +308,11 @@ public class Utils {
     return s;
   }
 
+  public static String checkNotEmpty(String s, Object errorMessage) {
+    checkState(!isNullOrEmpty(s), errorMessage);
+    return s;
+  }
+
   public static boolean isNullOrEmpty(String s) {
     return s == null || s.isEmpty();
   }
