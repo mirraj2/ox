@@ -279,7 +279,7 @@ public class Utils {
     if (c.isEmpty()) {
       return null;
     }
-    checkArgument(c.size() == 1, "Expected one element, but found " + c.size() + " :: " + c);
+    checkArgument(c.size() == 1, "Expected one element, but found " + c.size());
     return c.iterator().next();
   }
 
