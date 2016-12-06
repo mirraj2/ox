@@ -277,7 +277,7 @@ public class Json implements Iterable<String> {
   }
 
   public List<Double> asDoubleArray() {
-    return map(e.getAsJsonArray(), JsonElement::getAsDouble);
+    return map(e.getAsJsonArray(), j -> j.isJsonNull() ? null : j.getAsDouble());
   }
 
   public List<Json> asJsonArray() {
