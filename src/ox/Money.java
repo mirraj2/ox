@@ -23,6 +23,10 @@ public class Money {
     return new Money(cents + m.cents);
   }
 
+  public Money subtract(Money m) {
+    return new Money(cents - m.cents);
+  }
+
   public Money multiply(int n) {
     return new Money(cents * n);
   }
