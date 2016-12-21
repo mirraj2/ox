@@ -100,23 +100,31 @@ public class Utils {
   public static String money(double d, boolean decimals) {
     boolean negative = d < 0;
     DecimalFormat format = decimals ? decimalFormat2 : noDecimalFormat;
-    if (negative) {
-      return "-$" + format.format(-d);
-    } else {
-      return "$" + format.format(d);
+    synchronized (format) {
+      if (negative) {
+        return "-$" + format.format(-d);
+      } else {
+        return "$" + format.format(d);
+      }
     }
   }
 
   public static String format(double d) {
-    return noDecimalFormat.format(d);
+    synchronized (noDecimalFormat) {
+      return noDecimalFormat.format(d);
+    }
   }
 
   public static String formatDecimal(double d) {
-    return decimalFormat.format(d);
+    synchronized (decimalFormat) {
+      return decimalFormat.format(d);
+    }
   }
 
   public static String formatDecimal2(double d) {
-    return decimalFormat2.format(d);
+    synchronized (decimalFormat2) {
+      return decimalFormat2.format(d);
+    }
   }
 
   public static String formatDecimal(double d, int decimalPlaces) {
