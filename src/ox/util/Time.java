@@ -25,8 +25,8 @@ public class Time {
     return zdt.toInstant().toEpochMilli();
   }
 
-  public static LocalDate toDate(long timestamp) {
-    return toDateTime(timestamp).toLocalDate();
+  public static LocalDate toDate(Long timestamp) {
+    return timestamp == null ? null : toDateTime(timestamp).toLocalDate();
   }
 
   public static ZonedDateTime toDateTime(long timestamp) {
