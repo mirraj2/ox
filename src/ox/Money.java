@@ -51,6 +51,10 @@ public class Money {
     return this.cents > 0;
   }
 
+  public boolean isNegative() {
+    return this.cents < 0;
+  }
+
   public boolean isZero() {
     return this.cents == 0;
   }
