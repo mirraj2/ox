@@ -157,7 +157,7 @@ public class Utils {
   }
 
   public static boolean isValidPhoneNumber(String phoneNumber) {
-    String digits = CharMatcher.JAVA_DIGIT.retainFrom(phoneNumber);
+    String digits = CharMatcher.javaDigit().retainFrom(phoneNumber);
     return digits.length() >= 10; // TODO
   }
 
@@ -176,11 +176,11 @@ public class Utils {
   }
 
   public static boolean isAlphaNumeric(String s) {
-    return CharMatcher.JAVA_LETTER_OR_DIGIT.matchesAllOf(s);
+    return CharMatcher.javaLetterOrDigit().matchesAllOf(s);
   }
 
   public static String trim(String s) {
-    return CharMatcher.WHITESPACE.trimFrom(s);
+    return CharMatcher.whitespace().trimFrom(s);
   }
 
   public static void printStats(File dir) {
@@ -188,7 +188,7 @@ public class Utils {
     try {
       recurse(dir, counts);
     } catch (Exception e) {
-      throw Throwables.propagate(e);
+      throw propagate(e);
     }
 
     System.out.println(counts[0] + " java files.");
@@ -223,7 +223,7 @@ public class Utils {
     try {
       return URLEncoder.encode(s, "UTF-8");
     } catch (UnsupportedEncodingException e) {
-      throw Throwables.propagate(e);
+      throw propagate(e);
     }
   }
 
@@ -380,8 +380,13 @@ public class Utils {
     try {
       Thread.sleep(millis);
     } catch (InterruptedException e) {
-      throw Throwables.propagate(e);
+      throw propagate(e);
     }
+  }
+
+  public static RuntimeException propagate(Throwable throwable) {
+    Throwables.throwIfUnchecked(throwable);
+    throw new RuntimeException(throwable);
   }
 
 }
