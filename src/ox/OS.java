@@ -1,5 +1,3 @@
-/* Copyright 2012 Addepar. All Rights Reserved. */
-
 package ox;
 
 import static com.google.common.base.Preconditions.checkState;
