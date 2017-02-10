@@ -1,5 +1,6 @@
 package ox;
 
+import static ox.util.Utils.propagate;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -12,7 +13,6 @@ import java.util.Map;
 import java.util.UUID;
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
-import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import ox.util.Utils;
@@ -27,7 +27,7 @@ public class Reflection {
     try {
       modifiersField = Field.class.getDeclaredField("modifiers");
     } catch (Exception e) {
-      throw Throwables.propagate(e);
+      throw propagate(e);
     }
     modifiersField.setAccessible(true);
   }
@@ -36,7 +36,7 @@ public class Reflection {
     try {
       Class.forName(c.getName());
     } catch (ClassNotFoundException e) {
-      throw Throwables.propagate(e);
+      throw propagate(e);
     }
   }
 
@@ -93,18 +93,22 @@ public class Reflection {
     try {
       for (Method m : o.getClass().getDeclaredMethods()) {
         if (m.getName().equals(methodName)) {
-          return m.invoke(o);
+          if (m.getParameterCount() == 0) {
+            return m.invoke(o);
+          }
         }
       }
       for (Method m : o.getClass().getMethods()) {
         if (m.getName().equals(methodName)) {
-          return m.invoke(o);
+          if (m.getParameterCount() == 0) {
+            return m.invoke(o);
+          }
         }
       }
       throw new RuntimeException("Method not found: " + o.getClass().getSimpleName() + "." + methodName);
     } catch (Exception e) {
       Log.error("Problem calling method: " + methodName);
-      throw Throwables.propagate(e);
+      throw propagate(e);
     }
   }
 

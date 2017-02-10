@@ -1,6 +1,7 @@
 package ox;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static ox.util.Utils.propagate;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -32,7 +33,6 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import com.google.common.base.Charsets;
-import com.google.common.base.Throwables;
 import com.google.common.io.ByteStreams;
 import ox.util.Images;
 
@@ -61,7 +61,7 @@ public class IO {
     try {
       return from(new FileInputStream(file));
     } catch (FileNotFoundException e) {
-      throw Throwables.propagate(e);
+      throw propagate(e);
     }
   }
 
@@ -98,7 +98,7 @@ public class IO {
     try {
       return new URL(s);
     } catch (MalformedURLException e) {
-      throw Throwables.propagate(e);
+      throw propagate(e);
     }
   }
 
@@ -106,7 +106,7 @@ public class IO {
     try {
       c.close();
     } catch (IOException e) {
-      throw Throwables.propagate(e);
+      throw propagate(e);
     }
   }
 
@@ -173,7 +173,7 @@ public class IO {
       try {
         to(new FileOutputStream(file));
       } catch (FileNotFoundException e) {
-        throw Throwables.propagate(e);
+        throw propagate(e);
       }
     }
 
@@ -194,7 +194,7 @@ public class IO {
           ByteStreams.copy(asStream(), os);
         }
       } catch (IOException e) {
-        throw Throwables.propagate(e);
+        throw propagate(e);
       } finally {
         finish();
       }
@@ -204,7 +204,7 @@ public class IO {
       try {
         to(new URL(url));
       } catch (Exception e) {
-        throw Throwables.propagate(e);
+        throw propagate(e);
       }
     }
 
@@ -224,7 +224,7 @@ public class IO {
         to(conn.getOutputStream());
         conn.getInputStream().close();
       } catch (Exception e) {
-        throw Throwables.propagate(e);
+        throw propagate(e);
       }
     }
 
@@ -255,7 +255,7 @@ public class IO {
         return new Json(s);
       } catch (Exception e) {
         Log.error("Problem parsing json: " + s);
-        throw Throwables.propagate(e);
+        throw propagate(e);
       }
     }
 
@@ -263,7 +263,7 @@ public class IO {
       try {
         return ImageIO.read(asStream());
       } catch (IOException e) {
-        throw Throwables.propagate(e);
+        throw propagate(e);
       } finally {
         finish();
       }
@@ -273,7 +273,7 @@ public class IO {
       try {
         return Font.createFont(Font.TRUETYPE_FONT, asStream());
       } catch (Exception e) {
-        throw Throwables.propagate(e);
+        throw propagate(e);
       }
     }
 
@@ -297,7 +297,7 @@ public class IO {
         ret = is = buffer(ret);
         return ret;
       } catch (Exception e) {
-        throw Throwables.propagate(e);
+        throw propagate(e);
       }
     }
 
@@ -380,7 +380,7 @@ public class IO {
           try {
             os.flush();
           } catch (IOException e) {
-            throw Throwables.propagate(e);
+            throw propagate(e);
           }
         } else {
           close(os);
