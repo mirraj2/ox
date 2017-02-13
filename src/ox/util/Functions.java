@@ -4,8 +4,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterables.size;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,7 +36,7 @@ public final class Functions {
     checkNotNull(input, "input");
     checkNotNull(function, "function");
 
-    Set<B> ret = new HashSet<>(size(input));
+    Set<B> ret = new LinkedHashSet<>(size(input));
     for (A element : input) {
       ret.add(function.apply(element));
     }
