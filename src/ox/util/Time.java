@@ -21,6 +21,10 @@ public class Time {
 
   private static final Map<String, DateTimeFormatter> formatCache = Maps.newHashMap();
 
+  public static long timestamp(LocalDate date) {
+    return timestamp(date.atStartOfDay(PACIFIC_TIME));
+  }
+
   public static long timestamp(ZonedDateTime zdt) {
     return zdt.toInstant().toEpochMilli();
   }
