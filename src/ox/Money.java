@@ -89,6 +89,20 @@ public class Money {
     return n < 10 ? "0" + n : "" + n;
   }
 
+  @Override
+  public int hashCode() {
+    return cents;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (!(obj instanceof Money)) {
+      return false;
+    }
+    Money that = (Money) obj;
+    return this.cents == that.cents;
+  }
+
   public static <T> Money sum(Iterable<T> items, Function<T, Money> mappingFunction) {
     int ret = 0;
     for (T item : items) {
