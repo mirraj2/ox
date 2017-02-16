@@ -325,6 +325,10 @@ public class Utils {
     return s == null || s.isEmpty();
   }
 
+  public static String last(String s, int numCharacters) {
+    return s.substring(s.length() - numCharacters, s.length());
+  }
+
   public static String first(String s, String delimiter) {
     int i = s.indexOf(delimiter);
     return s.substring(0, i);
