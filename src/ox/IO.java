@@ -59,7 +59,11 @@ public class IO {
 
   public static Input from(File file) {
     try {
-      return from(new FileInputStream(file));
+      Input ret = from(new FileInputStream(file));
+      if (file.getName().endsWith(".gzip")) {
+        ret.gzipInput();
+      }
+      return ret;
     } catch (FileNotFoundException e) {
       throw propagate(e);
     }

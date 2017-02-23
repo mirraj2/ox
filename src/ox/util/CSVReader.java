@@ -1,5 +1,6 @@
 package ox.util;
 
+import static ox.util.Utils.propagate;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,7 +9,6 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.List;
 import java.util.function.Consumer;
-import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 
 public class CSVReader {
@@ -19,6 +19,8 @@ public class CSVReader {
   private int lastSize;
   private char delimiter = ',';
   private char escape = '"';
+  private boolean reuseBuffer = false;
+  private List<String> buffer;
 
   public CSVReader(InputStream is) {
     this(new InputStreamReader(is));
@@ -30,6 +32,11 @@ public class CSVReader {
 
   public CSVReader(Reader reader) {
     br = new BufferedReader(reader);
+  }
+
+  public CSVReader reuseBuffer() {
+    reuseBuffer = true;
+    return this;
   }
 
   public void forEach(Consumer<List<String>> callback) {
@@ -51,7 +58,7 @@ public class CSVReader {
     try {
       line = br.readLine();
     } catch (IOException e) {
-      throw Throwables.propagate(e);
+      throw propagate(e);
     }
     if (line == null) {
       return null;
@@ -61,7 +68,16 @@ public class CSVReader {
   }
 
   private List<String> parseLine(String line) {
-    List<String> ret = Lists.newArrayListWithCapacity(lastSize);
+    List<String> ret = buffer;
+    if (ret == null) {
+      ret = Lists.newArrayListWithCapacity(lastSize);
+      if (reuseBuffer) {
+        buffer = ret;
+      }
+    } else {
+      buffer.clear();
+    }
+
     boolean escaped = false;
     for (int i = 0; i < line.length(); i++) {
       char c = line.charAt(i);
