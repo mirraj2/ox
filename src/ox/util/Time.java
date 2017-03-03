@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
 import java.util.Map;
@@ -77,7 +78,12 @@ public class Time {
     if (isNullOrEmpty(s)) {
       return null;
     }
-    DateTimeFormatter dtf = formatCache.computeIfAbsent(format, DateTimeFormatter::ofPattern);
+    DateTimeFormatter dtf = formatCache.computeIfAbsent(format, pattern -> {
+      return new DateTimeFormatterBuilder()
+          .parseCaseInsensitive()
+          .appendPattern(pattern)
+          .toFormatter();
+    });
     return LocalDate.parse(s, dtf);
   }
 
