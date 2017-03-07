@@ -3,6 +3,7 @@ package ox.util;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Iterables.getLast;
+import static com.google.common.collect.Iterables.isEmpty;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
@@ -276,8 +277,8 @@ public class Utils {
     return c.iterator().next();
   }
 
-  public static <T> T last(Collection<T> c) {
-    if (c.isEmpty()) {
+  public static <T> T last(Iterable<T> c) {
+    if (isEmpty(c)) {
       return null;
     }
     return getLast(c);
