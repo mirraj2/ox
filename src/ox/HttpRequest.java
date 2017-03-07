@@ -1612,14 +1612,18 @@ public class HttpRequest {
   }
 
   public HttpRequest checkStatus() {
-    int status = status();
-    if (status < 200 || status >= 300) {
+    if (hasError()) {
       try {
         Log.error(body());
       } catch (Throwable t) {
       }
-      throw new IllegalStateException("Error status: " + status);
+      throw new IllegalStateException("Error status: " + status());
     }
     return this;
+  }
+
+  public boolean hasError() {
+    int status = status();
+    return status < 200 || status >= 300;
   }
 }
