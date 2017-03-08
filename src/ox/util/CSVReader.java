@@ -8,8 +8,10 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 public class CSVReader {
 
@@ -37,6 +39,15 @@ public class CSVReader {
   public CSVReader reuseBuffer() {
     reuseBuffer = true;
     return this;
+  }
+
+  public Map<String, Integer> getHeaderIndex() {
+    Map<String, Integer> ret = Maps.newHashMap();
+    List<String> row = nextLine();
+    for (int i = 0; i < row.size(); i++) {
+      ret.put(row.get(i), i);
+    }
+    return ret;
   }
 
   public void forEach(Consumer<List<String>> callback) {

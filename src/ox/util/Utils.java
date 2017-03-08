@@ -44,6 +44,10 @@ public class Utils {
   private static final Map<String, Pattern> patternCache = Maps.newConcurrentMap();
 
   public static String capitalize(String s) {
+    if (isNullOrEmpty(s)) {
+      return s;
+    }
+
     StringBuilder sb = new StringBuilder(s.toLowerCase());
     boolean up = true;
     for (int i = 0; i < sb.length(); i++) {
@@ -59,6 +63,21 @@ public class Utils {
       }
     }
     return sb.toString();
+  }
+
+  public static String sentenceCase(String s) {
+    if (isNullOrEmpty(s)) {
+      return s;
+    }
+
+    char[] chars = s.toCharArray();
+    chars[0] = Character.toUpperCase(chars[0]);
+    for (int i = 1; i < chars.length; i++) {
+      if (i == '_') {
+        chars[i] = ' ';
+      }
+    }
+    return new String(chars);
   }
 
   public static String formatBytes(long size) {
