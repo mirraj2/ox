@@ -73,8 +73,11 @@ public class Utils {
     char[] chars = s.toCharArray();
     chars[0] = Character.toUpperCase(chars[0]);
     for (int i = 1; i < chars.length; i++) {
-      if (i == '_') {
+      char c = chars[i];
+      if (c == '_') {
         chars[i] = ' ';
+      } else {
+        chars[i] = Character.toLowerCase(c);
       }
     }
     return new String(chars);
