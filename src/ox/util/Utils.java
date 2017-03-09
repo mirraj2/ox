@@ -30,6 +30,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import ox.Log;
+import ox.Money;
 
 public class Utils {
 
@@ -382,8 +383,8 @@ public class Utils {
     return isNullOrEmpty(s) ? null : LocalDate.parse(s);
   }
 
-  public static Double toMoney(String s) {
-    return isNullOrEmpty(s) ? null : parseMoney(s);
+  public static Money toMoney(String s) {
+    return isNullOrEmpty(s) ? null : Money.parse(s);
   }
 
   public static String regexMatch(String pattern, String document) {
