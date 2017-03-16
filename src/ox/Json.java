@@ -223,7 +223,8 @@ public class Json implements Iterable<String> {
   }
 
   public String get(int index) {
-    return arr().get(index).getAsString();
+    JsonElement e = arr().get(index);
+    return e.isJsonNull() ? null : e.getAsString();
   }
 
   public Json remove(int index) {
@@ -265,7 +266,7 @@ public class Json implements Iterable<String> {
   }
 
   public List<String> asStringArray() {
-    return map(e.getAsJsonArray(), JsonElement::getAsString);
+    return map(e.getAsJsonArray(), e -> e.isJsonNull() ? null : e.getAsString());
   }
 
   public List<Integer> asIntArray() {
