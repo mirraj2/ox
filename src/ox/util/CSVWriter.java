@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.List;
 
 public class CSVWriter {
@@ -22,6 +23,10 @@ public class CSVWriter {
 
   public CSVWriter(OutputStream os) {
     this.out = new PrintStream(os);
+  }
+
+  public void write(String... row) {
+    write(Arrays.asList(row));
   }
 
   public void write(List<String> row) {
