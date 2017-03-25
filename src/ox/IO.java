@@ -1,6 +1,7 @@
 package ox;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static ox.util.Utils.normalize;
 import static ox.util.Utils.propagate;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -79,7 +80,7 @@ public class IO {
   }
 
   public static Input fromURL(String url) {
-    return from(url(url));
+    return from(url(url)).gzipInput();
   }
 
   public static Input from(URL url) {
@@ -324,6 +325,8 @@ public class IO {
 
       if (httpConn != null) {
         int code = httpConn.getResponseCode();
+        String encoding = normalize(httpConn.getHeaderField("Content-Encoding"));
+        gzipInput = encoding.equalsIgnoreCase("gzip");
         if (code == HttpURLConnection.HTTP_MOVED_TEMP || code == HttpURLConnection.HTTP_MOVED_PERM
             || code == HttpURLConnection.HTTP_SEE_OTHER) {
           // redirected
