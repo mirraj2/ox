@@ -60,7 +60,8 @@ public class Log {
       System.setErr(new PrintStream(new SplitOutputStream(originalErr, os)));
       out = System.out;
     } catch (Exception e) {
-      throw Throwables.propagate(e);
+      Throwables.throwIfUnchecked(e);
+      throw new RuntimeException(e);
     }
   }
 
