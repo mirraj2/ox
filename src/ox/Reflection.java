@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -82,6 +83,8 @@ public class Reflection {
         }
       } else if (type == Money.class && value instanceof Integer) {
         value = Money.fromInt((Integer) value);
+      } else if (value instanceof Long && type == Instant.class) {
+        value = Instant.ofEpochMilli((long) value);
       }
       field.set(o, value);
     } catch (Exception e) {
