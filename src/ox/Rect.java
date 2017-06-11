@@ -47,7 +47,7 @@ public class Rect {
   }
 
   public boolean contains(Rect other) {
-    return other.x >= x && other.y >= y && other.maxX() <= other.maxX() && other.maxY() <= maxY();
+    return other.x >= x && other.y >= y && other.maxX() <= maxX() && other.maxY() <= maxY();
   }
 
   public Rect centerOn(double xx, double yy) {
