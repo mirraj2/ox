@@ -6,7 +6,10 @@ import java.util.Iterator;
 import com.google.common.base.Splitter;
 
 public class Rect {
-  public final double x, y, w, h;
+  public double x, y, w, h;
+
+  public Rect() {
+  }
 
   public Rect(double x, double y, double w, double h) {
     this.x = x;
