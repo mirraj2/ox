@@ -1,5 +1,6 @@
 package ox;
 
+import static ox.util.Utils.propagate;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -11,7 +12,6 @@ import java.time.ZoneId;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import com.google.common.base.Throwables;
 import ox.util.SplitOutputStream;
 
 public class Log {
@@ -60,7 +60,7 @@ public class Log {
       System.setErr(new PrintStream(new SplitOutputStream(originalErr, os)));
       out = System.out;
     } catch (Exception e) {
-      throw Throwables.propagate(e);
+      throw propagate(e);
     }
   }
 
@@ -125,21 +125,6 @@ public class Log {
 
   public static void error(Object o) {
     log(o);
-  }
-
-  public static void dumpSwingThread() {
-    Thread.getAllStackTraces().forEach((thread, trace) -> {
-      if (thread.getName().equals("AWT-EventQueue-0")) {
-        Log.debug("Dumping Swing Thread");
-        for (StackTraceElement e : trace) {
-          if (e.isNativeMethod() || e.getClassName().contains("EventDispatchThread")) {
-            continue;
-          }
-          Log.debug(e);
-        }
-        Log.debug("");
-      }
-    });
   }
 
 }
