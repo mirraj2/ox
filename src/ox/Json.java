@@ -242,8 +242,9 @@ public class Json implements Iterable<String> {
 
   public Json clear() {
     if (isArray()) {
-      while (size() > 0) {
-        arr().remove(0);
+      JsonArray array = arr();
+      for (int i = array.size() - 1; i >= 0; i--) {
+        array.remove(i);
       }
     } else {
       for (String key : this) {
