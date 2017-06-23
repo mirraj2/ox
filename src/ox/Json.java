@@ -267,23 +267,23 @@ public class Json implements Iterable<String> {
   }
 
   public List<String> asStringArray() {
-    return map(e.getAsJsonArray(), e -> e.isJsonNull() ? null : e.getAsString());
+    return map(arr(), e -> e.isJsonNull() ? null : e.getAsString());
   }
 
   public List<Integer> asIntArray() {
-    return map(e.getAsJsonArray(), JsonElement::getAsInt);
+    return map(arr(), JsonElement::getAsInt);
   }
 
   public List<Long> asLongArray() {
-    return map(e.getAsJsonArray(), JsonElement::getAsLong);
+    return map(arr(), JsonElement::getAsLong);
   }
 
   public List<Double> asDoubleArray() {
-    return map(e.getAsJsonArray(), j -> j.isJsonNull() ? null : j.getAsDouble());
+    return map(arr(), j -> j.isJsonNull() ? null : j.getAsDouble());
   }
 
   public List<Json> asJsonArray() {
-    return map(e.getAsJsonArray(), Json::new);
+    return map(arr(), Json::new);
   }
 
   private JsonObject obj() {

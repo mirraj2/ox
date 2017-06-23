@@ -404,7 +404,7 @@ public class Utils {
     return path.substring(i + 1);
   }
 
-  public static void sleep(int millis) {
+  public static void sleep(long millis) {
     try {
       Thread.sleep(millis);
     } catch (InterruptedException e) {
