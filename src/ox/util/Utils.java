@@ -26,6 +26,7 @@ import com.google.common.base.Enums;
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
@@ -263,11 +264,11 @@ public class Utils {
     return array[random(array.length)];
   }
 
-  public static <T> T random(List<T> list) {
-    if (list.isEmpty()) {
-      throw new IllegalStateException("Can't select a random element from an empty list!");
+  public static <T> T random(Collection<T> c) {
+    if (c.isEmpty()) {
+      return null;
     }
-    return list.get(random(list.size()));
+    return Iterables.get(c, random(c.size()));
   }
 
   public static List<Integer> count(int from, int to) {
