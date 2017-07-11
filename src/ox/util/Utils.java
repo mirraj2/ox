@@ -174,7 +174,7 @@ public class Utils {
       return o.get();
     }
     for (T constant : enumType.getEnumConstants()) {
-      if (constant.toString().equalsIgnoreCase(s)) {
+      if (CharMatcher.javaLetterOrDigit().retainFrom(constant.toString()).equalsIgnoreCase(s)) {
         return constant;
       }
     }
