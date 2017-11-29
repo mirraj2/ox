@@ -1,20 +1,25 @@
 package ox;
 
 import static ox.util.Utils.propagate;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
+
 import ox.util.Utils;
 
 public class Reflection {
@@ -82,6 +87,8 @@ public class Reflection {
         }
       } else if (type == Money.class && value instanceof Integer) {
         value = Money.fromInt((Integer) value);
+      } else if (type == Instant.class && value instanceof Long) {
+        value = Instant.ofEpochMilli((Long) value);
       }
       field.set(o, value);
     } catch (Exception e) {
@@ -122,7 +129,12 @@ public class Reflection {
       try {
         return c.getDeclaredField(fieldName);
       } catch (Exception e) {
-        return null;
+        Class<?> parent = c.getSuperclass();
+        if (parent == null) {
+          return null;
+        } else {
+          return getField(c.getSuperclass(), fieldName);
+        }
       }
     });
   }
