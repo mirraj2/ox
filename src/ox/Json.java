@@ -2,12 +2,14 @@ package ox;
 
 import static ox.util.Functions.map;
 import static ox.util.Utils.parseEnum;
+
 import java.io.Reader;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.function.Function;
+
 import com.google.common.base.Charsets;
 import com.google.common.collect.Iterables;
 import com.google.gson.Gson;

@@ -40,4 +40,8 @@ public class Lock {
     }
   }
 
+  public int getCounter() {
+    return counter;
+  }
+
 }

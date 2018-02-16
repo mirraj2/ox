@@ -366,8 +366,8 @@ public class IO {
       return this;
     }
 
-    public Input timeout(Integer timeout) {
-      this.timeout = timeout;
+    public Input timeout(Integer timeoutMillis) {
+      this.timeout = timeoutMillis;
       return this;
     }
 
