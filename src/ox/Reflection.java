@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 
 import ox.util.Utils;
+import sun.misc.Unsafe;
 
 public class Reflection {
 
@@ -29,12 +30,32 @@ public class Reflection {
   private static final Field modifiersField;
 
   static {
+    disableWarning();
     try {
       modifiersField = Field.class.getDeclaredField("modifiers");
     } catch (Exception e) {
       throw propagate(e);
     }
     modifiersField.setAccessible(true);
+  }
+
+  /**
+   * Turns off the warning that puts 5 warnings out to the console:
+   * 
+   * WARNING: An illegal reflective access operation has occurred
+   */
+  public static void disableWarning() {
+    try {
+      Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
+      theUnsafe.setAccessible(true);
+      Unsafe u = (Unsafe) theUnsafe.get(null);
+
+      Class<?> c = Class.forName("jdk.internal.module.IllegalAccessLogger");
+      Field logger = c.getDeclaredField("logger");
+      u.putObjectVolatile(c, u.staticFieldOffset(logger), null);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   public static void load(Class<?> c) {
