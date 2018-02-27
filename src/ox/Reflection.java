@@ -53,6 +53,8 @@ public class Reflection {
       Class<?> c = Class.forName("jdk.internal.module.IllegalAccessLogger");
       Field logger = c.getDeclaredField("logger");
       u.putObjectVolatile(c, u.staticFieldOffset(logger), null);
+    } catch (ClassNotFoundException e) {
+      // do nothing
     } catch (Exception e) {
       e.printStackTrace();
     }
