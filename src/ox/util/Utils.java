@@ -7,10 +7,12 @@ import static com.google.common.collect.Iterables.isEmpty;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
+
 import java.awt.Color;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -20,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Charsets;
 import com.google.common.base.Enums;
@@ -30,6 +33,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
+
 import ox.Log;
 import ox.Money;
 
@@ -247,6 +251,14 @@ public class Utils {
   public static String urlEncode(String s) {
     try {
       return URLEncoder.encode(s, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      throw propagate(e);
+    }
+  }
+
+  public static String urlDecode(String s) {
+    try {
+      return URLDecoder.decode(s, "UTF-8");
     } catch (UnsupportedEncodingException e) {
       throw propagate(e);
     }
