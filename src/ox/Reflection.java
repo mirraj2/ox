@@ -26,7 +26,7 @@ import sun.misc.Unsafe;
 public class Reflection {
 
   private static final Objenesis objenesis = new ObjenesisStd(true);
-  private static final Map<String, Field> fieldCache = Maps.newHashMap();
+  private static final Map<String, Field> fieldCache = Maps.newConcurrentMap();
   private static final Field modifiersField;
 
   static {
