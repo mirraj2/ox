@@ -373,6 +373,7 @@ public class Utils {
 
   public static String second(String s, String delimiter) {
     int i = s.indexOf(delimiter);
+    checkState(i != -1, delimiter + " not found in " + s);
     return s.substring(i + delimiter.length());
   }
 

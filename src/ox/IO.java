@@ -3,6 +3,7 @@ package ox;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static ox.util.Utils.normalize;
 import static ox.util.Utils.propagate;
+
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -25,16 +26,20 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipInputStream;
+
 import javax.imageio.ImageIO;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+
 import com.google.common.base.Charsets;
 import com.google.common.io.ByteStreams;
+
 import ox.util.Images;
 
 public class IO {
@@ -248,7 +253,7 @@ public class IO {
     @Override
     public String toString() {
       try {
-        return new String(toByteArray(), Charsets.UTF_8);
+        return new String(toByteArray(), StandardCharsets.UTF_8);
       } finally {
         finish();
       }
