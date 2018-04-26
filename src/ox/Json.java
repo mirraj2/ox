@@ -347,6 +347,19 @@ public class Json implements Iterable<String> {
     return new Json(toString());
   }
 
+  @Override
+  public int hashCode() {
+    return e.hashCode();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (!(o instanceof Json)) {
+      return false;
+    }
+    return this.e.equals(((Json) o).e);
+  }
+
   public static Json object() {
     return new Json();
   }
