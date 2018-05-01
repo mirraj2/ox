@@ -24,12 +24,12 @@ public class Time {
 
   private static final Map<String, DateTimeFormatter> formatCache = Maps.newHashMap();
 
-  public static long timestamp(LocalDate date) {
+  public static Instant timestamp(LocalDate date) {
     return timestamp(date.atStartOfDay(PACIFIC_TIME));
   }
 
-  public static long timestamp(ZonedDateTime zdt) {
-    return zdt.toInstant().toEpochMilli();
+  public static Instant timestamp(ZonedDateTime zdt) {
+    return zdt.toInstant();
   }
 
   public static LocalDate toDate(Long timestamp) {
