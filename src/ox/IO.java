@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
@@ -21,12 +22,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.util.function.Consumer;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipInputStream;
@@ -311,24 +314,36 @@ public class IO {
       }
     }
 
+    public void readLines(Consumer<String> callback) {
+      try (BufferedReader br = new BufferedReader(new InputStreamReader(asStream()))) {
+        String line = br.readLine();
+        while (line != null) {
+          callback.accept(line);
+          line = br.readLine();
+        }
+      } catch (Exception e) {
+        throw propagate(e);
+      }
+    }
+
     private InputStream asStream(URL url) throws Exception {
       URLConnection conn = url.openConnection();
       HttpURLConnection httpConn = conn instanceof HttpURLConnection ? (HttpURLConnection) conn : null;
 
-      if (timeout != null) {
-        conn.setConnectTimeout(timeout);
-      }
-
-      if (httpConn != null && method != null) {
-        httpConn.setRequestMethod(method);
-      }
-
-      conn.setRequestProperty("User-Agent", USER_AGENT);
-      if (gzipInput) {
-        conn.setRequestProperty("Accept-Encoding", "gzip");
-      }
-
       if (httpConn != null) {
+        if (timeout != null) {
+          conn.setConnectTimeout(timeout);
+        }
+
+        if (method != null) {
+          httpConn.setRequestMethod(method);
+        }
+
+        conn.setRequestProperty("User-Agent", USER_AGENT);
+        if (gzipInput) {
+          conn.setRequestProperty("Accept-Encoding", "gzip");
+        }
+
         int code = httpConn.getResponseCode();
         String encoding = normalize(httpConn.getHeaderField("Content-Encoding"));
         gzipInput = encoding.equalsIgnoreCase("gzip");
