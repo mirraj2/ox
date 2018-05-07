@@ -51,3 +51,6 @@ int age = json.getInt("age");
 for(String value : json){
 }
 ```
+
+## A whole lot more
+There's a lot more useful stuff in here that I don't have time to document yet. But check out Utils.java and just browse through some of the other files.
