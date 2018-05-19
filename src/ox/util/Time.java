@@ -32,12 +32,12 @@ public class Time {
     return zdt.toInstant();
   }
 
-  public static LocalDate toDate(Long timestamp) {
-    return timestamp == null ? null : toDateTime(timestamp).toLocalDate();
+  public static LocalDate toDate(Instant instant) {
+    return instant == null ? null : toDateTime(instant).toLocalDate();
   }
 
-  public static ZonedDateTime toDateTime(long timestamp) {
-    return Instant.ofEpochMilli(timestamp).atZone(PACIFIC_TIME);
+  public static ZonedDateTime toDateTime(Instant instant) {
+    return instant.atZone(PACIFIC_TIME);
   }
 
   public static LocalDate min(LocalDate a, LocalDate b) {
