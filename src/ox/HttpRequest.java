@@ -24,6 +24,7 @@ package ox;
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 import static java.net.Proxy.Type.HTTP;
 import static ox.util.Utils.urlEncode;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -69,6 +70,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.zip.GZIPInputStream;
+
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -76,6 +78,7 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+
 import com.google.common.base.Charsets;
 import com.google.common.io.BaseEncoding;
 
