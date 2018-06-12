@@ -1,5 +1,7 @@
 package ox;
 
+import static ox.util.Utils.propagate;
+
 import java.util.Arrays;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -52,10 +54,11 @@ public class Threads {
 
   public static class Parallelizer<T> {
     private Iterable<T> input;
-    private int numThreads = 4;
+    private final ExecutorService executor;
+    private Throwable exception;
 
     private Parallelizer(int numThreads) {
-      this.numThreads = numThreads;
+      executor = Executors.newFixedThreadPool(numThreads);
     }
 
     @SuppressWarnings("unchecked")
@@ -70,9 +73,31 @@ public class Threads {
       return (Parallelizer<K>) this;
     }
 
+    public void execute(Runnable r) {
+      executor.execute(() -> {
+        try {
+          r.run();
+        } catch (Throwable t) {
+          exception = t;
+          t.printStackTrace();
+        }
+      });
+    }
+
+    public void await() {
+      executor.shutdown();
+      try {
+        executor.awaitTermination(1000, TimeUnit.DAYS);
+      } catch (InterruptedException e) {
+        throw propagate(e);
+      }
+      if (exception != null) {
+        throw new RuntimeException(exception);
+      }
+    }
+
     public void run(Consumer<T> callback) {
       Lock lock = new Lock();
-      ExecutorService executor = Executors.newFixedThreadPool(numThreads);
       for (T o : input) {
         lock.increment();
         executor.execute(() -> {
@@ -106,4 +131,5 @@ public class Threads {
       return this;
     }
   }
+
 }
