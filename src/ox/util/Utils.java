@@ -407,6 +407,9 @@ public class Utils {
     if (!m.find()) {
       return null;
     }
+    if (m.groupCount() == 0) {
+      return m.group();
+    }
     return m.group(1);
   }
 
