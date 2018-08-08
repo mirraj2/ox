@@ -150,7 +150,9 @@ public class Json implements Iterable<String> {
   }
 
   public Json with(String key, String value) {
-    if (value != null) {
+    if (value == null) {
+      obj().remove(key);
+    } else {
       obj().addProperty(key, value);
     }
     return this;
@@ -184,6 +186,11 @@ public class Json implements Iterable<String> {
 
   public Json add(Json element) {
     arr().add(element.e);
+    return this;
+  }
+
+  public Json addNull() {
+    arr().add(JsonNull.INSTANCE);
     return this;
   }
 

@@ -333,6 +333,7 @@ public class IO {
       if (httpConn != null) {
         if (timeout != null) {
           conn.setConnectTimeout(timeout);
+          conn.setReadTimeout(timeout);
         }
 
         if (method != null) {

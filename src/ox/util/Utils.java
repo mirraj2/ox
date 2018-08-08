@@ -9,7 +9,6 @@ import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
 
 import java.awt.Color;
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.net.URLDecoder;
@@ -24,15 +23,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.google.common.base.CharMatcher;
-import com.google.common.base.Charsets;
 import com.google.common.base.Enums;
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.io.Files;
 
 import ox.Log;
 import ox.Money;
@@ -210,42 +206,6 @@ public class Utils {
 
   public static String trim(String s) {
     return CharMatcher.whitespace().trimFrom(s);
-  }
-
-  public static void printStats(File dir) {
-    int[] counts = new int[2];
-    try {
-      recurse(dir, counts);
-    } catch (Exception e) {
-      throw propagate(e);
-    }
-
-    System.out.println(counts[0] + " java files.");
-    System.out.println(counts[1] + " lines of code.");
-  }
-
-  private static void recurse(File f, int[] counts) throws Exception {
-    if (f.isDirectory()) {
-      if (f.getName().startsWith(".")
-          ||
-          ImmutableList.of("webbit", "Slick", "JSlick", "mod_open_src", "twitter4j", "javazoom", "Ostermiller", "org",
-              "open_src")
-              .contains(f.getName())) {
-        return;
-      }
-      for (File ff : f.listFiles()) {
-        recurse(ff, counts);
-      }
-    } else {
-      if (f.getName().endsWith(".java")) {
-        counts[0]++;
-        int lineCount = Files.readLines(f, Charsets.UTF_8).size();
-        if (lineCount > 500) {
-          System.out.println(f);
-        }
-        counts[1] += lineCount;
-      }
-    }
   }
 
   public static String urlEncode(String s) {
