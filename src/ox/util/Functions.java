@@ -2,6 +2,7 @@ package ox.util;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterables.size;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -13,6 +14,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+
 import com.google.common.collect.Maps;
 
 public final class Functions {
@@ -79,13 +81,15 @@ public final class Functions {
     return ret;
   }
 
-  public static <T> Consumer<T> noConsumer() {
-    return new Consumer<T>() {
-      @Override
-      public void accept(T t) {
-      }
+  public static <T> Consumer<T> emptyConsumer() {
+    return t -> {
     };
   }
+
+  public static Runnable emptyRunnable() {
+    return () -> {
+    };
+  };
 
   public static <T> Predicate<T> not(Predicate<T> t) {
     return t.negate();
