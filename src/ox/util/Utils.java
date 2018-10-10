@@ -296,7 +296,7 @@ public class Utils {
     return s == null ? "" : trim(s);
   }
 
-  public static Double normalize(Double d) {
+  public static double normalize(Double d) {
     return d == null ? 0.0 : d;
   }
 

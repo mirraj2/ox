@@ -8,10 +8,12 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.function.Function;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -333,10 +335,11 @@ public class Json implements Iterable<String> {
   @Override
   public Iterator<String> iterator() {
     if (isArray()) {
-      return asStringArray().iterator();
+      return Iterators.transform(arr().iterator(), JsonElement::getAsString);
+    } else {
+      Set<Entry<String, JsonElement>> entries = obj().entrySet();
+      return Iterators.transform(entries.iterator(), Entry::getKey);
     }
-
-    return map(obj().entrySet(), Entry::getKey).iterator();
   }
 
   public Json appendTo(Json object, String key) {
@@ -398,6 +401,10 @@ public class Json implements Iterable<String> {
   }
 
   public static <T> Json array(Iterable<T> data, Function<T, ?> mapper) {
+    return array(map(data, mapper));
+  }
+
+  public static <T> Json array(T[] data, Function<T, ?> mapper) {
     return array(map(data, mapper));
   }
 
