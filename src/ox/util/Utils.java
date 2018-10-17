@@ -296,15 +296,19 @@ public class Utils {
     return s == null ? "" : trim(s);
   }
 
-  public static double normalize(Double d) {
-    return d == null ? 0.0 : d;
+  public static double normalize(Double n) {
+    return n == null ? 0.0 : n;
   }
 
-  public static Integer normalize(Integer i) {
-    return i == null ? 0 : i;
+  public static int normalize(Integer n) {
+    return n == null ? 0 : n;
   }
 
-  public static Boolean normalize(Boolean b) {
+  public static long normalize(Long n) {
+    return n == null ? 0 : n;
+  }
+
+  public static boolean normalize(Boolean b) {
     return b == null ? Boolean.FALSE : b;
   }
 

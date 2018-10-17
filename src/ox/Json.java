@@ -70,8 +70,11 @@ public class Json implements Iterable<String> {
   }
 
   public Boolean getBoolean(String key) {
-    String s = get(key);
-    return s == null || s.isEmpty() ? null : Boolean.valueOf(s);
+    JsonElement e = getElement(key);
+    if (e == null || e.isJsonNull()) {
+      return null;
+    }
+    return e.getAsBoolean();
   }
 
   public <T extends Enum<T>> T getEnum(String key, Class<T> enumType) {
