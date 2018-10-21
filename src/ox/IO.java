@@ -69,7 +69,7 @@ public class IO {
   public static Input from(File file) {
     try {
       Input ret = from(new FileInputStream(file));
-      if (file.getName().endsWith(".gzip")) {
+      if (file.getName().endsWith(".gzip") || file.getName().endsWith(".gz")) {
         ret.gzipInput();
       }
       return ret;
@@ -180,7 +180,7 @@ public class IO {
           imageFormat = getImageType(file);
         }
       }
-      if (file.getName().endsWith(".gzip")) {
+      if (file.getName().endsWith(".gzip") || file.getName().endsWith(".gz")) {
         gzipOutput = true;
       }
       try {

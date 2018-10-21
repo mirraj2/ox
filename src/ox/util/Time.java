@@ -17,8 +17,8 @@ import com.google.common.collect.Maps;
 public class Time {
 
   public static final ZoneId PACIFIC_TIME = ZoneId.of("America/Los_Angeles");
-  public static final ZoneId NEW_YORK = ZoneId.of("America/New_York");
   public static final ZoneId CENTRAL = ZoneId.of("US/Central");
+  public static final ZoneId NEW_YORK = ZoneId.of("America/New_York");
 
   public static final DateTimeFormatter slashFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
   private static final DateTimeFormatter longFormat = DateTimeFormatter.ofPattern("MMM d, yyyy");
