@@ -3,6 +3,7 @@ package ox;
 import static ox.util.Utils.format;
 import static ox.util.Utils.money;
 import static ox.util.Utils.parseMoney;
+
 import java.util.function.Function;
 
 public class Money {
@@ -109,6 +110,10 @@ public class Money {
       ret += mappingFunction.apply(item).toInt();
     }
     return fromInt(ret);
+  }
+
+  public static Money min(Money a, Money b) {
+    return a.cents <= b.cents ? a : b;
   }
 
   public static Money fromInt(int totalCents) {
