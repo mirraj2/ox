@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -363,6 +364,10 @@ public class Utils {
 
   public static Money toMoney(String s) {
     return isNullOrEmpty(s) ? null : Money.parse(s);
+  }
+
+  public static String uuid() {
+    return UUID.randomUUID().toString().replace("-", "");
   }
 
   public static String regexMatch(String pattern, String document) {
