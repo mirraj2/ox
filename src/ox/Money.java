@@ -124,8 +124,8 @@ public class Money {
     return new Money(dollars * 100);
   }
 
-  public static Money fromDouble(double d) {
-    return fromInt((int) (d * 100));
+  public static Money fromDouble(Double d) {
+    return d == null ? null : fromInt((int) (d * 100));
   }
 
   public static Money parse(String s) {

@@ -45,7 +45,7 @@ public class Json implements Iterable<String> {
     this(parser.parse(reader));
   }
 
-  private Json(JsonElement e) {
+  public Json(JsonElement e) {
     this.e = e;
   }
 

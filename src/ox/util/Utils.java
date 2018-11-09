@@ -95,7 +95,10 @@ public class Utils {
     return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
   }
 
-  public static double parseMoney(String s) {
+  public static Double parseMoney(String s) {
+    if (isNullOrEmpty(s)) {
+      return null;
+    }
     double ret = parseDouble(moneyMatcher.removeFrom(s));
     if (s.charAt(0) == '-' || s.charAt(0) == '–' || s.charAt(0) == '(') {
       ret = -ret;
