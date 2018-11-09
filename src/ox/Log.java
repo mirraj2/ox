@@ -1,6 +1,7 @@
 package ox;
 
 import static ox.util.Utils.propagate;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,6 +13,7 @@ import java.time.ZoneId;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
 import ox.util.SplitOutputStream;
 
 public class Log {
@@ -121,6 +123,10 @@ public class Log {
 
   public static void warn(Object o) {
     log(o);
+  }
+
+  public static void warn(Object o, Object... args) {
+    log(o, args);
   }
 
   public static void error(Object o) {

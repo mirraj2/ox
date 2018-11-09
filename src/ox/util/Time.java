@@ -77,6 +77,13 @@ public class Time {
     return dtf.format(date);
   }
 
+  public static LocalDate parseDate(String s, DateTimeFormatter format) {
+    if (isNullOrEmpty(s)) {
+      return null;
+    }
+    return LocalDate.parse(s, format);
+  }
+
   public static LocalDate parseDate(String s, String format) {
     if (isNullOrEmpty(s)) {
       return null;

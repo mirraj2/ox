@@ -191,7 +191,7 @@ public class Utils {
   }
 
   public static String formatPhone(String phoneNumber) {
-    if (phoneNumber.length() != 10) {
+    if (phoneNumber == null || phoneNumber.length() != 10) {
       return phoneNumber;
     }
     return "(" + phoneNumber.substring(0, 3) + ") " + phoneNumber.substring(3, 6) + "-" + phoneNumber.substring(6, 10);
@@ -314,6 +314,10 @@ public class Utils {
 
   public static boolean normalize(Boolean b) {
     return b == null ? Boolean.FALSE : b;
+  }
+
+  public static Money normalize(Money m) {
+    return m == null ? Money.ZERO : m;
   }
 
   public static String checkNotEmpty(String s) {
