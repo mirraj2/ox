@@ -335,6 +335,10 @@ public class Json implements Iterable<String> {
     return e instanceof JsonObject;
   }
 
+  public boolean isNull() {
+    return e instanceof JsonNull;
+  }
+
   @Override
   public Iterator<String> iterator() {
     if (isArray()) {
