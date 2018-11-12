@@ -81,6 +81,16 @@ public final class Functions {
     return ret;
   }
 
+  public static <T extends Comparable<? super T>> T min(Iterable<T> iter) {
+    T ret = null;
+    for (T t : iter) {
+      if (ret == null || t.compareTo(ret) < 0) {
+        ret = t;
+      }
+    }
+    return ret;
+  }
+
   public static <T> Consumer<T> emptyConsumer() {
     return t -> {
     };
