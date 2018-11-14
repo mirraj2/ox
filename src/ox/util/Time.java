@@ -49,6 +49,10 @@ public class Time {
     return a.isAfter(b) ? a : b;
   }
 
+  public static Instant max(Instant a, Instant b) {
+    return a.isAfter(b) ? a : b;
+  }
+
   public static LocalDate now() {
     return LocalDate.now(PACIFIC_TIME);
   }
