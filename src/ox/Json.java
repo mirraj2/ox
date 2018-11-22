@@ -194,6 +194,14 @@ public class Json implements Iterable<String> {
     return this;
   }
 
+  public Json addAll(Iterable<Json> elements) {
+    JsonArray array = arr();
+    for (Json e : elements) {
+      array.add(e.e);
+    }
+    return this;
+  }
+
   public Json addNull() {
     arr().add(JsonNull.INSTANCE);
     return this;
