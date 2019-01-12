@@ -29,6 +29,15 @@ public class Reflection {
   private static final Map<String, Field> fieldCache = Maps.newConcurrentMap();
   private static final Field modifiersField;
 
+  private static final Field NULL_FIELD;
+  static {
+    try {
+      NULL_FIELD = Reflection.class.getDeclaredField("fieldCache");
+    } catch (Exception e) {
+      throw propagate(e);
+    }
+  }
+
   static {
     disableWarning();
     try {
@@ -75,8 +84,6 @@ public class Reflection {
       return null;
     }
     try {
-      field.setAccessible(true);
-      modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
       return (T) field.get(o);
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -90,9 +97,6 @@ public class Reflection {
       return;
     }
     try {
-      field.setAccessible(true);
-      modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-
       Class<?> type = field.getType();
       if (value instanceof String) {
         if (type.isEnum()) {
@@ -148,18 +152,34 @@ public class Reflection {
 
   private static Field getField(Class<?> c, String fieldName) {
     String key = c.getName() + fieldName;
-    return fieldCache.computeIfAbsent(key, k -> {
-      try {
-        return c.getDeclaredField(fieldName);
-      } catch (Exception e) {
-        Class<?> parent = c.getSuperclass();
-        if (parent == null) {
-          return null;
-        } else {
-          return getField(c.getSuperclass(), fieldName);
-        }
+
+    Field ret = fieldCache.get(key);
+    if (ret != null) {
+      return ret == NULL_FIELD ? null : ret;
+    }
+
+    try {
+      ret = c.getDeclaredField(fieldName);
+      ret.setAccessible(true);
+      modifiersField.setInt(ret, ret.getModifiers() & ~Modifier.FINAL);
+    } catch (NoSuchFieldException e) {
+      Class<?> parent = c.getSuperclass();
+      if (parent == null) {
+        ret = null;
+      } else {
+        ret = getField(parent, fieldName);
       }
-    });
+    } catch (IllegalAccessException e) {
+      throw propagate(e);
+    }
+
+    if (ret == null) {
+      fieldCache.put(key, NULL_FIELD);
+    } else {
+      fieldCache.put(key, ret);
+    }
+
+    return ret;
   }
 
   public static List<Field> getFields(Class<?> c) {
