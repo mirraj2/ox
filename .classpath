@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="lib" path="lib/gson-2.3.jar" sourcepath="open_src/gson-2.3-srouces.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/objenesis-2.1.jar" sourcepath="open_src/objenesis-2.1-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/guava-27.0.1-jre.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/guava-27.0.1-jre.jar" sourcepath="open_src/guava-27.0.1.zip"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="module" value="true"/>

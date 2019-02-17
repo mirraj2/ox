@@ -17,6 +17,7 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -284,12 +285,14 @@ public class Utils {
     return getLast(c);
   }
 
-  public static <T> T only(Collection<T> c) {
-    if (c.isEmpty()) {
+  public static <T> T only(Iterable<T> c) {
+    Iterator<T> iter = c.iterator();
+    if (!iter.hasNext()) {
       return null;
     }
-    checkArgument(c.size() == 1, "Expected one element, but found " + c.size());
-    return c.iterator().next();
+    T ret = iter.next();
+    checkArgument(!iter.hasNext(), "Expected one element, but found multiple.");
+    return ret;
   }
 
   public static Color withAlpha(Color c, int alpha) {
