@@ -474,8 +474,8 @@ public class HttpRequest {
       params.forEach((k, v) -> {
         Object a = k, b = v;
         if (encode) {
-          a = urlEncode(k.toString());
-          b = urlEncode(v.toString());
+          a = urlEncode(String.valueOf(k));
+          b = urlEncode(String.valueOf(v));
         }
         addParam(a, b, result);
         result.append("&");
