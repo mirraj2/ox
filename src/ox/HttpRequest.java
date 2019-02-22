@@ -1133,6 +1133,10 @@ public class HttpRequest {
     return parameter(HEADER_CONTENT_TYPE, PARAM_CHARSET);
   }
 
+  public HttpRequest chromeAgent() {
+    return userAgent(IO.USER_AGENT);
+  }
+
   public HttpRequest userAgent(final String userAgent) {
     return header(HEADER_USER_AGENT, userAgent);
   }

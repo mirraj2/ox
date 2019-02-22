@@ -7,7 +7,9 @@ import static ox.util.Utils.propagate;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.BufferedInputStream;
@@ -105,6 +107,17 @@ public class IO {
 
   public static Input from(RenderedImage image) {
     return new Input(image);
+  }
+
+  public static Input fromClipboard() {
+    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+    Transferable t = clipboard.getContents(null);
+    try {
+      Object o = t.getTransferData(DataFlavor.stringFlavor);
+      return from(String.valueOf(o));
+    } catch (Exception e) {
+      throw propagate(e);
+    }
   }
 
   private static URL url(String s) {
@@ -249,8 +262,8 @@ public class IO {
 
     public void toClipboard() {
       StringSelection stringSelection = new StringSelection(toString());
-      Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
-      clpbrd.setContents(stringSelection, null);
+      Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+      clipboard.setContents(stringSelection, null);
     }
 
     @Override
