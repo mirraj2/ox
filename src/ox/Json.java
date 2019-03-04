@@ -300,6 +300,10 @@ public class Json implements Iterable<String> {
     return map(arr(), JsonElement::getAsLong);
   }
 
+  public List<Float> asFloatArray() {
+    return map(arr(), j -> j.isJsonNull() ? null : j.getAsFloat());
+  }
+
   public List<Double> asDoubleArray() {
     return map(arr(), j -> j.isJsonNull() ? null : j.getAsDouble());
   }
