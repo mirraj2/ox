@@ -226,15 +226,15 @@ public class IO {
       }
     }
 
-    public void toUrl(String url) {
+    public String toUrl(String url) {
       try {
-        to(new URL(url));
+        return to(new URL(url));
       } catch (Exception e) {
         throw propagate(e);
       }
     }
 
-    public void to(URL url) {
+    public String to(URL url) {
       try {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         if (acceptAllCerts && conn instanceof HttpsURLConnection) {
@@ -248,7 +248,7 @@ public class IO {
         conn.setDoOutput(true);
         conn.setDoInput(true);
         to(conn.getOutputStream());
-        conn.getInputStream().close();
+        return IO.from(conn.getInputStream()).toString();
       } catch (Exception e) {
         throw propagate(e);
       }
