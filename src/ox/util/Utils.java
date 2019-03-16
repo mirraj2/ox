@@ -8,7 +8,6 @@ import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
 
-import java.awt.Color;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.net.URLDecoder;
@@ -295,9 +294,6 @@ public class Utils {
     return ret;
   }
 
-  public static Color withAlpha(Color c, int alpha) {
-    return new Color(c.getRed(), c.getGreen(), c.getBlue(), alpha);
-  }
 
   public static String normalize(String s) {
     return s == null ? "" : trim(s);

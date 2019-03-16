@@ -21,8 +21,8 @@
  */
 package ox;
 
+import static com.google.common.base.Preconditions.checkState;
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
-import static java.net.Proxy.Type.HTTP;
 import static ox.util.Utils.urlEncode;
 
 import java.io.BufferedInputStream;
@@ -49,6 +49,7 @@ import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.Proxy;
+import java.net.Proxy.Type;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.ByteBuffer;
@@ -700,9 +701,7 @@ public class HttpRequest {
 
   private long totalWritten = 0;
 
-  private String httpProxyHost;
-
-  private int httpProxyPort;
+  private Proxy proxy = null;
 
   private UploadProgress progress = UploadProgress.DEFAULT;
 
@@ -722,15 +721,11 @@ public class HttpRequest {
     this.requestMethod = method;
   }
 
-  private Proxy createProxy() {
-    return new Proxy(HTTP, new InetSocketAddress(httpProxyHost, httpProxyPort));
-  }
-
   private HttpURLConnection createConnection() {
     try {
       final HttpURLConnection connection;
-      if (httpProxyHost != null) {
-        connection = CONNECTION_FACTORY.create(url, createProxy());
+      if (proxy != null) {
+        connection = CONNECTION_FACTORY.create(url, proxy);
       } else {
         connection = CONNECTION_FACTORY.create(url);
       }
@@ -811,7 +806,7 @@ public class HttpRequest {
     }
   }
 
-  public String body(final String charset) throws HttpRequestException {
+  public String getBody(final String charset) throws HttpRequestException {
     final ByteArrayOutputStream output = byteStream();
     try {
       copy(buffer(), output);
@@ -821,12 +816,12 @@ public class HttpRequest {
     }
   }
 
-  public String body() throws HttpRequestException {
-    return body(charset());
+  public String getBody() throws HttpRequestException {
+    return getBody(charset());
   }
 
-  public Json json() {
-    return new Json(body());
+  public Json toJson() {
+    return new Json(getBody());
   }
 
   public byte[] bytes() throws HttpRequestException {
@@ -1603,13 +1598,12 @@ public class HttpRequest {
   }
 
   public HttpRequest useProxy(final String proxyHost, final int proxyPort) {
-    if (connection != null) {
-      throw new IllegalStateException(
-          "The connection has already been created. This method must be called before reading or writing to the request.");
-    }
+    return proxy(new Proxy(Type.HTTP, new InetSocketAddress(proxyHost, proxyPort)));
+  }
 
-    this.httpProxyHost = proxyHost;
-    this.httpProxyPort = proxyPort;
+  public HttpRequest proxy(Proxy proxy) {
+    checkState(connection == null, "You must set the proxy before opening the connection.");
+    this.proxy = proxy;
     return this;
   }
 
@@ -1621,7 +1615,7 @@ public class HttpRequest {
   public HttpRequest checkStatus() {
     if (hasError()) {
       try {
-        Log.error(body());
+        Log.error(getBody());
       } catch (Throwable t) {
       }
       throw new IllegalStateException("Error status: " + status());
