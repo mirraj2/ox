@@ -42,7 +42,7 @@ public class Images {
   public static BufferedImage resize(BufferedImage bi, int w, int h) {
     BufferedImage ret = new BufferedImage(w, h, bi.getType());
 
-    while (bi.getWidth() > w * 2) {
+    while (bi.getWidth() > w * 2 + 1) {
       bi = resize(bi, bi.getWidth() / 2, bi.getHeight() / 2);
     }
 
