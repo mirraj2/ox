@@ -450,6 +450,8 @@ public class HttpRequest {
       result.setLength(result.length() - 1);
     }
 
+    // Log.debug(result);
+
     return result.toString();
   }
 

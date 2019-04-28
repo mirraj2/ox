@@ -104,7 +104,8 @@ public class Threads {
           try {
             callback.accept(o);
           } catch (Throwable t) {
-            t.printStackTrace();
+            // t.printStackTrace();
+            exception = t;
           } finally {
             lock.decrement();
           }
@@ -112,6 +113,9 @@ public class Threads {
       }
       lock.await();
       executor.shutdown();
+      if (exception != null) {
+        throw new RuntimeException(exception);
+      }
     }
   }
 
