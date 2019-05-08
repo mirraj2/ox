@@ -4,6 +4,7 @@ import static ox.util.Utils.isNullOrEmpty;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -71,6 +72,10 @@ public class Time {
 
   public static String longFormat(TemporalAccessor date) {
     return date == null ? "" : longFormat.format(date);
+  }
+
+  public static String format(LocalTime time) {
+    return format(time, "h:mm a");
   }
 
   public static String format(TemporalAccessor date, String format) {

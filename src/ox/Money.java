@@ -1,10 +1,11 @@
 package ox;
 
 import static ox.util.Utils.format;
-import static ox.util.Utils.money;
 import static ox.util.Utils.parseMoney;
 
 import java.util.function.Function;
+
+import ox.util.Utils;
 
 public class Money {
 
@@ -70,7 +71,7 @@ public class Money {
 
   @Override
   public String toString() {
-    return money(toDouble());
+    return Utils.money(toDouble());
   }
 
   public int getDollars() {
