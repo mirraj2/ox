@@ -4,6 +4,7 @@ import static ox.util.Functions.map;
 import static ox.util.Utils.parseEnum;
 
 import java.io.Reader;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -80,6 +81,11 @@ public class Json implements Iterable<String> {
   public <T extends Enum<T>> T getEnum(String key, Class<T> enumType) {
     String s = get(key);
     return s == null || s.isEmpty() ? null : parseEnum(s, enumType);
+  }
+
+  public LocalDate getDate(String key) {
+    String s = get(key);
+    return s == null || s.isEmpty() ? null : LocalDate.parse(s);
   }
 
   public Json getJson(String key) {
