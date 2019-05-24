@@ -442,7 +442,9 @@ public class HttpRequest {
         Object a = k, b = v;
         if (encode) {
           a = urlEncode(String.valueOf(k));
-          b = urlEncode(String.valueOf(v));
+          if (!(b instanceof Iterable)) {
+            b = urlEncode(String.valueOf(v));
+          }
         }
         addParam(a, b, result);
         result.append("&");
