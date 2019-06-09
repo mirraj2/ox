@@ -7,7 +7,7 @@ import java.util.function.Function;
 
 import ox.util.Utils;
 
-public class Money {
+public class Money implements Comparable<Money> {
 
   public static final Money ZERO = Money.dollars(0);
 
@@ -103,6 +103,11 @@ public class Money {
     }
     Money that = (Money) obj;
     return this.cents == that.cents;
+  }
+
+  @Override
+  public int compareTo(Money o) {
+    return this.cents - o.cents;
   }
 
   public static <T> Money sum(Iterable<T> items, Function<T, Money> mappingFunction) {
