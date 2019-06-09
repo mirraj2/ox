@@ -88,6 +88,11 @@ public class Json implements Iterable<String> {
     return s == null || s.isEmpty() ? null : LocalDate.parse(s);
   }
 
+  public Money getMoney(String key) {
+    String s = get(key);
+    return s == null || s.isEmpty() ? null : Money.parse(s);
+  }
+
   public Json getJson(String key) {
     JsonElement e = getElement(key);
     return e == null ? null : new Json(e);
