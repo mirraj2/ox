@@ -5,6 +5,8 @@ import static ox.util.Utils.parseMoney;
 
 import java.util.function.Function;
 
+import com.google.common.base.Functions;
+
 import ox.util.Utils;
 
 public class Money implements Comparable<Money> {
@@ -108,6 +110,10 @@ public class Money implements Comparable<Money> {
   @Override
   public int compareTo(Money o) {
     return this.cents - o.cents;
+  }
+
+  public static <T> Money sum(Iterable<Money> items) {
+    return sum(items, Functions.identity());
   }
 
   public static <T> Money sum(Iterable<T> items, Function<T, Money> mappingFunction) {

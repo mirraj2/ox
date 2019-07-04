@@ -178,7 +178,7 @@ public class Utils {
       return o.get();
     }
     for (T constant : enumType.getEnumConstants()) {
-      if (CharMatcher.javaLetterOrDigit().retainFrom(constant.toString()).equalsIgnoreCase(s)) {
+      if (Matchers.javaLetterOrDigit().retainFrom(constant.toString()).equalsIgnoreCase(s)) {
         return constant;
       }
     }
@@ -186,7 +186,7 @@ public class Utils {
   }
 
   public static boolean isValidPhoneNumber(String phoneNumber) {
-    String digits = CharMatcher.javaDigit().retainFrom(phoneNumber);
+    String digits = Matchers.javaDigit().retainFrom(phoneNumber);
     return digits.length() >= 10; // TODO
   }
 
@@ -205,7 +205,7 @@ public class Utils {
   }
 
   public static boolean isAlphaNumeric(String s) {
-    return CharMatcher.javaLetterOrDigit().matchesAllOf(s);
+    return Matchers.javaLetterOrDigit().matchesAllOf(s);
   }
 
   public static String trim(String s) {
