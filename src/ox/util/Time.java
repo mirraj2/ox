@@ -59,7 +59,11 @@ public class Time {
   }
 
   public static int daysSince(long timestamp) {
-    return (int) ChronoUnit.DAYS.between(Instant.ofEpochMilli(timestamp), Instant.now());
+    return daysSince(Instant.ofEpochMilli(timestamp));
+  }
+
+  public static int daysSince(Instant timestamp) {
+    return (int) ChronoUnit.DAYS.between(timestamp, Instant.now());
   }
 
   public static int minutesSince(long timestamp) {
