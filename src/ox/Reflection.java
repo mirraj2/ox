@@ -113,7 +113,7 @@ public class Reflection {
           value = ((java.sql.Date) value).toLocalDate();
         }
       } else if (type == Money.class && value instanceof Integer) {
-        value = Money.fromInt((Integer) value);
+        value = Money.fromLong((Integer) value);
       } else if (type == Instant.class && value instanceof Long) {
         value = Instant.ofEpochMilli((Long) value);
       }

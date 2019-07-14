@@ -2,6 +2,7 @@ package ox;
 
 import static ox.util.Utils.format;
 import static ox.util.Utils.parseMoney;
+import static ox.util.Utils.signum;
 
 import java.util.function.Function;
 
@@ -13,9 +14,9 @@ public class Money implements Comparable<Money> {
 
   public static final Money ZERO = Money.dollars(0);
 
-  private final int cents;
+  private final long cents;
 
-  private Money(int cents) {
+  private Money(long cents) {
     this.cents = cents;
   }
 
@@ -36,7 +37,7 @@ public class Money implements Comparable<Money> {
   }
 
   public Money multiply(double n) {
-    return new Money((int) (cents * n));
+    return new Money((long) (cents * n));
   }
 
   public Money divide(int n) {
@@ -63,7 +64,7 @@ public class Money implements Comparable<Money> {
     return this.cents == 0;
   }
 
-  public int toInt() {
+  public long toLong() {
     return cents;
   }
 
@@ -76,12 +77,12 @@ public class Money implements Comparable<Money> {
     return Utils.money(toDouble());
   }
 
-  public int getDollars() {
+  public long getDollars() {
     return cents / 100;
   }
 
   public int getCents() {
-    return Math.abs(cents % 100);
+    return (int) Math.abs(cents % 100);
   }
 
   public String dollarsFormatted() {
@@ -95,7 +96,7 @@ public class Money implements Comparable<Money> {
 
   @Override
   public int hashCode() {
-    return cents;
+    return Long.hashCode(cents);
   }
 
   @Override
@@ -109,7 +110,7 @@ public class Money implements Comparable<Money> {
 
   @Override
   public int compareTo(Money o) {
-    return this.cents - o.cents;
+    return signum(this.cents - o.cents);
   }
 
   public static <T> Money sum(Iterable<Money> items) {
@@ -117,27 +118,27 @@ public class Money implements Comparable<Money> {
   }
 
   public static <T> Money sum(Iterable<T> items, Function<T, Money> mappingFunction) {
-    int ret = 0;
+    long ret = 0;
     for (T item : items) {
-      ret += mappingFunction.apply(item).toInt();
+      ret += mappingFunction.apply(item).toLong();
     }
-    return fromInt(ret);
+    return fromLong(ret);
   }
 
   public static Money min(Money a, Money b) {
     return a.cents <= b.cents ? a : b;
   }
 
-  public static Money fromInt(int totalCents) {
+  public static Money fromLong(long totalCents) {
     return new Money(totalCents);
   }
 
-  public static Money dollars(int dollars) {
+  public static Money dollars(long dollars) {
     return new Money(dollars * 100);
   }
 
   public static Money fromDouble(Double d) {
-    return d == null ? null : fromInt((int) (d * 100));
+    return d == null ? null : fromLong((long) (d * 100));
   }
 
   public static Money parse(String s) {
