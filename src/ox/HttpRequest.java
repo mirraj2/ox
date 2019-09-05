@@ -1436,6 +1436,10 @@ public class HttpRequest {
     return send(stream);
   }
 
+  public HttpRequest send(Json json) {
+    return send(json.toString());
+  }
+
   public HttpRequest send(final byte[] input) throws HttpRequestException {
     if (input != null) {
       incrementTotalSize(input.length);

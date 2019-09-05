@@ -20,6 +20,11 @@ public class Log {
 
   public static final ZoneId PACIFIC_TIME = ZoneId.of("America/Los_Angeles");
 
+  /**
+   * If you're trying to find the source of a pesky log statement, set this to true.
+   */
+  private static final boolean debugMode = false;
+
   private static PrintStream originalOut = System.out;
   private static PrintStream originalErr = System.err;
 
@@ -71,6 +76,10 @@ public class Log {
   }
 
   private static void log(Object o, Object... args) {
+    if (debugMode) {
+      Thread.dumpStack();
+    }
+
     if (o == null) {
       o = "null";
     }
