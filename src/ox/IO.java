@@ -187,6 +187,10 @@ public class IO {
       return this;
     }
 
+    public void to(File folder, String fileName) {
+      to(new File(folder, fileName));
+    }
+
     public void to(File file) {
       if (o instanceof RenderedImage) {
         if (imageFormat == null) {
