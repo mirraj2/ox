@@ -16,6 +16,7 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -375,6 +376,13 @@ public class Utils {
 
   public static String uuid() {
     return UUID.randomUUID().toString().replace("-", "");
+  }
+
+  public static <T> void sort(List<T> list, Comparator<? super T> c) {
+    if (list.isEmpty()) {
+      return;
+    }
+    list.sort(c);
   }
 
   public static String regexMatch(String pattern, String document) {
