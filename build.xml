@@ -9,6 +9,8 @@
         <pathelement location="lib/gson-2.8.2.jar"/>
         <pathelement location="lib/guava-27.0.1-jre.jar"/>
         <pathelement location="lib/objenesis-2.1.jar"/>
+    	<pathelement location="lib/slf4j-api-1.7.2.jar"/>
+        <pathelement location="lib/slf4j-simple-1.7.2.jar"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>
