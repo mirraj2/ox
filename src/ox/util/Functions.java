@@ -15,7 +15,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
 
 public final class Functions {
 
@@ -47,6 +49,17 @@ public final class Functions {
 
   public static <K, V> Map<K, V> index(Iterable<V> input, Function<V, K> function) {
     return Maps.uniqueIndex(input, function::apply);
+  }
+
+  /**
+   * Unlike Multimaps.index, this allows 'null' keys and values.
+   */
+  public static <K, V> Multimap<K, V> indexMultimap(Iterable<V> input, Function<V, K> function) {
+    Multimap<K, V> ret = LinkedListMultimap.create();
+    for (V v : input) {
+      ret.put(function.apply(v), v);
+    }
+    return ret;
   }
 
   public static <T> List<T> filter(Iterable<T> input, Function<T, Boolean> filter) {
