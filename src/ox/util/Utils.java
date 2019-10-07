@@ -192,7 +192,13 @@ public class Utils {
   }
 
   public static String formatPhone(String phoneNumber) {
-    if (phoneNumber == null || phoneNumber.length() != 10) {
+    if (phoneNumber == null) {
+      return null;
+    }
+    if (phoneNumber.startsWith("+1")) {
+      phoneNumber = phoneNumber.substring(2);
+    }
+    if (phoneNumber.length() != 10) {
       return phoneNumber;
     }
     return "(" + phoneNumber.substring(0, 3) + ") " + phoneNumber.substring(3, 6) + "-" + phoneNumber.substring(6, 10);
