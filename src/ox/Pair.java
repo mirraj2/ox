@@ -19,4 +19,13 @@ public class Pair<A, B> {
     return "(" + a + "," + b + ")";
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || !(o instanceof Pair<?, ?>)) {
+      return false;
+    }
+    Pair<?, ?> other = (Pair<?, ?>) o;
+    return this.a.equals(other.a) && this.b.equals(other.b);
+  }
+
 }
