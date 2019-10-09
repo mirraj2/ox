@@ -1,5 +1,7 @@
 package ox;
 
+import com.google.common.base.Objects;
+
 public class Pair<A, B> {
 
   public final A a;
@@ -21,11 +23,11 @@ public class Pair<A, B> {
 
   @Override
   public boolean equals(Object o) {
-    if (o == null || !(o instanceof Pair<?, ?>)) {
+    if (!(o instanceof Pair<?, ?>)) {
       return false;
     }
-    Pair<?, ?> other = (Pair<?, ?>) o;
-    return this.a.equals(other.a) && this.b.equals(other.b);
+    Pair<?, ?> that = (Pair<?, ?>) o;
+    return Objects.equal(this.a, that.a) && Objects.equal(this.b, that.b);
   }
 
 }
