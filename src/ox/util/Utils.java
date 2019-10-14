@@ -391,6 +391,12 @@ public class Utils {
     list.sort(c);
   }
 
+  public static <T> Collection<T> removeNulls(Collection<T> c) {
+    while (c.remove(null)) {
+    }
+    return c;
+  }
+
   public static String regexMatch(String pattern, String document) {
     Pattern p = patternCache.computeIfAbsent(pattern, Pattern::compile);
     Matcher m = p.matcher(document);
