@@ -10,6 +10,7 @@ import java.lang.reflect.Type;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -105,6 +106,8 @@ public class Reflection {
           value = LocalDateTime.parse((String) value);
         } else if (type == Json.class) {
           value = new Json((String) value);
+        } else if (type == LocalTime.class) {
+          value = LocalTime.parse((String) value);
         } else if (type == UUID.class) {
           value = UUID.fromString((String) value);
         }
