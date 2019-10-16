@@ -57,7 +57,15 @@ public class Json implements Iterable<String> {
 
   public Integer getInt(String key) {
     String s = get(key);
-    return s == null || s.isEmpty() ? null : Integer.valueOf(s);
+    if (s == null || s.isEmpty()) {
+      return null;
+    } else {
+      try {
+        return Integer.valueOf(s);
+      } catch (NumberFormatException e) {
+        throw new NumberFormatException(String.format("Expected %s to be an integer, but was '%s'", key, s));
+      }
+    }
   }
 
   public Long getLong(String key) {
@@ -67,7 +75,15 @@ public class Json implements Iterable<String> {
 
   public Double getDouble(String key) {
     String s = get(key);
-    return s == null || s.isEmpty() ? null : Double.valueOf(s.replace(",", ""));
+    if (s == null || s.isEmpty()) {
+      return null;
+    } else {
+      try {
+        return Double.valueOf(s.replace(",", ""));
+      } catch (NumberFormatException e) {
+        throw new NumberFormatException(String.format("Expected %s to be a double, but was '%s'", key, s));
+      }
+    }
   }
 
   public Boolean getBoolean(String key) {
