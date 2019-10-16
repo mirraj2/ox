@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
+import java.util.Calendar;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
@@ -20,6 +21,7 @@ public class Time {
   public static final ZoneId PACIFIC_TIME = ZoneId.of("America/Los_Angeles");
   public static final ZoneId CENTRAL = ZoneId.of("US/Central");
   public static final ZoneId NEW_YORK = ZoneId.of("America/New_York");
+  public static final ZoneId SERVER_ZONE_ID = ZoneId.of(Calendar.getInstance().getTimeZone().getID());
 
   public static final DateTimeFormatter slashFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
   private static final DateTimeFormatter longFormat = DateTimeFormatter.ofPattern("MMM d, yyyy");
