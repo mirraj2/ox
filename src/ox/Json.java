@@ -5,6 +5,7 @@ import static ox.util.Utils.parseEnum;
 
 import java.io.Reader;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -102,6 +103,11 @@ public class Json implements Iterable<String> {
   public LocalDate getDate(String key) {
     String s = get(key);
     return s == null || s.isEmpty() ? null : LocalDate.parse(s);
+  }
+
+  public LocalTime getTime(String key) {
+    String s = get(key);
+    return s == null || s.isEmpty() ? null : LocalTime.parse(s);
   }
 
   public Money getMoney(String key) {
