@@ -1,5 +1,6 @@
 package ox.util;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static ox.util.Utils.isNullOrEmpty;
 
 import java.time.Instant;
@@ -20,6 +21,7 @@ public class Time {
   public static final ZoneId PACIFIC_TIME = ZoneId.of("America/Los_Angeles");
   public static final ZoneId CENTRAL = ZoneId.of("US/Central");
   public static final ZoneId NEW_YORK = ZoneId.of("America/New_York");
+  public static ZoneId DEFAULT_TIME_ZONE = PACIFIC_TIME;
 
   public static final DateTimeFormatter slashFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
   private static final DateTimeFormatter longFormat = DateTimeFormatter.ofPattern("MMM d, yyyy");
@@ -27,7 +29,7 @@ public class Time {
   private static final Map<String, DateTimeFormatter> formatCache = Maps.newHashMap();
 
   public static Instant timestamp(LocalDate date) {
-    return timestamp(date.atStartOfDay(PACIFIC_TIME));
+    return timestamp(date.atStartOfDay(DEFAULT_TIME_ZONE));
   }
 
   public static Instant timestamp(ZonedDateTime zdt) {
@@ -39,7 +41,7 @@ public class Time {
   }
 
   public static ZonedDateTime toDateTime(Instant instant) {
-    return instant.atZone(PACIFIC_TIME);
+    return instant.atZone(DEFAULT_TIME_ZONE);
   }
 
   public static LocalDate min(LocalDate a, LocalDate b) {
@@ -55,7 +57,7 @@ public class Time {
   }
 
   public static LocalDate now() {
-    return LocalDate.now(PACIFIC_TIME);
+    return LocalDate.now(DEFAULT_TIME_ZONE);
   }
 
   public static int daysSince(long timestamp) {
@@ -115,6 +117,10 @@ public class Time {
           .toFormatter();
     });
     return LocalDate.parse(s, dtf);
+  }
+
+  public static void setDefaultTimeZone(ZoneId zone) {
+    Time.DEFAULT_TIME_ZONE = checkNotNull(zone);
   }
 
 }
