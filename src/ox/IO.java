@@ -385,7 +385,11 @@ public class IO {
     }
 
     public Input zipInput() {
-      zipInput = true;
+      return zipInput(true);
+    }
+
+    public Input zipInput(boolean zipInput) {
+      this.zipInput = zipInput;
       return this;
     }
 
