@@ -259,6 +259,13 @@ public class Json implements Iterable<String> {
     arr().set(index, new JsonPrimitive(s));
     return this;
   }
+  
+  public Json remove(String...keys) {
+    for(String key : keys) {
+      remove(key);
+    }
+    return this;
+  }
 
   public Json remove(String s) {
     if (isArray()) {
