@@ -108,7 +108,7 @@ public class Utils {
   }
 
   public static double parsePercent(String s) {
-    return parseDouble(s.replace("%", ""));
+    return parseDouble(s.replace("%", "")) / 100.0;
   }
 
   public static String percent(double d) {
