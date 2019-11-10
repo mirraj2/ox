@@ -414,7 +414,11 @@ public class Utils {
     if (i == -1) {
       return "";
     }
-    return path.substring(i + 1);
+    String ret = path.substring(i + 1);
+    if (!Matchers.javaLetter().matchesAllOf(ret)) {
+      return "";
+    }
+    return ret;
   }
 
   public static void sleep(long millis) {
