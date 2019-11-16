@@ -51,6 +51,14 @@ public final class Functions {
     return Maps.uniqueIndex(input, function::apply);
   }
 
+  public static <K, V> Map<K, V> indexAllowNulls(Iterable<V> input, Function<V, K> function) {
+    Map<K, V> ret = Maps.newHashMap();
+    for (V v : input) {
+      ret.put(function.apply(v), v);
+    }
+    return ret;
+  }
+
   /**
    * Unlike Multimaps.index, this allows 'null' keys and values.
    */
