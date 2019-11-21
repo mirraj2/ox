@@ -15,7 +15,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 
@@ -45,6 +47,13 @@ public final class Functions {
       ret.add(function.apply(element));
     }
     return ret;
+  }
+
+  public static <V> Iterable<V> reverse(Iterable<V> iter) {
+    if (iter instanceof List) {
+      return Lists.reverse((List<V>) iter);
+    }
+    return Lists.reverse(ImmutableList.copyOf(iter));
   }
 
   public static <K, V> Map<K, V> index(Iterable<V> input, Function<V, K> function) {
