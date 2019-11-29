@@ -100,7 +100,12 @@ public class Utils {
     if (isNullOrEmpty(s)) {
       return null;
     }
-    double ret = parseDouble(moneyMatcher.removeFrom(s));
+    double ret;
+    try {
+      ret = parseDouble(moneyMatcher.removeFrom(s));
+    } catch (Throwable t) {
+      throw new RuntimeException("Couldn't parse money: " + s);
+    }
     if (s.charAt(0) == '-' || s.charAt(0) == '–' || s.charAt(0) == '(') {
       ret = -ret;
     }
