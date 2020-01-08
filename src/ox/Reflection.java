@@ -115,6 +115,8 @@ public class Reflection {
         if (type == LocalDate.class) {
           value = ((java.sql.Date) value).toLocalDate();
         }
+      } else if (type == Money.class && value instanceof Long) {
+        value = Money.fromLong((Long) value);
       } else if (type == Money.class && value instanceof Integer) {
         value = Money.fromLong((Integer) value);
       } else if (type == Instant.class && value instanceof Long) {
