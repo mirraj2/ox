@@ -1198,7 +1198,7 @@ public class HttpRequest {
     return contentLength(Integer.parseInt(contentLength));
   }
 
-  public HttpRequest contentLength(final int contentLength) {
+  public HttpRequest contentLength(final long contentLength) {
     getConnection().setFixedLengthStreamingMode(contentLength);
     return this;
   }
@@ -1273,11 +1273,10 @@ public class HttpRequest {
     if (output != null) {
       return this;
     }
-    getConnection().setDoOutput(true);
-    final String charset = getParam(
-        getConnection().getRequestProperty(HEADER_CONTENT_TYPE), PARAM_CHARSET);
-    output = new RequestOutputStream(getConnection().getOutputStream(), charset,
-        bufferSize);
+    HttpURLConnection conn = getConnection();
+    conn.setDoOutput(true);
+    final String charset = getParam(conn.getRequestProperty(HEADER_CONTENT_TYPE), PARAM_CHARSET);
+    output = new RequestOutputStream(conn.getOutputStream(), charset, bufferSize);
     return this;
   }
 
