@@ -42,9 +42,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
-import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
@@ -912,17 +910,6 @@ public class HttpRequest {
     }.call();
   }
 
-  public HttpRequest receive(final Writer writer) throws HttpRequestException {
-    final BufferedReader reader = bufferedReader();
-    return new CloseOperation<HttpRequest>(reader, ignoreCloseExceptions) {
-
-      @Override
-      public HttpRequest run() throws IOException {
-        return copy(reader, writer);
-      }
-    }.call();
-  }
-
   public HttpRequest readTimeout(final int timeout) {
     getConnection().setReadTimeout(timeout);
     return this;
@@ -1230,31 +1217,7 @@ public class HttpRequest {
 
       @Override
       public HttpRequest run() throws IOException {
-        final byte[] buffer = new byte[bufferSize];
-        int read;
-        while ((read = input.read(buffer)) != -1) {
-          output.write(buffer, 0, read);
-          totalWritten += read;
-          progress.onUpload(totalWritten, totalSize);
-        }
-        return HttpRequest.this;
-      }
-    }.call();
-  }
-
-  protected HttpRequest copy(final Reader input, final Writer output)
-      throws IOException {
-    return new CloseOperation<HttpRequest>(input, ignoreCloseExceptions) {
-
-      @Override
-      public HttpRequest run() throws IOException {
-        final char[] buffer = new char[bufferSize];
-        int read;
-        while ((read = input.read(buffer)) != -1) {
-          output.write(buffer, 0, read);
-          totalWritten += read;
-          progress.onUpload(totalWritten, -1);
-        }
+        IO.from(input).to(output);
         return HttpRequest.this;
       }
     }.call();
@@ -1455,23 +1418,6 @@ public class HttpRequest {
       throw new HttpRequestException(e);
     }
     return this;
-  }
-
-  public HttpRequest send(final Reader input) throws HttpRequestException {
-    try {
-      openOutput();
-    } catch (IOException e) {
-      throw new HttpRequestException(e);
-    }
-    final Writer writer = new OutputStreamWriter(output,
-        output.encoder.charset());
-    return new FlushOperation<HttpRequest>(writer) {
-
-      @Override
-      protected HttpRequest run() throws IOException {
-        return copy(input, writer);
-      }
-    }.call();
   }
 
   public HttpRequest send(final CharSequence value) throws HttpRequestException {
