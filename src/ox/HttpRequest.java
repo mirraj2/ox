@@ -1214,10 +1214,9 @@ public class HttpRequest {
   protected HttpRequest copy(final InputStream input, final OutputStream output)
       throws IOException {
     return new CloseOperation<HttpRequest>(input, ignoreCloseExceptions) {
-
       @Override
       public HttpRequest run() throws IOException {
-        IO.from(input).to(output);
+        IO.from(input).keepOutputAlive().to(output);
         return HttpRequest.this;
       }
     }.call();
