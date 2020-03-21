@@ -91,6 +91,18 @@ public class Reflection {
     }
   }
 
+  /**
+   * Sets a static field.
+   */
+  public static void set(Class<?> c, String fieldName, Object value) {
+    Field field = getField(c, fieldName);
+    try {
+      field.set(null, value);
+    } catch (IllegalArgumentException | IllegalAccessException e) {
+      throw propagate(e);
+    }
+  }
+
   @SuppressWarnings({ "unchecked", "rawtypes" })
   public static void set(Object o, String fieldName, Object value) {
     Field field = getField(o.getClass(), fieldName);
