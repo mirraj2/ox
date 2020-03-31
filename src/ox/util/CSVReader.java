@@ -1,6 +1,7 @@
 package ox.util;
 
 import static ox.util.Utils.propagate;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,6 +11,7 @@ import java.io.StringReader;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -105,6 +107,10 @@ public class CSVReader {
     sb.setLength(0);
     lastSize = ret.size();
     return ret;
+  }
+
+  public static CSVReader from(InputStream is) {
+    return new CSVReader(is);
   }
 
 }
