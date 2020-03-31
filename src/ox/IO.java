@@ -45,6 +45,7 @@ import javax.net.ssl.X509TrustManager;
 import com.google.common.base.Charsets;
 import com.google.common.io.ByteStreams;
 
+import ox.util.CSVReader;
 import ox.util.Images;
 
 public class IO {
@@ -268,6 +269,10 @@ public class IO {
       StringSelection stringSelection = new StringSelection(toString());
       Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
       clipboard.setContents(stringSelection, null);
+    }
+
+    public CSVReader toCSV() {
+      return CSVReader.from(asStream());
     }
 
     @Override

@@ -1,16 +1,21 @@
 package ox;
 
+import static com.google.common.base.Preconditions.checkState;
 import static ox.util.Utils.propagate;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -19,6 +24,8 @@ import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import ox.util.Utils;
@@ -217,6 +224,44 @@ public class Reflection {
     } else {
       return null;
     }
+  }
+
+  public static List<Class<?>> findClasses(String packageName) {
+    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+    Enumeration<URL> resources;
+    try {
+      resources = classLoader.getResources(packageName.replace('.', '/'));
+    } catch (IOException e) {
+      throw propagate(e);
+    }
+    List<File> dirs = Lists.newArrayList();
+    Iterators.forEnumeration(resources).forEachRemaining(url -> {
+      dirs.add(new File(url.getFile()));
+    });
+    List<Class<?>> classes = Lists.newArrayList();
+    for (File directory : dirs) {
+      classes.addAll(findClasses(directory, packageName));
+    }
+    return classes;
+  }
+
+  private static List<Class<?>> findClasses(File dir, String packageName) {
+    List<Class<?>> classes = Lists.newArrayList();
+    for (File file : dir.listFiles()) {
+      String name = file.getName();
+      if (file.isDirectory()) {
+        checkState(!name.contains("."));
+        classes.addAll(findClasses(file, packageName + "." + name));
+      } else if (name.endsWith(".class")) {
+        try {
+          String s = packageName + '.' + name.substring(0, name.length() - 6);
+          classes.add(Class.forName(s));
+        } catch (ClassNotFoundException e) {
+          throw propagate(e);
+        }
+      }
+    }
+    return classes;
   }
 
 }

@@ -43,6 +43,17 @@ public class CSVReader {
     return this;
   }
 
+  public CSVReader skipLines(int nLines) {
+    for (int i = 0; i < nLines; i++) {
+      try {
+        br.readLine();
+      } catch (IOException e) {
+        throw propagate(e);
+      }
+    }
+    return this;
+  }
+
   public Map<String, Integer> getHeaderIndex() {
     Map<String, Integer> ret = Maps.newHashMap();
     List<String> row = nextLine();
