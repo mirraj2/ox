@@ -55,7 +55,7 @@ public class CSVReader {
   }
 
   public Map<String, Integer> getHeaderIndex() {
-    Map<String, Integer> ret = Maps.newHashMap();
+    Map<String, Integer> ret = Maps.newLinkedHashMap();
     List<String> row = nextLine();
     for (int i = 0; i < row.size(); i++) {
       ret.put(row.get(i), i);

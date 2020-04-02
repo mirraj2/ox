@@ -106,6 +106,19 @@ public class Time {
     return LocalDate.parse(s, format);
   }
 
+  /**
+   * Attempts to try each of the given formats to parse the date.
+   */
+  public static LocalDate parseDate(String s, String... formats) {
+    for (String format : formats) {
+      try {
+        return parseDate(s, format);
+      } catch (Exception e) {
+      }
+    }
+    throw new RuntimeException(s + " could not be parsed with any of the formats: " + formats);
+  }
+
   public static LocalDate parseDate(String s, String format) {
     if (isNullOrEmpty(s)) {
       return null;
