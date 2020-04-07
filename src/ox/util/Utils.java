@@ -37,6 +37,8 @@ import ox.Money;
 
 public class Utils {
 
+  private static final CharMatcher whiteSpace = CharMatcher.whitespace().or(CharMatcher.is('\0')).precomputed();
+
   private static final Pattern emailPattern = Pattern.compile(
       "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\." +
           "[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$");
@@ -221,7 +223,7 @@ public class Utils {
   }
 
   public static String trim(String s) {
-    return CharMatcher.whitespace().trimFrom(s);
+    return whiteSpace.trimFrom(s);
   }
 
   public static String urlEncode(String s) {
