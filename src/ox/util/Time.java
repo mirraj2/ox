@@ -132,6 +132,10 @@ public class Time {
     return LocalDate.parse(s, dtf);
   }
 
+  public static LocalTime parseTime(String s) {
+    return LocalTime.parse(s, DateTimeFormatter.ofPattern("h:mm a"));
+  }
+
   public static void setDefaultTimeZone(ZoneId zone) {
     Time.DEFAULT_TIME_ZONE = checkNotNull(zone);
   }
