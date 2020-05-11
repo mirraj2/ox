@@ -92,6 +92,12 @@ public final class Functions {
     return ret;
   }
 
+  @SuppressWarnings("unchecked")
+  public static <T, F extends T> List<F> filter(Iterable<T> input, Class<F> classFilter) {
+    checkNotNull(classFilter);
+    return (List<F>) filter(input, t -> t != null && classFilter.isAssignableFrom(t.getClass()));
+  }
+
   public static double sum(Iterable<? extends Number> input) {
     double ret = 0;
     for (Number n : input) {

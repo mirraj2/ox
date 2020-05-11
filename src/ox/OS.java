@@ -1,7 +1,11 @@
 package ox;
 
 import static com.google.common.base.Preconditions.checkState;
+import static ox.util.Utils.propagate;
+
+import java.awt.Desktop;
 import java.io.File;
+import java.io.IOException;
 
 public final class OS {
   public static enum OS_Type {
@@ -94,6 +98,14 @@ public final class OS {
 
   public static String getUserName() {
     return System.getProperty("user.name");
+  }
+
+  public static void open(File file) {
+    try {
+      Desktop.getDesktop().open(file);
+    } catch (IOException e) {
+      throw propagate(e);
+    }
   }
 
 }

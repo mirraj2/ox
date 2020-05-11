@@ -379,6 +379,11 @@ public class Json implements Iterable<String> {
     return gson.toJson(e);
   }
 
+  public Json log() {
+    Log.debug(prettyPrint());
+    return this;
+  }
+
   public boolean isArray() {
     return e instanceof JsonArray;
   }
@@ -481,6 +486,16 @@ public class Json implements Iterable<String> {
     Json ret = Json.array();
     if (data != null) {
       for (long n : data) {
+        ret.add(n);
+      }
+    }
+    return ret;
+  }
+
+  public static Json array(int[] data) {
+    Json ret = Json.array();
+    if (data != null) {
+      for (int n : data) {
         ret.add(n);
       }
     }
