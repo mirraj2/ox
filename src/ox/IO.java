@@ -157,7 +157,7 @@ public class IO {
     private InputStream is;
     private OutputStream os;
     private boolean zipInput, gzipInput, gzipOutput;
-    private String imageFormat;
+    private String imageFormat = "";
     private boolean keepOutputAlive = false, keepInputAlive = false;
     private Integer timeout = null;
     private String method;
@@ -312,6 +312,7 @@ public class IO {
       }
     }
 
+    @SuppressWarnings("resource")
     public InputStream asStream() {
       try {
         InputStream ret = null;
@@ -319,6 +320,11 @@ public class IO {
           ret = (InputStream) o;
         } else if (o instanceof URL) {
           ret = asStream((URL) o);
+        } else if (o instanceof RenderedImage) {
+          // we could maybe use a PipedInputStream to be more efficient
+          ByteArrayOutputStream baos = new ByteArrayOutputStream();
+          ImageIO.write((RenderedImage) o, imageFormat.isEmpty() ? "jpg" : "png", baos);
+          ret = new ByteArrayInputStream(baos.toByteArray());
         }
         if (ret == null) {
           throw new RuntimeException("Don't know how to turn " + o.getClass() + " into a stream.");

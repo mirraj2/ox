@@ -1,8 +1,10 @@
 package ox;
 
+import static ox.util.Utils.only;
 import static ox.util.Utils.propagate;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -10,6 +12,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+
+import com.google.common.collect.Lists;
 
 public class Threads {
 
@@ -97,6 +101,7 @@ public class Threads {
     }
 
     public void run(Consumer<T> callback) {
+      List<Throwable> exceptions = Lists.newCopyOnWriteArrayList();
       Lock lock = new Lock();
       for (T o : input) {
         lock.increment();
@@ -104,8 +109,8 @@ public class Threads {
           try {
             callback.accept(o);
           } catch (Throwable t) {
-            // t.printStackTrace();
-            exception = t;
+            Log.error("Problem with input: " + o);
+            exceptions.add(t);
           } finally {
             lock.decrement();
           }
@@ -113,8 +118,12 @@ public class Threads {
       }
       lock.await();
       executor.shutdown();
-      if (exception != null) {
-        throw new RuntimeException(exception);
+      if (!exceptions.isEmpty()) {
+        if (exceptions.size() == 1) {
+          throw new RuntimeException(only(exceptions));
+        }
+        exceptions.forEach(Throwable::printStackTrace);
+        throw new RuntimeException("Found " + exceptions.size() + " exceptions.");
       }
     }
   }
