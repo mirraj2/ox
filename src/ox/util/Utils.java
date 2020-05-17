@@ -416,6 +416,16 @@ public class Utils {
     return m.group(1);
   }
 
+  public static List<String> regexMatches(String pattern, String document) {
+    Pattern p = patternCache.computeIfAbsent(pattern, Pattern::compile);
+    Matcher m = p.matcher(document);
+    List<String> ret = Lists.newArrayList();
+    while (m.find()) {
+      ret.add(m.group());
+    }
+    return ret;
+  }
+
   public static String getExtension(String path) {
     int i = path.lastIndexOf(".");
     if (i == -1) {
