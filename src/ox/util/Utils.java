@@ -404,6 +404,9 @@ public class Utils {
     return c;
   }
 
+  /**
+   * Gets the first match for the given pattern.
+   */
   public static String regexMatch(String pattern, String document) {
     Pattern p = patternCache.computeIfAbsent(pattern, Pattern::compile);
     Matcher m = p.matcher(document);
@@ -416,12 +419,19 @@ public class Utils {
     return m.group(1);
   }
 
+  /**
+   * Gets all matches for the given pattern.
+   */
   public static List<String> regexMatches(String pattern, String document) {
     Pattern p = patternCache.computeIfAbsent(pattern, Pattern::compile);
     Matcher m = p.matcher(document);
     List<String> ret = Lists.newArrayList();
     while (m.find()) {
-      ret.add(m.group());
+      if (m.groupCount() == 0) {
+        ret.add(m.group());
+      } else {
+        ret.add(m.group(1));
+      }
     }
     return ret;
   }
