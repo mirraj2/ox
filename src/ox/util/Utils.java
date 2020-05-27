@@ -10,6 +10,7 @@ import static java.lang.Long.parseLong;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
@@ -98,18 +99,18 @@ public class Utils {
     return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
   }
 
-  public static Double parseMoney(String s) {
+  public static BigDecimal parseMoney(String s) {
     if (isNullOrEmpty(s)) {
       return null;
     }
-    double ret;
+    BigDecimal ret;
     try {
-      ret = parseDouble(moneyMatcher.removeFrom(s));
+      ret = new BigDecimal(moneyMatcher.removeFrom(s));
     } catch (Throwable t) {
       throw new RuntimeException("Couldn't parse money: " + s);
     }
     if (s.charAt(0) == '-' || s.charAt(0) == '–' || s.charAt(0) == '(') {
-      ret = -ret;
+      ret = ret.negate();
     }
     return ret;
   }

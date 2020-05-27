@@ -37,6 +37,7 @@ public class Time {
   }
 
   public static LocalDate toDate(Instant instant) {
+    // TODO LocalDate.ofInstant() once we are on java9
     return instant == null ? null : toDateTime(instant).toLocalDate();
   }
 

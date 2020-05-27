@@ -4,6 +4,7 @@ import static ox.util.Utils.format;
 import static ox.util.Utils.parseMoney;
 import static ox.util.Utils.signum;
 
+import java.math.BigDecimal;
 import java.util.function.Function;
 
 import com.google.common.base.Functions;
@@ -142,7 +143,7 @@ public class Money implements Comparable<Money> {
   }
 
   public static Money parse(String s) {
-    return fromDouble(parseMoney(s));
+    return fromLong(parseMoney(s).multiply(new BigDecimal(100)).longValueExact());
   }
 
 }
