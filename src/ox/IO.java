@@ -18,7 +18,6 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -65,11 +64,11 @@ public class IO {
     return from(new ByteArrayInputStream(data));
   }
 
-  public static Input from(File parent, String childName) {
-    return from(new File(parent, childName));
+  public static Input from(File file) {
+    return from(file.file);
   }
 
-  public static Input from(File file) {
+  public static Input from(java.io.File file) {
     try {
       Input ret = from(new FileInputStream(file));
       if (file.getName().endsWith(".gzip") || file.getName().endsWith(".gz")) {
@@ -188,8 +187,8 @@ public class IO {
       return this;
     }
 
-    public void to(File folder, String fileName) {
-      to(new File(folder, fileName));
+    public void to(java.io.File file) {
+      to(File.of(file));
     }
 
     public void to(File file) {
@@ -202,7 +201,7 @@ public class IO {
         gzipOutput = true;
       }
       try {
-        to(new FileOutputStream(file));
+        to(new FileOutputStream(file.file));
       } catch (FileNotFoundException e) {
         throw propagate(e);
       }
@@ -273,6 +272,10 @@ public class IO {
 
     public CSVReader toCSV() {
       return CSVReader.from(asStream());
+    }
+
+    public void toLog() {
+      Log.debug(toString());
     }
 
     @Override
@@ -450,12 +453,11 @@ public class IO {
     }
 
     private static String getImageType(File file) {
-      String s = file.getPath();
-      int i = s.lastIndexOf(".");
-      if (i == -1) {
-        return "png";
+      String ret = file.extension();
+      if (ret.isEmpty()) {
+        ret = "png";
       }
-      return s.substring(i + 1);
+      return ret;
     }
   }
 
