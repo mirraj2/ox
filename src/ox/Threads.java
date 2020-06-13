@@ -60,6 +60,7 @@ public class Threads {
     private Iterable<T> input;
     private final ExecutorService executor;
     private Throwable exception;
+    private boolean failFast = false;
 
     private Parallelizer(int numThreads) {
       executor = Executors.newFixedThreadPool(numThreads);
@@ -109,6 +110,9 @@ public class Threads {
           try {
             callback.accept(o);
           } catch (Throwable t) {
+            if (failFast) {
+              t.printStackTrace();
+            }
             Log.error("Problem with input: " + o);
             exceptions.add(t);
           } finally {
@@ -125,6 +129,11 @@ public class Threads {
         exceptions.forEach(Throwable::printStackTrace);
         throw new RuntimeException("Found " + exceptions.size() + " exceptions.");
       }
+    }
+
+    public Parallelizer<T> failFast() {
+      this.failFast = true;
+      return this;
     }
   }
 
