@@ -79,6 +79,15 @@ public final class Functions {
     return ret;
   }
 
+  public static <K1, K2, V1, V2> Multimap<K2, V2> transformMultimap(Multimap<K1, V1> multimap,
+      Function<K1, K2> keyFunction, Function<V1, V2> valueFunction) {
+    Multimap<K2, V2> ret = LinkedListMultimap.create();
+    multimap.forEach((k, v) -> {
+      ret.put(keyFunction.apply(k), valueFunction.apply(v));
+    });
+    return ret;
+  }
+
   public static <T> List<T> filter(Iterable<T> input, Function<T, Boolean> filter) {
     checkNotNull(input, "input");
     checkNotNull(filter, "filter");
