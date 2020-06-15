@@ -66,6 +66,9 @@ public class File {
   }
 
   public File delete() {
+    if (!file.exists()) {
+      return this;
+    }
     checkState(file.delete());
     return this;
   }
