@@ -443,7 +443,7 @@ public class Utils {
       return "";
     }
     String ret = path.substring(i + 1);
-    if (!Matchers.javaLetter().matchesAllOf(ret)) {
+    if (!Matchers.javaLetterOrDigit().matchesAllOf(ret)) {
       return "";
     }
     return ret;
