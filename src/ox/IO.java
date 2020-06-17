@@ -222,17 +222,10 @@ public class IO {
           ImageIO.write(r, imageFormat, os);
         } else {
           ByteStreams.copy(asStream(), os);
-          Log.error(Thread.currentThread().getId() + "::" + "IO COPY COMPLETE");
-          Thread.dumpStack();
         }
-        Log.error("REACHED END of IO.to()");
       } catch (IOException e) {
-        Log.error(Thread.currentThread().getId() + "::" + "IO ERROR");
-        e.printStackTrace();
         throw propagate(e);
       } finally {
-        Log.error(Thread.currentThread().getId() + "::" + "IO FINISH");
-        Thread.dumpStack();
         finish();
       }
     }
