@@ -31,6 +31,11 @@ public class File {
     return file.exists();
   }
 
+  public File rename(File toName) {
+    file.renameTo(toName.file);
+    return this;
+  }
+
   public File parent() {
     return new File(file.getParentFile());
   }
@@ -89,6 +94,10 @@ public class File {
   @Override
   public String toString() {
     return getPath();
+  }
+
+  public void openUI() {
+    OS.open(file);
   }
 
   public static File desktop() {
