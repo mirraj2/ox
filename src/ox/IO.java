@@ -224,8 +224,10 @@ public class IO {
           ByteStreams.copy(asStream(), os);
           Log.error(Thread.currentThread().getId() + "::" + "IO COPY COMPLETE");
         }
+        Log.error("REACHED END of IO.to()");
       } catch (IOException e) {
         Log.error(Thread.currentThread().getId() + "::" + "IO ERROR");
+        e.printStackTrace();
         throw propagate(e);
       } finally {
         Log.error(Thread.currentThread().getId() + "::" + "IO FINISH");
