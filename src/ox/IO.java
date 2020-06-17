@@ -222,10 +222,13 @@ public class IO {
           ImageIO.write(r, imageFormat, os);
         } else {
           ByteStreams.copy(asStream(), os);
+          Log.error(Thread.currentThread().getId() + "::" + "IO COPY COMPLETE");
         }
       } catch (IOException e) {
+        Log.error(Thread.currentThread().getId() + "::" + "IO ERROR");
         throw propagate(e);
       } finally {
+        Log.error(Thread.currentThread().getId() + "::" + "IO FINISH");
         finish();
       }
     }
