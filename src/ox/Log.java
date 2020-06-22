@@ -15,6 +15,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import ox.util.SplitOutputStream;
+import ox.util.Time;
 
 public class Log {
 
@@ -30,6 +31,8 @@ public class Log {
 
   private static PrintStream out = originalOut;
 
+  private static OutputStream lastFileOutput = null;
+
   private static File logFolder;
   private static LocalDate currentLogDate;
 
@@ -37,7 +40,7 @@ public class Log {
     logFolder = folder;
     logFolder.mkdirs();
 
-    currentLogDate = LocalDate.now(PACIFIC_TIME);
+    currentLogDate = LocalDate.now(Time.DEFAULT_TIME_ZONE);
     logToFile(new File(logFolder, currentLogDate + ".log"));
 
     ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
@@ -51,7 +54,7 @@ public class Log {
   }
 
   private static void rolloverLog() {
-    LocalDate now = LocalDate.now(PACIFIC_TIME);
+    LocalDate now = LocalDate.now(Time.DEFAULT_TIME_ZONE);
     if (now.equals(currentLogDate)) {
       return;
     }
@@ -60,12 +63,17 @@ public class Log {
     logToFile(new File(logFolder, currentLogDate + ".log"));
   }
 
-  private static void logToFile(File file) {
+  private static synchronized void logToFile(File file) {
     try {
       OutputStream os = new BufferedOutputStream(new FileOutputStream(file, true));
       System.setOut(new PrintStream(new SplitOutputStream(originalOut, os)));
       System.setErr(new PrintStream(new SplitOutputStream(originalErr, os)));
       out = System.out;
+
+      if (lastFileOutput != null) {
+        IO.close(lastFileOutput);
+      }
+      lastFileOutput = os;
     } catch (Exception e) {
       throw propagate(e);
     }

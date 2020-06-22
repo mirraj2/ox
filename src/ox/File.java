@@ -62,7 +62,9 @@ public class File {
   }
 
   public List<File> children() {
-    return map(file.listFiles(), File::new);
+    java.io.File[] files = file.listFiles();
+    checkState(files != null, file + " does not exist.");
+    return map(files, File::new);
   }
 
   public File mkdirs() {
