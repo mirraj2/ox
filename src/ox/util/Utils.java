@@ -448,6 +448,19 @@ public class Utils {
     }
     return ret;
   }
+  
+  /**
+   * 5 "apple" would return "5 apples"<br>
+   * 1 "apple" would return "1 apple"
+   */
+  public static final String plural(long count, String word) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(count).append(' ').append(word);
+    if (count != 1) {
+      sb.append('s');
+    }
+    return sb.toString();
+  }
 
   public static void sleep(long millis) {
     try {
