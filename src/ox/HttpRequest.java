@@ -766,7 +766,7 @@ public class HttpRequest {
   }
 
   protected ByteArrayOutputStream byteStream() {
-    final int size = contentLength();
+    final int size = Math.toIntExact(contentLength());
     if (size > 0) {
       return new ByteArrayOutputStream(size);
     } else {
@@ -970,6 +970,15 @@ public class HttpRequest {
       throws HttpRequestException {
     closeOutputQuietly();
     return getConnection().getHeaderFieldInt(name, defaultValue);
+  }
+
+  public Long longHeader(final String name) throws HttpRequestException {
+    closeOutputQuietly();
+    long ret = getConnection().getHeaderFieldLong(name, -1);
+    if (ret == -1) {
+      return null;
+    }
+    return ret;
   }
 
   public String[] headers(final String name) {
@@ -1190,8 +1199,8 @@ public class HttpRequest {
     return header(HEADER_CONTENT_TYPE);
   }
 
-  public int contentLength() {
-    return intHeader(HEADER_CONTENT_LENGTH);
+  public Long contentLength() {
+    return longHeader(HEADER_CONTENT_LENGTH);
   }
 
   public HttpRequest contentLength(final String contentLength) {
