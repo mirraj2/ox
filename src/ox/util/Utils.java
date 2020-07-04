@@ -437,6 +437,9 @@ public class Utils {
     return ret;
   }
 
+  /**
+   * "foo/bar/ack.png" -> "png"
+   */
   public static String getExtension(String path) {
     int i = path.lastIndexOf(".");
     if (i == -1) {

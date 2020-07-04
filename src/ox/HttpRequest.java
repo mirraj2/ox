@@ -487,12 +487,8 @@ public class HttpRequest {
     return result.toString();
   }
 
-  public static HttpRequest get(final CharSequence url)
+  public static HttpRequest get(final String url)
       throws HttpRequestException {
-    return new HttpRequest(url, METHOD_GET);
-  }
-
-  public static HttpRequest get(final URL url) throws HttpRequestException {
     return new HttpRequest(url, METHOD_GET);
   }
 
@@ -511,12 +507,8 @@ public class HttpRequest {
     return get(url);
   }
 
-  public static HttpRequest post(final CharSequence url)
+  public static HttpRequest post(final String url)
       throws HttpRequestException {
-    return new HttpRequest(url, METHOD_POST);
-  }
-
-  public static HttpRequest post(final URL url) throws HttpRequestException {
     return new HttpRequest(url, METHOD_POST);
   }
 
@@ -534,12 +526,8 @@ public class HttpRequest {
     return post(url);
   }
 
-  public static HttpRequest put(final CharSequence url)
+  public static HttpRequest put(final String url)
       throws HttpRequestException {
-    return new HttpRequest(url, METHOD_PUT);
-  }
-
-  public static HttpRequest put(final URL url) throws HttpRequestException {
     return new HttpRequest(url, METHOD_PUT);
   }
 
@@ -555,12 +543,8 @@ public class HttpRequest {
     return put(url);
   }
 
-  public static HttpRequest delete(final CharSequence url)
+  public static HttpRequest delete(final String url)
       throws HttpRequestException {
-    return new HttpRequest(url, METHOD_DELETE);
-  }
-
-  public static HttpRequest delete(final URL url) throws HttpRequestException {
     return new HttpRequest(url, METHOD_DELETE);
   }
 
@@ -576,21 +560,13 @@ public class HttpRequest {
     return delete(url);
   }
 
-  public static HttpRequest options(final CharSequence url)
+  public static HttpRequest options(final String url)
       throws HttpRequestException {
     return new HttpRequest(url, METHOD_OPTIONS);
   }
 
-  public static HttpRequest options(final URL url) throws HttpRequestException {
-    return new HttpRequest(url, METHOD_OPTIONS);
-  }
-
-  public static HttpRequest trace(final CharSequence url)
+  public static HttpRequest trace(final String url)
       throws HttpRequestException {
-    return new HttpRequest(url, METHOD_TRACE);
-  }
-
-  public static HttpRequest trace(final URL url) throws HttpRequestException {
     return new HttpRequest(url, METHOD_TRACE);
   }
 
@@ -651,6 +627,7 @@ public class HttpRequest {
 
   private HttpURLConnection connection = null;
 
+  public final String rawUrl;
   private final URL url;
 
   private final String requestMethod;
@@ -673,9 +650,10 @@ public class HttpRequest {
 
   private UploadProgress progress = UploadProgress.DEFAULT;
 
-  public HttpRequest(final CharSequence url, final String method)
+  public HttpRequest(final String url, final String method)
       throws HttpRequestException {
     try {
+      this.rawUrl = url;
       this.url = new URL(url.toString());
     } catch (MalformedURLException e) {
       throw new HttpRequestException(e);
@@ -683,11 +661,11 @@ public class HttpRequest {
     this.requestMethod = method;
   }
 
-  public HttpRequest(final URL url, final String method)
-      throws HttpRequestException {
-    this.url = url;
-    this.requestMethod = method;
-  }
+  // public HttpRequest(final URL url, final String method)
+  // throws HttpRequestException {
+  // this.url = url;
+  // this.requestMethod = method;
+  // }
 
   private HttpURLConnection createConnection() {
     try {
