@@ -744,9 +744,9 @@ public class HttpRequest {
   }
 
   protected ByteArrayOutputStream byteStream() {
-    final int size = Math.toIntExact(contentLength());
-    if (size > 0) {
-      return new ByteArrayOutputStream(size);
+    Long length = contentLength();
+    if (length != null && length > 0) {
+      return new ByteArrayOutputStream(Math.toIntExact(length));
     } else {
       return new ByteArrayOutputStream();
     }
