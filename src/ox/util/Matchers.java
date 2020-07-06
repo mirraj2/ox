@@ -24,6 +24,10 @@ public class Matchers {
     return JAVA_UPPERCASE;
   }
 
+  public static CharMatcher whitespace() {
+    return CharMatcher.whitespace();
+  }
+
   private static final CharMatcher JAVA_DIGIT = new CharMatcher() {
     @Override
     public boolean matches(char c) {
