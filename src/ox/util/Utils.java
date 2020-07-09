@@ -393,7 +393,7 @@ public class Utils {
   }
 
   public static <T> void sort(List<T> list, Comparator<? super T> c) {
-    if (list.isEmpty()) {
+    if (list.size() < 2) {
       return;
     }
     list.sort(c);
