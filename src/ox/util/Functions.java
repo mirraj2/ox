@@ -79,6 +79,15 @@ public final class Functions {
     return ret;
   }
 
+  public static <K, V, T> Multimap<K, V> buildMultimap(Iterable<T> input, Function<T, K> keyFunction,
+      Function<T, V> valueFunction) {
+    Multimap<K, V> ret = LinkedListMultimap.create();
+    for (T t : input) {
+      ret.put(keyFunction.apply(t), valueFunction.apply(t));
+    }
+    return ret;
+  }
+
   public static <K1, K2, V1, V2> Multimap<K2, V2> transformMultimap(Multimap<K1, V1> multimap,
       Function<K1, K2> keyFunction, Function<V1, V2> valueFunction) {
     Multimap<K2, V2> ret = LinkedListMultimap.create();
