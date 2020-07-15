@@ -7,10 +7,13 @@ import static ox.util.Utils.propagate;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
 import com.google.common.base.Predicate;
+import com.google.common.hash.Hashing;
+import com.google.common.io.Files;
 
 public class File {
 
@@ -122,6 +125,14 @@ public class File {
     }
   }
 
+  public String hash() {
+    try {
+      return Files.asByteSource(file).hash(Hashing.sha256()).toString();
+    } catch (IOException e) {
+      throw propagate(e);
+    }
+  }
+
   public static File desktop() {
     return new File(OS.getDesktop());
   }
@@ -136,6 +147,14 @@ public class File {
 
   public static File downloads(String child) {
     return downloads().child(child);
+  }
+
+  public static File temp() {
+    try {
+      return of(java.nio.file.Files.createTempFile(null, null).toFile());
+    } catch (IOException e) {
+      throw propagate(e);
+    }
   }
 
   public static File temp(String child) {
