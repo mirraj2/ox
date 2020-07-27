@@ -10,8 +10,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.function.Consumer;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 
@@ -70,9 +72,17 @@ public class File {
   }
 
   public List<File> children() {
+    if (!file.isDirectory()) {
+      return ImmutableList.of();
+    }
     java.io.File[] files = file.listFiles();
     checkState(files != null, file + " does not exist.");
     return map(files, File::new);
+  }
+
+  public void walkTree(Consumer<File> callback) {
+    callback.accept(this);
+    children().forEach(child -> child.walkTree(callback));
   }
 
   public File mkdirs() {
@@ -95,6 +105,10 @@ public class File {
 
   public long length() {
     return file.length();
+  }
+
+  public boolean isDirectory() {
+    return file.isDirectory();
   }
 
   public InputStream stream() {
@@ -149,6 +163,14 @@ public class File {
     return downloads().child(child);
   }
 
+  public static File home() {
+    return new File(OS.getHomeFolder());
+  }
+
+  public static File home(String child) {
+    return home().child(child);
+  }
+
   public static File temp() {
     try {
       return of(java.nio.file.Files.createTempFile(null, null).toFile());
@@ -159,6 +181,14 @@ public class File {
 
   public static File temp(String child) {
     return new File(new java.io.File(OS.getTemporaryFolder(), child));
+  }
+
+  public static File appFolder(String appName) {
+    return new File(OS.getAppFolder(appName));
+  }
+
+  public static File appFolder(String appName, String child) {
+    return appFolder(appName).child(child);
   }
 
   public static File of(java.io.File file) {

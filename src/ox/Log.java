@@ -3,7 +3,6 @@ package ox;
 import static ox.util.Utils.propagate;
 
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -36,12 +35,16 @@ public class Log {
   private static File logFolder;
   private static LocalDate currentLogDate;
 
+  public static void logToFolder(String appName) {
+    logToFolder(File.appFolder(appName, "log"));
+  }
+
   public static void logToFolder(File folder) {
     logFolder = folder;
     logFolder.mkdirs();
 
     currentLogDate = LocalDate.now(Time.DEFAULT_TIME_ZONE);
-    logToFile(new File(logFolder, currentLogDate + ".log"));
+    logToFile(logFolder.child(currentLogDate + ".log"));
 
     ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
@@ -60,12 +63,12 @@ public class Log {
     }
     Log.info("Rolling over log to the next day.");
     currentLogDate = now;
-    logToFile(new File(logFolder, currentLogDate + ".log"));
+    logToFile(logFolder.child(currentLogDate + ".log"));
   }
 
   private static synchronized void logToFile(File file) {
     try {
-      OutputStream os = new BufferedOutputStream(new FileOutputStream(file, true));
+      OutputStream os = new BufferedOutputStream(new FileOutputStream(file.file, true));
       System.setOut(new PrintStream(new SplitOutputStream(originalOut, os)));
       System.setErr(new PrintStream(new SplitOutputStream(originalErr, os)));
       out = System.out;
