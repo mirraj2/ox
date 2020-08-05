@@ -226,6 +226,17 @@ public class Reflection {
     }
   }
 
+  @SuppressWarnings("unchecked")
+  public static <T> List<Class<? extends T>> findClasses(String packageName, Class<T> classType) {
+    List<Class<? extends T>> ret = Lists.newArrayList();
+    for (Class<?> c : findClasses(packageName)) {
+      if (classType.isAssignableFrom(c)) {
+        ret.add((Class<? extends T>) c);
+      }
+    }
+    return ret;
+  }
+
   public static List<Class<?>> findClasses(String packageName) {
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     Enumeration<URL> resources;
