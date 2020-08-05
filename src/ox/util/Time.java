@@ -74,10 +74,16 @@ public class Time {
   }
 
   public static String slashFormat(TemporalAccessor date) {
+    if (date instanceof Instant) {
+      date = toDate((Instant) date);
+    }
     return date == null ? "" : slashFormat.format(date);
   }
 
   public static String longFormat(TemporalAccessor date) {
+    if (date instanceof Instant) {
+      date = toDate((Instant) date);
+    }
     return date == null ? "" : longFormat.format(date);
   }
 
@@ -88,6 +94,9 @@ public class Time {
   public static String format(TemporalAccessor date, String format) {
     if (date == null) {
       return "";
+    }
+    if (date instanceof Instant) {
+      date = toDate((Instant) date);
     }
     DateTimeFormatter dtf = formatCache.computeIfAbsent(format, DateTimeFormatter::ofPattern);
     return dtf.format(date);
