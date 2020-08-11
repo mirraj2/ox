@@ -18,6 +18,7 @@ import java.time.LocalTime;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.objenesis.Objenesis;
@@ -118,6 +119,11 @@ public class Reflection {
     }
     try {
       Class<?> type = field.getType();
+      boolean wrapWithOptional = false;
+      if (type == Optional.class) {
+        wrapWithOptional = true;
+        type = getTypeArgument(field.getGenericType());
+      }
       if (value instanceof String) {
         if (type.isEnum()) {
           value = Utils.parseEnum((String) value, (Class<? extends Enum>) type);
@@ -140,6 +146,9 @@ public class Reflection {
         value = Money.fromLong((Integer) value);
       } else if (type == Instant.class && value instanceof Long) {
         value = Instant.ofEpochMilli((Long) value);
+      }
+      if (wrapWithOptional) {
+        value = Optional.ofNullable(value);
       }
       field.set(o, value);
     } catch (Exception e) {
@@ -220,10 +229,14 @@ public class Reflection {
   public static Class<?> getGenericClass(Class<?> c) {
     Type t = c.getGenericSuperclass();
     if (t instanceof ParameterizedType) {
-      return (Class<?>) ((ParameterizedType) t).getActualTypeArguments()[0];
+      return getTypeArgument(t);
     } else {
       return null;
     }
+  }
+
+  private static Class<?> getTypeArgument(Type t) {
+    return (Class<?>) ((ParameterizedType) t).getActualTypeArguments()[0];
   }
 
   @SuppressWarnings("unchecked")
