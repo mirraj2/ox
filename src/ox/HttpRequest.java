@@ -888,11 +888,17 @@ public class HttpRequest {
     }.call();
   }
 
+  /**
+   * @param timeout In milliseconds
+   */
   public HttpRequest readTimeout(final int timeout) {
     getConnection().setReadTimeout(timeout);
     return this;
   }
 
+  /**
+   * @param timeout In milliseconds
+   */
   public HttpRequest connectTimeout(final int timeout) {
     getConnection().setConnectTimeout(timeout);
     return this;

@@ -193,7 +193,7 @@ public class IO {
 
     public void to(File file) {
       if (o instanceof RenderedImage) {
-        if (imageFormat == null) {
+        if (imageFormat.isEmpty()) {
           imageFormat = getImageType(file);
         }
       }

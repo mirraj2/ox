@@ -406,6 +406,13 @@ public class Utils {
   }
 
   /**
+   * Returns true if the entire input matches the pattern.
+   */
+  public static boolean isExactMatch(String pattern, String input) {
+    return input.equals(regexMatch(pattern, input));
+  }
+
+  /**
    * Gets the first match for the given pattern.
    */
   public static String regexMatch(String pattern, String document) {
