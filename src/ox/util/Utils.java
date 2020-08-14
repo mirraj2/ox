@@ -399,7 +399,7 @@ public class Utils {
     list.sort(c);
   }
 
-  public static <T> Collection<T> removeNulls(Collection<T> c) {
+  public static <T extends Collection<?>> T removeNulls(T c) {
     while (c.remove(null)) {
     }
     return c;
