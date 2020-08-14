@@ -45,7 +45,6 @@ import com.google.common.base.Charsets;
 import com.google.common.io.ByteStreams;
 
 import ox.util.CSVReader;
-import ox.util.Images;
 
 public class IO {
 
@@ -216,10 +215,10 @@ public class IO {
         this.os = os;
         if (o instanceof RenderedImage) {
           RenderedImage r = (RenderedImage) o;
-          if (r instanceof BufferedImage && imageFormat.equals("jpg")) {
-            r = Images.withType((BufferedImage) o, BufferedImage.TYPE_INT_RGB);
-          }
-          ImageIO.write(r, imageFormat, os);
+          // if (r instanceof BufferedImage && imageFormat.equals("jpg")) {
+          // r = Images.withType((BufferedImage) o, BufferedImage.TYPE_INT_RGB);
+          // }
+          ImageIO.write(r, imageFormat.isEmpty() ? "jpg" : imageFormat, os);
         } else {
           ByteStreams.copy(asStream(), os);
         }
