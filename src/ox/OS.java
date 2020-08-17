@@ -27,16 +27,16 @@ public final class OS {
     }
   }
 
-  private OS() {}
+  private OS() {
+  }
 
   public static File getAppFolder(String appName) {
     String ret;
     if (type == OS_Type.WINDOWS) {
       ret = System.getenv("LOCALAPPDATA");
       if (ret == null) {
-        ret =
-            System.getProperty("user.home") + File.separatorChar + "Local Settings"
-                + File.separatorChar + "Application Data";
+        ret = System.getProperty("user.home") + File.separatorChar + "Local Settings"
+            + File.separatorChar + "Application Data";
       }
     } else {
       checkState(!appName.startsWith("."), "The app name should not start with a period!");
