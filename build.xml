@@ -2,8 +2,8 @@
 <project basedir="." default="build" name="ox">
     <property environment="env"/>
     <property name="debuglevel" value="source,lines,vars"/>
-    <property name="target" value="1.8"/>
-    <property name="source" value="1.8"/>
+    <property name="target" value="11"/>
+    <property name="source" value="11"/>
     <path id="ox.classpath">
         <pathelement location="bin"/>
         <pathelement location="lib/gson-2.8.2.jar"/>
