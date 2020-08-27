@@ -13,9 +13,11 @@ import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.security.SecureRandom;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -49,6 +51,9 @@ public class Utils {
   public static final DecimalFormat noDecimalFormat = new DecimalFormat("#,##0");
   private static final CharMatcher moneyMatcher = CharMatcher.anyOf("$£€ ,-–()").precomputed();
   private static final Map<String, Pattern> patternCache = Maps.newConcurrentMap();
+
+  private static final SecureRandom random = new SecureRandom();
+  private static final Base64.Encoder tokenEncoder = Base64.getUrlEncoder().withoutPadding();
 
   public static String capitalize(String s) {
     if (isNullOrEmpty(s)) {
@@ -390,6 +395,17 @@ public class Utils {
 
   public static String uuid() {
     return UUID.randomUUID().toString().replace("-", "");
+  }
+
+  /**
+   * uuid() is for if you need a unique identifier.
+   * 
+   * token() is better for things where you don't want anyone to guess the token, such as for authenticating a user.
+   */
+  public static String token() {
+    byte[] buffer = new byte[20];
+    random.nextBytes(buffer);
+    return tokenEncoder.encodeToString(buffer);
   }
 
   public static <T> void sort(List<T> list, Comparator<? super T> c) {
