@@ -2,6 +2,7 @@ package ox;
 
 import java.io.File;
 import java.util.Map;
+
 import com.google.common.collect.Maps;
 
 public class Config {
@@ -39,6 +40,15 @@ public class Config {
 
   public boolean getBoolean(String key, boolean defaultValue) {
     Boolean ret = json.getBoolean(key);
+    return ret == null ? defaultValue : ret;
+  }
+
+  public <T extends Enum<T>> T getEnum(String key, Class<T> enumClass) {
+    return getEnum(key, enumClass, null);
+  }
+
+  public <T extends Enum<T>> T getEnum(String key, Class<T> enumClass, T defaultValue) {
+    T ret = json.getEnum(key, enumClass);
     return ret == null ? defaultValue : ret;
   }
 

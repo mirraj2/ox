@@ -1,6 +1,7 @@
 package ox;
 
 import static ox.util.Functions.map;
+import static ox.util.Utils.isNullOrEmpty;
 import static ox.util.Utils.parseEnum;
 
 import java.io.Reader;
@@ -58,7 +59,7 @@ public class Json implements Iterable<String> {
 
   public Integer getInt(String key) {
     String s = get(key);
-    if (s == null || s.isEmpty()) {
+    if (isNullOrEmpty(s)) {
       return null;
     } else {
       try {
@@ -71,12 +72,12 @@ public class Json implements Iterable<String> {
 
   public Long getLong(String key) {
     String s = get(key);
-    return s == null || s.isEmpty() ? null : Long.valueOf(s);
+    return isNullOrEmpty(s) ? null : Long.valueOf(s);
   }
 
   public Double getDouble(String key) {
     String s = get(key);
-    if (s == null || s.isEmpty()) {
+    if (isNullOrEmpty(s)) {
       return null;
     } else {
       try {
@@ -97,22 +98,22 @@ public class Json implements Iterable<String> {
 
   public <T extends Enum<T>> T getEnum(String key, Class<T> enumType) {
     String s = get(key);
-    return s == null || s.isEmpty() ? null : parseEnum(s, enumType);
+    return isNullOrEmpty(s) ? null : parseEnum(s, enumType);
   }
 
   public LocalDate getDate(String key) {
     String s = get(key);
-    return s == null || s.isEmpty() ? null : LocalDate.parse(s);
+    return isNullOrEmpty(s) ? null : LocalDate.parse(s);
   }
 
   public LocalTime getTime(String key) {
     String s = get(key);
-    return s == null || s.isEmpty() ? null : LocalTime.parse(s);
+    return isNullOrEmpty(s) ? null : LocalTime.parse(s);
   }
 
   public Money getMoney(String key) {
     String s = get(key);
-    return s == null || s.isEmpty() ? null : Money.parse(s);
+    return isNullOrEmpty(s) ? null : Money.parse(s);
   }
 
   public Json getJson(String key) {
