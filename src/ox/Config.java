@@ -52,8 +52,8 @@ public class Config {
     return ret == null ? defaultValue : ret;
   }
 
-  public Json getJson(String key) {
-    return json.getJson(key);
+  public Json json() {
+    return json;
   }
 
   public void put(String key, String value) {
