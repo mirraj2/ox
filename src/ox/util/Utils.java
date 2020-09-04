@@ -11,6 +11,8 @@ import static java.lang.Long.parseLong;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.SecureRandom;
@@ -406,6 +408,14 @@ public class Utils {
     byte[] buffer = new byte[20];
     random.nextBytes(buffer);
     return tokenEncoder.encodeToString(buffer);
+  }
+
+  public static URI uri(String s) {
+    try {
+      return new URI(s);
+    } catch (URISyntaxException e) {
+      throw propagate(e);
+    }
   }
 
   public static <T> void sort(List<T> list, Comparator<? super T> c) {
