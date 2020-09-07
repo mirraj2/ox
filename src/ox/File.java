@@ -90,6 +90,15 @@ public class File {
     return this;
   }
 
+  public File touch() {
+    try {
+      file.createNewFile();
+    } catch (IOException e) {
+      throw propagate(e);
+    }
+    return this;
+  }
+
   public File delete() {
     if (!file.exists()) {
       return this;
@@ -193,6 +202,10 @@ public class File {
 
   public static File of(java.io.File file) {
     return new File(file);
+  }
+
+  public static File ofPath(String path) {
+    return new File(path);
   }
 
 }

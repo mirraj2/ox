@@ -6,6 +6,7 @@ import static ox.util.Utils.propagate;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 
 public final class OS {
   public static enum OS_Type {
@@ -104,6 +105,14 @@ public final class OS {
     try {
       Desktop.getDesktop().open(file);
     } catch (IOException e) {
+      throw propagate(e);
+    }
+  }
+
+  public static void browse(String url) {
+    try {
+      Desktop.getDesktop().browse(new URI(url));
+    } catch (Exception e) {
       throw propagate(e);
     }
   }
