@@ -97,13 +97,13 @@ public final class Functions {
     return ret;
   }
 
-  public static <T> List<T> filter(Iterable<T> input, Function<T, Boolean> filter) {
+  public static <T> List<T> filter(Iterable<T> input, Predicate<T> filter) {
     checkNotNull(input, "input");
     checkNotNull(filter, "filter");
 
     List<T> ret = new ArrayList<>(size(input));
     for (T t : input) {
-      if (filter.apply(t)) {
+      if (filter.test(t)) {
         ret.add(t);
       }
     }
