@@ -7,6 +7,29 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+/**
+ * <p>
+ * This class offers methods similar to those in Java's Stream API. This class offers convenience at the cost of
+ * performance. 99.9% of the time, this performance difference will not matter and this class will be a superior
+ * alternative.
+ * </p>
+ * 
+ * <pre>
+ * Using Java Stream API:
+ * 
+ * List<T> foo = new ArrayList<>();
+ * 
+ * foo.stream().map(...).collect(Collectors.toList());
+ * </pre>
+ * 
+ * <pre>
+ * Using XList:
+ * 
+ * XList<T> foo = new XList<>();
+ * 
+ * foo.map(...) //much easier!
+ * </pre>
+ */
 public class XList<T> extends ArrayList<T> {
 
   public XList() {
