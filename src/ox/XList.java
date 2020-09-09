@@ -1,11 +1,20 @@
 package ox;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class XList<T> extends ArrayList<T> {
+
+  public XList() {
+  }
+
+  public XList(Iterable<T> iter) {
+    iter.forEach(this::add);
+  }
 
   @SuppressWarnings("unchecked")
   public <S extends T> XList<S> filter(Class<S> classFilter) {
@@ -47,8 +56,25 @@ public class XList<T> extends ArrayList<T> {
     }
   }
 
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+  /**
+   * Returns the maximum value in this collection. Assumes that all elements in this collection are Comparable
+   */
+  public T max() {
+    return (T) Collections.max((Collection<? extends Comparable>) this);
+  }
+
+  public XList<T> log() {
+    Log.debug(this);
+    return this;
+  }
+
   public static <T> XList<T> create() {
     return new XList<T>();
+  }
+
+  public static <T> XList<T> create(Iterable<T> iter) {
+    return new XList<T>(iter);
   }
 
 }

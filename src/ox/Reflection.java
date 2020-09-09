@@ -179,8 +179,22 @@ public class Reflection {
     }
   }
 
+  /**
+   * Constructs an instance of the class without calling any constructors.
+   */
   public static <T> T newInstance(Class<T> c) {
     return objenesis.newInstance(c);
+  }
+
+  /**
+   * Constructs an instance of the class using its default (empty) constructor.
+   */
+  public static <T> T constructNewInstance(Class<T> c) {
+    try {
+      return c.getConstructor().newInstance();
+    } catch (Exception e) {
+      throw propagate(e);
+    }
   }
 
   private static Field getField(Class<?> c, String fieldName) {
@@ -240,8 +254,8 @@ public class Reflection {
   }
 
   @SuppressWarnings("unchecked")
-  public static <T> List<Class<? extends T>> findClasses(String packageName, Class<T> classType) {
-    List<Class<? extends T>> ret = Lists.newArrayList();
+  public static <T> XList<Class<? extends T>> findClasses(String packageName, Class<T> classType) {
+    XList<Class<? extends T>> ret = XList.create();
     for (Class<?> c : findClasses(packageName)) {
       if (classType.isAssignableFrom(c)) {
         ret.add((Class<? extends T>) c);
@@ -250,7 +264,7 @@ public class Reflection {
     return ret;
   }
 
-  public static List<Class<?>> findClasses(String packageName) {
+  public static XList<Class<?>> findClasses(String packageName) {
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     Enumeration<URL> resources;
     try {
@@ -262,7 +276,7 @@ public class Reflection {
     Iterators.forEnumeration(resources).forEachRemaining(url -> {
       dirs.add(new File(url.getFile()));
     });
-    List<Class<?>> classes = Lists.newArrayList();
+    XList<Class<?>> classes = XList.create();
     for (File directory : dirs) {
       classes.addAll(findClasses(directory, packageName));
     }
