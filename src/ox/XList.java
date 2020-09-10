@@ -85,6 +85,14 @@ public class XList<T> extends ArrayList<T> {
     return ret;
   }
 
+  /**
+   * Unlike map(), which calls the function one time per element, the given function will only be called once. It is
+   * passed this entire list as an argument.
+   */
+  public <V> V mapBulk(Function<? super XList<T>, V> function) {
+    return function.apply(this);
+  }
+
   public <V> Set<V> toSet(Function<T, V> function) {
     return Functions.toSet(this, function);
   }
