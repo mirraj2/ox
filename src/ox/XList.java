@@ -3,9 +3,13 @@ package ox;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
+
+import ox.util.Functions;
 
 /**
  * <p>
@@ -33,6 +37,10 @@ import java.util.function.Predicate;
 public class XList<T> extends ArrayList<T> {
 
   public XList() {
+  }
+
+  public XList(int capacity) {
+    super(capacity);
   }
 
   public XList(Iterable<T> iter) {
@@ -68,6 +76,28 @@ public class XList<T> extends ArrayList<T> {
     return ret;
   }
 
+  public <V> Map<V, T> index(Function<T, V> function) {
+    return Functions.index(this, function);
+  }
+
+  public XList<T> sortSelf(Comparator<? super T> comparator) {
+    sort(comparator);
+    return this;
+  }
+
+  /**
+   * Gets a list containing at MOST the limit number of items.
+   */
+  public XList<T> limit(int limit) {
+    if (size() <= limit) {
+      return this;
+    } else {
+      XList<T> ret = new XList<>(limit);
+      ret.addAll(subList(0, limit));
+      return ret;
+    }
+  }
+
   public Optional<T> only() {
     int size = size();
     if (size == 1) {
@@ -94,6 +124,14 @@ public class XList<T> extends ArrayList<T> {
 
   public static <T> XList<T> create() {
     return new XList<T>();
+  }
+
+  public static <T> XList<T> empty() {
+    return createWithCapacity(0);
+  }
+
+  public static <T> XList<T> createWithCapacity(int capacity) {
+    return new XList<T>(capacity);
   }
 
   public static <T> XList<T> create(Iterable<T> iter) {
