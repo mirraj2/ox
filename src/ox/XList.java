@@ -4,10 +4,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
+
+import com.google.common.base.Predicates;
+import com.google.common.collect.Multimap;
 
 import ox.util.Functions;
 
@@ -47,6 +52,10 @@ public class XList<T> extends ArrayList<T> {
     iter.forEach(this::add);
   }
 
+  public XList<T> removeNulls() {
+    return filter(Predicates.notNull());
+  }
+
   @SuppressWarnings("unchecked")
   public <S extends T> XList<S> filter(Class<S> classFilter) {
     XList<S> ret = new XList<>();
@@ -76,8 +85,16 @@ public class XList<T> extends ArrayList<T> {
     return ret;
   }
 
+  public <V> Set<V> toSet(Function<T, V> function) {
+    return Functions.toSet(this, function);
+  }
+
   public <V> Map<V, T> index(Function<T, V> function) {
     return Functions.index(this, function);
+  }
+
+  public <V> Multimap<V, T> indexMultimap(Function<? super T, V> function) {
+    return Functions.indexMultimap(this, function);
   }
 
   public XList<T> sortSelf(Comparator<? super T> comparator) {
@@ -88,14 +105,16 @@ public class XList<T> extends ArrayList<T> {
   /**
    * Gets a list containing at MOST the limit number of items.
    */
-  public XList<T> limit(int limit) {
-    if (size() <= limit) {
-      return this;
-    } else {
-      XList<T> ret = new XList<>(limit);
-      ret.addAll(subList(0, limit));
-      return ret;
-    }
+  public XList<T> limit(int maxResults) {
+    return limit(0, maxResults);
+  }
+
+  public XList<T> limit(int offset, int maxResults) {
+    List<T> toAdd = subList(Math.min(offset, size()), Math.min(size(), offset + maxResults));
+
+    XList<T> ret = XList.createWithCapacity(toAdd.size());
+    ret.addAll(toAdd);
+    return ret;
   }
 
   public Optional<T> only() {
@@ -128,6 +147,12 @@ public class XList<T> extends ArrayList<T> {
 
   public static <T> XList<T> empty() {
     return createWithCapacity(0);
+  }
+
+  public static <T> XList<T> of(T t) {
+    XList<T> ret = createWithCapacity(1);
+    ret.add(t);
+    return ret;
   }
 
   public static <T> XList<T> createWithCapacity(int capacity) {

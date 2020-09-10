@@ -425,12 +425,6 @@ public class Utils {
     list.sort(c);
   }
 
-  public static <T extends Collection<?>> T removeNulls(T c) {
-    while (c.remove(null)) {
-    }
-    return c;
-  }
-
   /**
    * Returns true if the entire input matches the pattern.
    */

@@ -3,7 +3,6 @@ package ox.util;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterables.size;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -21,17 +20,19 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 
+import ox.XList;
+
 public final class Functions {
 
-  public static <A, B> List<B> map(A[] array, Function<A, B> function) {
+  public static <A, B> XList<B> map(A[] array, Function<A, B> function) {
     return map(Arrays.asList(array), function);
   }
 
-  public static <A, B> List<B> map(Iterable<A> input, Function<A, B> function) {
+  public static <A, B> XList<B> map(Iterable<A> input, Function<A, B> function) {
     checkNotNull(input, "input");
     checkNotNull(function, "function");
 
-    List<B> ret = new ArrayList<>(size(input));
+    XList<B> ret = XList.createWithCapacity(size(input));
     for (A element : input) {
       ret.add(function.apply(element));
     }
@@ -71,7 +72,7 @@ public final class Functions {
   /**
    * Unlike Multimaps.index, this allows 'null' keys and values.
    */
-  public static <K, V> Multimap<K, V> indexMultimap(Iterable<V> input, Function<V, K> function) {
+  public static <K, V> Multimap<K, V> indexMultimap(Iterable<V> input, Function<? super V, K> function) {
     Multimap<K, V> ret = LinkedListMultimap.create();
     for (V v : input) {
       ret.put(function.apply(v), v);
@@ -79,8 +80,8 @@ public final class Functions {
     return ret;
   }
 
-  public static <K, V, T> Multimap<K, V> buildMultimap(Iterable<T> input, Function<T, K> keyFunction,
-      Function<T, V> valueFunction) {
+  public static <K, V, T> Multimap<K, V> buildMultimap(Iterable<T> input, Function<? super T, K> keyFunction,
+      Function<? super T, V> valueFunction) {
     Multimap<K, V> ret = LinkedListMultimap.create();
     for (T t : input) {
       ret.put(keyFunction.apply(t), valueFunction.apply(t));
@@ -89,7 +90,7 @@ public final class Functions {
   }
 
   public static <K1, K2, V1, V2> Multimap<K2, V2> transformMultimap(Multimap<K1, V1> multimap,
-      Function<K1, K2> keyFunction, Function<V1, V2> valueFunction) {
+      Function<? super K1, K2> keyFunction, Function<? super V1, V2> valueFunction) {
     Multimap<K2, V2> ret = LinkedListMultimap.create();
     multimap.forEach((k, v) -> {
       ret.put(keyFunction.apply(k), valueFunction.apply(v));
@@ -97,11 +98,11 @@ public final class Functions {
     return ret;
   }
 
-  public static <T> List<T> filter(Iterable<T> input, Predicate<T> filter) {
+  public static <T> XList<T> filter(Iterable<T> input, Predicate<? super T> filter) {
     checkNotNull(input, "input");
     checkNotNull(filter, "filter");
 
-    List<T> ret = new ArrayList<>(size(input));
+    XList<T> ret = XList.createWithCapacity(size(input));
     for (T t : input) {
       if (filter.test(t)) {
         ret.add(t);
@@ -111,9 +112,9 @@ public final class Functions {
   }
 
   @SuppressWarnings("unchecked")
-  public static <T, F extends T> List<F> filter(Iterable<T> input, Class<F> classFilter) {
+  public static <T, F extends T> XList<F> filter(Iterable<T> input, Class<F> classFilter) {
     checkNotNull(classFilter);
-    return (List<F>) filter(input, t -> t != null && classFilter.isAssignableFrom(t.getClass()));
+    return (XList<F>) filter(input, t -> t != null && classFilter.isAssignableFrom(t.getClass()));
   }
 
   public static double sum(Iterable<? extends Number> input) {
