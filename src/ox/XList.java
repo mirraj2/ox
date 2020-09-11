@@ -52,6 +52,13 @@ public class XList<T> extends ArrayList<T> {
     iter.forEach(this::add);
   }
 
+  @SafeVarargs
+  public XList(T... values) {
+    for (T value : values) {
+      add(value);
+    }
+  }
+
   public XList<T> removeNulls() {
     return filter(Predicates.notNull());
   }
@@ -163,8 +170,17 @@ public class XList<T> extends ArrayList<T> {
     return ret;
   }
 
+  public static <T extends Enum<T>> XList<T> ofEnum(Class<T> enumClass) {
+    return create(enumClass.getEnumConstants());
+  }
+
   public static <T> XList<T> createWithCapacity(int capacity) {
     return new XList<T>(capacity);
+  }
+
+  @SafeVarargs
+  public static <T> XList<T> create(T... values) {
+    return new XList<>(values);
   }
 
   public static <T> XList<T> create(Iterable<T> iter) {
