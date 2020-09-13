@@ -112,6 +112,12 @@ public class XList<T> extends ArrayList<T> {
     return Functions.indexMultimap(this, function);
   }
 
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+  public XList<T> sortSelf() {
+    Collections.sort((List<? extends Comparable>) this);
+    return this;
+  }
+
   public XList<T> sortSelf(Comparator<? super T> comparator) {
     sort(comparator);
     return this;
