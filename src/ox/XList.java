@@ -12,6 +12,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import com.google.common.base.Predicates;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
 import ox.util.Functions;
@@ -123,11 +124,19 @@ public class XList<T> extends ArrayList<T> {
     return this;
   }
 
+  public XList<T> reverse() {
+    return XList.create(Lists.reverse(this));
+  }
+
   /**
    * Gets a list containing at MOST the limit number of items.
    */
   public XList<T> limit(int maxResults) {
     return limit(0, maxResults);
+  }
+
+  public XList<T> offset(int offset) {
+    return limit(offset, size());
   }
 
   public XList<T> limit(int offset, int maxResults) {
@@ -136,6 +145,13 @@ public class XList<T> extends ArrayList<T> {
     XList<T> ret = XList.createWithCapacity(toAdd.size());
     ret.addAll(toAdd);
     return ret;
+  }
+
+  public Optional<T> first() {
+    if (isEmpty()) {
+      return Optional.empty();
+    }
+    return Optional.ofNullable(get(0));
   }
 
   public Optional<T> only() {
