@@ -9,7 +9,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Function;
@@ -329,27 +328,27 @@ public class Json implements Iterable<String> {
     return e.toString().getBytes(Charsets.UTF_8);
   }
 
-  public List<String> asStringArray() {
+  public XList<String> asStringArray() {
     return map(arr(), e -> e.isJsonNull() ? null : e.getAsString());
   }
 
-  public List<Integer> asIntArray() {
+  public XList<Integer> asIntArray() {
     return map(arr(), JsonElement::getAsInt);
   }
 
-  public List<Long> asLongArray() {
+  public XList<Long> asLongArray() {
     return map(arr(), JsonElement::getAsLong);
   }
 
-  public List<Float> asFloatArray() {
+  public XList<Float> asFloatArray() {
     return map(arr(), j -> j.isJsonNull() ? null : j.getAsFloat());
   }
 
-  public List<Double> asDoubleArray() {
+  public XList<Double> asDoubleArray() {
     return map(arr(), j -> j.isJsonNull() ? null : j.getAsDouble());
   }
 
-  public List<Json> asJsonArray() {
+  public XList<Json> asJsonArray() {
     return map(arr(), Json::new);
   }
 
