@@ -36,12 +36,15 @@ public class Reflection {
 
   private static final Objenesis objenesis = new ObjenesisStd(true);
   private static final Map<String, Field> fieldCache = Maps.newConcurrentMap();
+  private static final Map<String, Method> methodCache = Maps.newConcurrentMap();
   private static final Field modifiersField;
 
   private static final Field NULL_FIELD;
+  private static final Method NULL_METHOD;
   static {
     try {
       NULL_FIELD = Reflection.class.getDeclaredField("fieldCache");
+      NULL_METHOD = Reflection.class.getDeclaredMethod("nullMethod");
     } catch (Exception e) {
       throw propagate(e);
     }
@@ -55,6 +58,10 @@ public class Reflection {
       throw propagate(e);
     }
     modifiersField.setAccessible(true);
+  }
+
+  public static void nullMethod() {
+    // this is for the NULL_METHOD field
   }
 
   /**
@@ -231,6 +238,34 @@ public class Reflection {
 
   public static List<Field> getFields(Class<?> c) {
     return ImmutableList.copyOf(c.getDeclaredFields());
+  }
+
+  public static List<Method> getMethods(Class<?> c) {
+    return ImmutableList.copyOf(c.getDeclaredMethods());
+  }
+
+  public static Method getMethod(Class<?> c, String methodName) {
+    return methodCache.computeIfAbsent(c.getName() + methodName, s -> {
+      try {
+        Method ret = c.getMethod(methodName);
+        ret.setAccessible(true);
+        return ret;
+      } catch (NoSuchMethodException e) {
+        return NULL_METHOD;
+      } catch (Exception e) {
+        throw propagate(e);
+      }
+    });
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T> T callMethod(Object o, String methodName) {
+    Method m = getMethod(o.getClass(), methodName);
+    try {
+      return (T) m.invoke(o);
+    } catch (Exception e) {
+      throw propagate(e);
+    }
   }
 
   /**

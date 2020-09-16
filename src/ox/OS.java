@@ -101,6 +101,14 @@ public final class OS {
     return System.getProperty("user.name");
   }
 
+  public static long getFreeDiskSpace() {
+    return ox.File.home().file.getUsableSpace();
+  }
+
+  public static long getTotalDiskSpace() {
+    return ox.File.home().file.getTotalSpace();
+  }
+
   public static void open(File file) {
     try {
       Desktop.getDesktop().open(file);
