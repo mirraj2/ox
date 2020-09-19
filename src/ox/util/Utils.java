@@ -24,9 +24,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.google.common.base.CharMatcher;
@@ -35,7 +33,6 @@ import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 import ox.Log;
 import ox.Money;
@@ -52,7 +49,6 @@ public class Utils {
   public static final DecimalFormat decimalFormat2 = new DecimalFormat("#,##0.00");
   public static final DecimalFormat noDecimalFormat = new DecimalFormat("#,##0");
   private static final CharMatcher moneyMatcher = CharMatcher.anyOf("$£€ ,-–()").precomputed();
-  private static final Map<String, Pattern> patternCache = Maps.newConcurrentMap();
 
   private static final SecureRandom random = new SecureRandom();
   private static final Base64.Encoder tokenEncoder = Base64.getUrlEncoder().withoutPadding();
@@ -423,45 +419,6 @@ public class Utils {
       return;
     }
     list.sort(c);
-  }
-
-  /**
-   * Returns true if the entire input matches the pattern.
-   */
-  public static boolean isExactMatch(String pattern, String input) {
-    return input.equals(regexMatch(pattern, input));
-  }
-
-  /**
-   * Gets the first match for the given pattern.
-   */
-  public static String regexMatch(String pattern, String document) {
-    Pattern p = patternCache.computeIfAbsent(pattern, Pattern::compile);
-    Matcher m = p.matcher(document);
-    if (!m.find()) {
-      return null;
-    }
-    if (m.groupCount() == 0) {
-      return m.group();
-    }
-    return m.group(1);
-  }
-
-  /**
-   * Gets all matches for the given pattern.
-   */
-  public static List<String> regexMatches(String pattern, String document) {
-    Pattern p = patternCache.computeIfAbsent(pattern, Pattern::compile);
-    Matcher m = p.matcher(document);
-    List<String> ret = Lists.newArrayList();
-    while (m.find()) {
-      if (m.groupCount() == 0) {
-        ret.add(m.group());
-      } else {
-        ret.add(m.group(1));
-      }
-    }
-    return ret;
   }
 
   /**
