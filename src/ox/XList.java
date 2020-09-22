@@ -186,23 +186,23 @@ public class XList<T> extends ArrayList<T> {
     return createWithCapacity(0);
   }
 
+  public static <T extends Enum<T>> XList<T> ofEnum(Class<T> enumClass) {
+    return of(enumClass.getEnumConstants());
+  }
+
   public static <T> XList<T> of(T t) {
     XList<T> ret = createWithCapacity(1);
     ret.add(t);
     return ret;
   }
 
-  public static <T extends Enum<T>> XList<T> ofEnum(Class<T> enumClass) {
-    return create(enumClass.getEnumConstants());
+  @SafeVarargs
+  public static <T> XList<T> of(T... values) {
+    return new XList<>(values);
   }
 
   public static <T> XList<T> createWithCapacity(int capacity) {
     return new XList<T>(capacity);
-  }
-
-  @SafeVarargs
-  public static <T> XList<T> create(T... values) {
-    return new XList<>(values);
   }
 
   public static <T> XList<T> create(Iterable<T> iter) {
