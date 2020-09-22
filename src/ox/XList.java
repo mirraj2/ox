@@ -186,7 +186,7 @@ public class XList<T> extends ArrayList<T> {
     return createWithCapacity(0);
   }
 
-  public static <T extends Enum<T>> XList<T> ofEnum(Class<T> enumClass) {
+  public static <T extends Enum<T>> XList<T> allOf(Class<T> enumClass) {
     return of(enumClass.getEnumConstants());
   }
 
