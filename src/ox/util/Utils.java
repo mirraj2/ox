@@ -32,10 +32,10 @@ import com.google.common.base.Enums;
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 import ox.Log;
 import ox.Money;
+import ox.XList;
 
 public class Utils {
 
@@ -265,16 +265,19 @@ public class Utils {
     return Iterables.get(c, random(c.size()));
   }
 
-  public static List<Integer> count(int from, int to) {
-    List<Integer> ret = Lists.newArrayList();
+  /**
+   * Gets a list of all numbers between `from` and `to`, INCLUSIVE.
+   */
+  public static XList<Integer> count(int from, int to) {
+    XList<Integer> ret = XList.create();
     for (int i = from; i <= to; i++) {
       ret.add(i);
     }
     return ret;
   }
 
-  public static List<Double> count(double from, double to, double step) {
-    List<Double> ret = Lists.newArrayList();
+  public static XList<Double> count(double from, double to, double step) {
+    XList<Double> ret = XList.create();
     for (double i = from; i <= to; i += step) {
       ret.add(i);
     }
