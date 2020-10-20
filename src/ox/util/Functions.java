@@ -16,6 +16,7 @@ import java.util.function.Predicate;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
@@ -72,8 +73,8 @@ public final class Functions {
   /**
    * Unlike Multimaps.index, this allows 'null' keys and values.
    */
-  public static <K, V> Multimap<K, V> indexMultimap(Iterable<V> input, Function<? super V, K> function) {
-    Multimap<K, V> ret = LinkedListMultimap.create();
+  public static <K, V> ListMultimap<K, V> indexMultimap(Iterable<V> input, Function<? super V, K> function) {
+    ListMultimap<K, V> ret = LinkedListMultimap.create();
     for (V v : input) {
       ret.put(function.apply(v), v);
     }

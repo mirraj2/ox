@@ -12,8 +12,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import com.google.common.base.Predicates;
+import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Multimap;
 
 import ox.util.Functions;
 
@@ -109,7 +109,7 @@ public class XList<T> extends ArrayList<T> {
     return Functions.index(this, function);
   }
 
-  public <V> Multimap<V, T> indexMultimap(Function<? super T, V> function) {
+  public <V> ListMultimap<V, T> indexMultimap(Function<? super T, V> function) {
     return Functions.indexMultimap(this, function);
   }
 
