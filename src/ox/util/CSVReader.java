@@ -1,5 +1,6 @@
 package ox.util;
 
+import static com.google.common.base.Preconditions.checkState;
 import static ox.util.Utils.propagate;
 
 import java.io.BufferedReader;
@@ -20,7 +21,7 @@ public class CSVReader {
   private final BufferedReader br;
 
   private StringBuilder sb = new StringBuilder();
-  private int lastSize;
+  private int lastSize = 0;
   private char delimiter = ',';
   private char escape = '"';
   private boolean reuseBuffer = false;
@@ -40,6 +41,16 @@ public class CSVReader {
 
   public CSVReader reuseBuffer() {
     reuseBuffer = true;
+    return this;
+  }
+
+  public CSVReader delimiter(char delimiter) {
+    this.delimiter = delimiter;
+    return this;
+  }
+
+  public CSVReader escape(char escapeCharacter) {
+    this.escape = escapeCharacter;
     return this;
   }
 
@@ -88,10 +99,14 @@ public class CSVReader {
       return null;
     }
 
-    return parseLine(line);
+    try {
+      return parseLine(line, br);
+    } catch (Exception e) {
+      throw propagate(e);
+    }
   }
 
-  private List<String> parseLine(String line) {
+  private List<String> parseLine(String line, BufferedReader br) throws Exception {
     List<String> ret = buffer;
     if (ret == null) {
       ret = Lists.newArrayListWithCapacity(lastSize);
@@ -106,17 +121,36 @@ public class CSVReader {
     for (int i = 0; i < line.length(); i++) {
       char c = line.charAt(i);
       if (c == escape) {
-        escaped = !escaped;
+        if (escaped) {
+          // next character must be a delimiter in order to unescape (or we've reached end of file)
+          if (i == line.length() - 1 || line.charAt(i + 1) == delimiter) {
+            escaped = false;
+          }
+        } else {
+          escaped = true;
+        }
       } else if (!escaped && c == delimiter) {
         ret.add(sb.toString());
         sb.setLength(0);
       } else {
         sb.append(c);
       }
+      if (i == line.length() - 1) {
+        if (escaped) {
+          // there was a newline which was escaped!
+          line = line + '\n' + br.readLine();
+        }
+      }
     }
     ret.add(sb.toString());
     sb.setLength(0);
-    lastSize = ret.size();
+
+    if (lastSize == 0) {
+      lastSize = ret.size();
+    } else {
+      checkState(ret.size() == lastSize, "Found a row with " + ret.size() +
+          " elements when we previously saw a row with " + lastSize + " elements.");
+    }
     return ret;
   }
 

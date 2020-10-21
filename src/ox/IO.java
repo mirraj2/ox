@@ -393,7 +393,11 @@ public class IO {
     }
 
     public Input gzipInput() {
-      gzipInput = true;
+      return gzipInput(true);
+    }
+
+    public Input gzipInput(boolean gzipInput) {
+      this.gzipInput = gzipInput;
       return this;
     }
 
