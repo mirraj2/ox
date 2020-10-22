@@ -9,6 +9,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -28,7 +30,11 @@ public class CSVReader {
   private List<String> buffer;
 
   public CSVReader(InputStream is) {
-    this(new InputStreamReader(is));
+    this(new InputStreamReader(is, StandardCharsets.UTF_8));
+  }
+
+  public CSVReader(InputStream is, Charset charset) {
+    this(new InputStreamReader(is, charset));
   }
 
   public CSVReader(String s) {
