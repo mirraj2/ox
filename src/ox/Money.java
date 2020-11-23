@@ -45,6 +45,10 @@ public class Money implements Comparable<Money> {
     return new Money(cents / n);
   }
 
+  public Money abs() {
+    return this.cents < 0 ? new Money(-this.cents) : this;
+  }
+
   public boolean isGreaterThan(Money m) {
     return this.cents > m.cents;
   }
