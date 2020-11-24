@@ -452,6 +452,13 @@ public class Utils {
     return sb.toString();
   }
 
+  public static String abbreviate(String s, int maxCharacterLength) {
+    if (s.length() > maxCharacterLength) {
+      return s.substring(0, maxCharacterLength - 3) + "...";
+    }
+    return s;
+  }
+
   public static void sleep(long millis) {
     try {
       Thread.sleep(millis);

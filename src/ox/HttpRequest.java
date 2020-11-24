@@ -79,6 +79,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import com.google.common.base.Charsets;
+import com.google.common.collect.Multimap;
 import com.google.common.io.BaseEncoding;
 
 //taken from https://github.com/kevinsawicki/http-request
@@ -1432,6 +1433,11 @@ public class HttpRequest {
 
   public HttpRequest form(final Map<?, ?> values) throws HttpRequestException {
     return form(values, CHARSET_UTF8);
+  }
+
+  public HttpRequest form(final Multimap<?, ?> values) throws HttpRequestException {
+    values.forEach(this::form);
+    return this;
   }
 
   public HttpRequest form(final Entry<?, ?> entry) throws HttpRequestException {
