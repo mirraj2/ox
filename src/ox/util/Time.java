@@ -133,17 +133,27 @@ public class Time {
     if (isNullOrEmpty(s)) {
       return null;
     }
-    DateTimeFormatter dtf = formatCache.computeIfAbsent(format, pattern -> {
-      return new DateTimeFormatterBuilder()
-          .parseCaseInsensitive()
-          .appendPattern(pattern)
-          .toFormatter();
-    });
+    DateTimeFormatter dtf = formatCache.computeIfAbsent(format, Time::createFormatter);
     return LocalDate.parse(s, dtf);
   }
 
   public static LocalTime parseTime(String s) {
-    return LocalTime.parse(s, DateTimeFormatter.ofPattern("h:mm a"));
+    return parseTime(s, "h:mm a");
+  }
+
+  public static LocalTime parseTime(String s, String format) {
+    if (isNullOrEmpty(s)) {
+      return null;
+    }
+    DateTimeFormatter dtf = formatCache.computeIfAbsent(format, Time::createFormatter);
+    return LocalTime.parse(s, dtf);
+  }
+
+  private static DateTimeFormatter createFormatter(String pattern) {
+      return new DateTimeFormatterBuilder()
+          .parseCaseInsensitive()
+          .appendPattern(pattern)
+          .toFormatter();
   }
 
   public static void setDefaultTimeZone(ZoneId zone) {
