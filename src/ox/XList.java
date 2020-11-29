@@ -1,6 +1,7 @@
 package ox;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,6 +13,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
 
@@ -45,19 +47,22 @@ public class XList<T> extends ArrayList<T> {
   public XList() {
   }
 
+  public XList(Iterable<T> iter) {
+    this(Iterables.size(iter));
+    iter.forEach(this::add);
+  }
+
   public XList(int capacity) {
     super(capacity);
   }
 
-  public XList(Iterable<T> iter) {
-    iter.forEach(this::add);
-  }
-
   @SafeVarargs
   public XList(T... values) {
-    for (T value : values) {
-      add(value);
-    }
+    this(Arrays.asList(values));
+  }
+
+  public XList(Collection<T> c) {
+    super(c);
   }
 
   public XList<T> removeNulls() {
@@ -207,6 +212,10 @@ public class XList<T> extends ArrayList<T> {
 
   public static <T> XList<T> create(Iterable<T> iter) {
     return new XList<T>(iter);
+  }
+
+  public static <T> XList<T> create(Collection<T> c) {
+    return new XList<T>(c);
   }
 
 }
