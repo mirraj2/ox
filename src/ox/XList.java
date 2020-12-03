@@ -159,6 +159,10 @@ public class XList<T> extends ArrayList<T> {
     return Optional.ofNullable(get(0));
   }
 
+  public Optional<T> last() {
+    return isEmpty() ? Optional.empty() : Optional.ofNullable(get(size() - 1));
+  }
+
   public Optional<T> only() {
     int size = size();
     if (size == 1) {
