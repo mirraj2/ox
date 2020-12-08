@@ -147,6 +147,11 @@ public class Json implements Iterable<String> {
     return obj().get(key);
   }
 
+  /**
+   * Returns false if the value is 'falsy' in the Javascript sense, i.e. if the value is missing, null, empty string, or
+   * JsonNull, with the important *exception* that this method will return true if the JSON object a numerical value of
+   * 0 for this key.
+   */
   public boolean has(String key) {
     JsonElement e = getElement(key);
     if (e == null || e instanceof JsonNull) {
