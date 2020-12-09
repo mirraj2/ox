@@ -35,7 +35,7 @@ import com.google.common.collect.Iterables;
 
 import ox.Log;
 import ox.Money;
-import ox.XList;
+import ox.x.XList;
 
 public class Utils {
 

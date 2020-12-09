@@ -8,20 +8,19 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.LinkedListMultimap;
-import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 
-import ox.XList;
+import ox.x.XList;
+import ox.x.XMultimap;
+import ox.x.XSet;
 
 public final class Functions {
 
@@ -40,11 +39,11 @@ public final class Functions {
     return ret;
   }
 
-  public static <A, B> Set<B> toSet(Iterable<A> input, Function<A, B> function) {
+  public static <A, B> XSet<B> toSet(Iterable<A> input, Function<A, B> function) {
     checkNotNull(input, "input");
     checkNotNull(function, "function");
 
-    Set<B> ret = new LinkedHashSet<>(size(input));
+    XSet<B> ret = XSet.create(new LinkedHashSet<>(size(input)));
     for (A element : input) {
       ret.add(function.apply(element));
     }
@@ -73,26 +72,26 @@ public final class Functions {
   /**
    * Unlike Multimaps.index, this allows 'null' keys and values.
    */
-  public static <K, V> ListMultimap<K, V> indexMultimap(Iterable<V> input, Function<? super V, K> function) {
-    ListMultimap<K, V> ret = LinkedListMultimap.create();
+  public static <K, V> XMultimap<K, V> indexMultimap(Iterable<V> input, Function<? super V, K> function) {
+    XMultimap<K, V> ret = XMultimap.create();
     for (V v : input) {
       ret.put(function.apply(v), v);
     }
     return ret;
   }
 
-  public static <K, V, T> Multimap<K, V> buildMultimap(Iterable<T> input, Function<? super T, K> keyFunction,
+  public static <K, V, T> XMultimap<K, V> buildMultimap(Iterable<T> input, Function<? super T, K> keyFunction,
       Function<? super T, V> valueFunction) {
-    Multimap<K, V> ret = LinkedListMultimap.create();
+    XMultimap<K, V> ret = XMultimap.create();
     for (T t : input) {
       ret.put(keyFunction.apply(t), valueFunction.apply(t));
     }
     return ret;
   }
 
-  public static <K1, K2, V1, V2> Multimap<K2, V2> transformMultimap(Multimap<K1, V1> multimap,
+  public static <K1, K2, V1, V2> XMultimap<K2, V2> transformMultimap(Multimap<K1, V1> multimap,
       Function<? super K1, K2> keyFunction, Function<? super V1, V2> valueFunction) {
-    Multimap<K2, V2> ret = LinkedListMultimap.create();
+    XMultimap<K2, V2> ret = XMultimap.create();
     multimap.forEach((k, v) -> {
       ret.put(keyFunction.apply(k), valueFunction.apply(v));
     });

@@ -30,6 +30,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import ox.util.Utils;
+import ox.x.XList;
 import sun.misc.Unsafe;
 
 public class Reflection {

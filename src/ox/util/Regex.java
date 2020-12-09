@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 import com.google.common.collect.Maps;
 
-import ox.XList;
+import ox.x.XList;
 
 public class Regex {
 

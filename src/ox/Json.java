@@ -25,6 +25,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
+import ox.x.XList;
+
 public class Json implements Iterable<String> {
 
   private static final JsonParser parser = new JsonParser();

@@ -1,22 +1,20 @@
-package ox;
+package ox.x;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.ListMultimap;
+import com.google.common.collect.ForwardingList;
 import com.google.common.collect.Lists;
 
+import ox.Log;
 import ox.util.Functions;
 
 /**
@@ -42,27 +40,21 @@ import ox.util.Functions;
  * foo.map(...) //much easier!
  * </pre>
  */
-public class XList<T> extends ArrayList<T> {
+public class XList<T> extends ForwardingList<T> {
+
+  private final List<T> delgate;
 
   public XList() {
+    this(new ArrayList<>());
   }
 
-  public XList(Iterable<T> iter) {
-    this(Iterables.size(iter));
-    iter.forEach(this::add);
+  private XList(List<T> delegate) {
+    this.delgate = delegate;
   }
 
-  public XList(int capacity) {
-    super(capacity);
-  }
-
-  @SafeVarargs
-  public XList(T... values) {
-    this(Arrays.asList(values));
-  }
-
-  public XList(Collection<T> c) {
-    super(c);
+  @Override
+  protected List<T> delegate() {
+    return delgate;
   }
 
   public XList<T> removeNulls() {
@@ -106,7 +98,7 @@ public class XList<T> extends ArrayList<T> {
     return function.apply(this);
   }
 
-  public <V> Set<V> toSet(Function<T, V> function) {
+  public <V> XSet<V> toSet(Function<T, V> function) {
     return Functions.toSet(this, function);
   }
 
@@ -114,7 +106,7 @@ public class XList<T> extends ArrayList<T> {
     return Functions.index(this, function);
   }
 
-  public <V> ListMultimap<V, T> indexMultimap(Function<? super T, V> function) {
+  public <V> XMultimap<V, T> indexMultimap(Function<? super T, V> function) {
     return Functions.indexMultimap(this, function);
   }
 
@@ -207,19 +199,19 @@ public class XList<T> extends ArrayList<T> {
 
   @SafeVarargs
   public static <T> XList<T> of(T... values) {
-    return new XList<>(values);
+    return new XList<>(Lists.newArrayList(values));
   }
 
   public static <T> XList<T> createWithCapacity(int capacity) {
-    return new XList<T>(capacity);
+    return new XList<T>(Lists.newArrayListWithCapacity(capacity));
   }
 
   public static <T> XList<T> create(Iterable<T> iter) {
-    return new XList<T>(iter);
+    return new XList<T>(Lists.newArrayList(iter));
   }
 
   public static <T> XList<T> create(Collection<T> c) {
-    return new XList<T>(c);
+    return new XList<T>(Lists.newArrayList(c));
   }
 
 }
