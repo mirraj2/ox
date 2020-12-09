@@ -1,13 +1,13 @@
 package ox.util;
 
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
+import ox.XList;
 
 public class Regex {
 
@@ -38,10 +38,10 @@ public class Regex {
   /**
    * Gets all matches for the given pattern.
    */
-  public static List<String> matches(String pattern, String document) {
+  public static XList<String> matches(String pattern, String document) {
     Pattern p = patternCache.computeIfAbsent(pattern, Pattern::compile);
     Matcher m = p.matcher(document);
-    List<String> ret = Lists.newArrayList();
+    XList<String> ret = XList.create();
     while (m.find()) {
       if (m.groupCount() == 0) {
         ret.add(m.group());
