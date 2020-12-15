@@ -25,6 +25,11 @@ public class XMultimap<K, V> extends ForwardingMultimap<K, V> {
   }
 
   @Override
+  public XList<V> values() {
+    return XList.create(super.values());
+  }
+
+  @Override
   public XSet<K> keySet() {
     Set<K> set = super.keySet();
     return XSet.create(set);

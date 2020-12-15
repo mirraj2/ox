@@ -2,6 +2,7 @@ package ox.x;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 
 import com.google.common.collect.ForwardingSet;
 import com.google.common.collect.Sets;
@@ -19,6 +20,14 @@ public class XSet<T> extends ForwardingSet<T> {
   @Override
   protected Set<T> delegate() {
     return delegate;
+  }
+
+  /**
+   * Unlike map(), which calls the function one time per element, the given function will only be called once. It is
+   * passed this entire list as an argument.
+   */
+  public <V> V mapBulk(Function<? super XSet<T>, V> function) {
+    return function.apply(this);
   }
 
   public XSet<T> ifContains(T element, Runnable callback) {
