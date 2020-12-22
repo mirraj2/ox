@@ -9,6 +9,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -198,6 +200,14 @@ public class File {
 
   public static File appFolder(String appName, String child) {
     return appFolder(appName).child(child);
+  }
+
+  public static File fromURL(URL url) {
+    try {
+      return of(new java.io.File(url.toURI()));
+    } catch (URISyntaxException e) {
+      throw propagate(e);
+    }
   }
 
   public static File of(java.io.File file) {
