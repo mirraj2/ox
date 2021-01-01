@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -102,12 +101,20 @@ public class XList<T> extends ForwardingList<T> {
     return Functions.toSet(this, function);
   }
 
-  public <V> Map<V, T> index(Function<T, V> function) {
+  public <V> XMap<V, T> index(Function<T, V> function) {
     return Functions.index(this, function);
   }
 
   public <V> XMultimap<V, T> indexMultimap(Function<? super T, V> function) {
     return Functions.indexMultimap(this, function);
+  }
+
+  public <A, B> XMap<A, B> toMap(Function<T, A> keyFunction, Function<T, B> valueFunction) {
+    XMap<A, B> ret = XMap.create();
+    this.forEach(t -> {
+      ret.put(keyFunction.apply(t), valueFunction.apply(t));
+    });
+    return ret;
   }
 
   @SuppressWarnings({ "unchecked", "rawtypes" })

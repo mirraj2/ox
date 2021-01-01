@@ -19,6 +19,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 
 import ox.x.XList;
+import ox.x.XMap;
 import ox.x.XMultimap;
 import ox.x.XSet;
 
@@ -57,8 +58,10 @@ public final class Functions {
     return Lists.reverse(ImmutableList.copyOf(iter));
   }
 
-  public static <K, V> Map<K, V> index(Iterable<V> input, Function<V, K> function) {
-    return Maps.uniqueIndex(input, function::apply);
+  public static <K, V> XMap<K, V> index(Iterable<V> input, Function<V, K> function) {
+    XMap<K, V> ret = XMap.create();
+    input.forEach(x -> ret.put(function.apply(x), x));
+    return ret;
   }
 
   public static <K, V> Map<K, V> indexAllowNulls(Iterable<V> input, Function<V, K> function) {
