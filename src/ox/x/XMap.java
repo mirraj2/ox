@@ -1,6 +1,7 @@
 package ox.x;
 
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import com.google.common.collect.ForwardingMap;
@@ -23,6 +24,14 @@ public class XMap<K, V> extends ForwardingMap<K, V> {
     XMap<K2, V> ret = create();
     forEach((k, v) -> {
       ret.put(mappingFunction.apply(k), v);
+    });
+    return ret;
+  }
+
+  public <T> XList<T> toList(BiFunction<K, V, T> mappingFunction) {
+    XList<T> ret = XList.create();
+    forEach((k, v) -> {
+      ret.add(mappingFunction.apply(k, v));
     });
     return ret;
   }
