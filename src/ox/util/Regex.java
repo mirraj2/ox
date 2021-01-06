@@ -1,6 +1,7 @@
 package ox.util;
 
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,27 +40,31 @@ public class Regex {
    * Gets all matches for the given pattern.
    */
   public static XList<String> matches(String pattern, String document) {
-    Pattern p = patternCache.computeIfAbsent(pattern, Pattern::compile);
-    Matcher m = p.matcher(document);
     XList<String> ret = XList.create();
-    while (m.find()) {
+    run(pattern, document, m -> {
       if (m.groupCount() == 0) {
         ret.add(m.group());
       } else {
         ret.add(m.group(1));
       }
-    }
+    });
     return ret;
   }
 
-  public static String replaceAll(String pattern, String document, Function<Matcher, String> callback) {
+  public static Matcher run(String pattern, String document, Consumer<Matcher> callback) {
     Pattern p = patternCache.computeIfAbsent(pattern, Pattern::compile);
     Matcher m = p.matcher(document);
-    StringBuffer ret = new StringBuffer();
     while (m.find()) {
-      m.appendReplacement(ret, callback.apply(m));
+      callback.accept(m);
     }
-    m.appendTail(ret);
+    return m;
+  }
+
+  public static String replaceAll(String pattern, String document, Function<Matcher, String> callback) {
+    StringBuffer ret = new StringBuffer();
+    run(pattern, document, m -> {
+      m.appendReplacement(ret, callback.apply(m));
+    }).appendTail(ret);
     return ret.toString();
   }
 }
