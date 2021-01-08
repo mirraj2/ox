@@ -97,6 +97,10 @@ public class XList<T> extends ForwardingList<T> {
     return function.apply(this);
   }
 
+  public XSet<T> toSet() {
+    return XSet.create(this);
+  }
+
   public <V> XSet<V> toSet(Function<T, V> function) {
     return Functions.toSet(this, function);
   }
