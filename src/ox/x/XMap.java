@@ -36,6 +36,11 @@ public class XMap<K, V> extends ForwardingMap<K, V> {
     return ret;
   }
 
+  @Override
+  public XList<V> values() {
+    return XList.create(super.values());
+  }
+
   public static <K, V> XMap<K, V> create() {
     return new XMap<>(Maps.newLinkedHashMap());
   }
