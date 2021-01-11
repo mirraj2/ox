@@ -148,12 +148,18 @@ public class Reflection {
         if (type == LocalDate.class) {
           value = ((java.sql.Date) value).toLocalDate();
         }
-      } else if (type == Money.class && value instanceof Long) {
-        value = Money.fromLong((Long) value);
-      } else if (type == Money.class && value instanceof Integer) {
-        value = Money.fromLong((Integer) value);
-      } else if (type == Instant.class && value instanceof Long) {
-        value = Instant.ofEpochMilli((Long) value);
+      } else if (value instanceof Long) {
+        if (type == Money.class) {
+          value = Money.fromLong((Long) value);
+        } else if (type == Instant.class) {
+          value = Instant.ofEpochMilli((Long) value);
+        }
+      } else if (value instanceof Integer) {
+        if (type == Money.class) {
+          value = Money.fromLong((Integer) value);
+        } else if (type == Long.class) {
+          value = ((Integer) value).longValue();
+        }
       }
       if (wrapWithOptional) {
         value = Optional.ofNullable(value);
