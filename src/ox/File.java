@@ -11,13 +11,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.List;
 import java.util.function.Consumer;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableList;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
+
+import ox.x.XList;
 
 public class File {
 
@@ -73,9 +73,9 @@ public class File {
     return getExtension(getPath());
   }
 
-  public List<File> children() {
+  public XList<File> children() {
     if (!file.isDirectory()) {
-      return ImmutableList.of();
+      return XList.empty();
     }
     java.io.File[] files = file.listFiles();
     checkState(files != null, file + " does not exist.");
