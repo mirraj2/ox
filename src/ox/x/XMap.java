@@ -7,6 +7,8 @@ import java.util.function.Function;
 import com.google.common.collect.ForwardingMap;
 import com.google.common.collect.Maps;
 
+import ox.Log;
+
 public class XMap<K, V> extends ForwardingMap<K, V> {
 
   private Map<K, V> delgate;
@@ -39,6 +41,13 @@ public class XMap<K, V> extends ForwardingMap<K, V> {
   @Override
   public XList<V> values() {
     return XList.create(super.values());
+  }
+
+  public XMap<K, V> log() {
+    this.forEach((k, v) -> {
+      Log.debug(k + " = " + v);
+    });
+    return this;
   }
 
   public static <K, V> XMap<K, V> create() {
