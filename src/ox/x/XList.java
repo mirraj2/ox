@@ -217,7 +217,7 @@ public class XList<T> extends ForwardingList<T> {
     return new XList<T>(Lists.newArrayListWithCapacity(capacity));
   }
 
-  public static <T> XList<T> create(Iterable<T> iter) {
+  public static <T> XList<T> create(Iterable<? extends T> iter) {
     return new XList<T>(Lists.newArrayList(iter));
   }
 
