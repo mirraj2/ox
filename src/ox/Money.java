@@ -130,6 +130,10 @@ public class Money implements Comparable<Money> {
     return a.cents <= b.cents ? a : b;
   }
 
+  public static Money max(Money a, Money b) {
+    return a.cents >= b.cents ? a : b;
+  }
+
   public static Money fromLong(long totalCents) {
     return new Money(totalCents);
   }
