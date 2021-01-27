@@ -646,11 +646,11 @@ public class HttpRequest {
 
   private long totalSize = -1;
 
-  private long totalWritten = 0;
+  // private long totalWritten = 0;
 
   private Proxy proxy = null;
 
-  private UploadProgress progress = UploadProgress.DEFAULT;
+  // private UploadProgress progress = UploadProgress.DEFAULT;
 
   public HttpRequest(final String url, final String method)
       throws HttpRequestException {
@@ -1217,14 +1217,14 @@ public class HttpRequest {
     }.call();
   }
 
-  public HttpRequest progress(final UploadProgress callback) {
-    if (callback == null) {
-      progress = UploadProgress.DEFAULT;
-    } else {
-      progress = callback;
-    }
-    return this;
-  }
+  // public HttpRequest progress(final UploadProgress callback) {
+  // if (callback == null) {
+  // progress = UploadProgress.DEFAULT;
+  // } else {
+  // progress = callback;
+  // }
+  // return this;
+  // }
 
   private HttpRequest incrementTotalSize(final long size) {
     if (totalSize == -1) {
@@ -1235,7 +1235,7 @@ public class HttpRequest {
   }
 
   protected HttpRequest closeOutput() throws IOException {
-    progress(null);
+    // progress(null);
     if (output == null) {
       return this;
     }

@@ -94,6 +94,7 @@ public class Utils {
   }
 
   private static final String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
+
   public static String formatBytes(long size) {
     if (size <= 0) {
       return "0";
@@ -199,7 +200,7 @@ public class Utils {
 
   public static boolean isValidPhoneNumber(String phoneNumber) {
     String digits = Matchers.javaDigit().retainFrom(phoneNumber);
-    return digits.length() >= 10; // TODO
+    return digits.length() >= 10;
   }
 
   public static String formatPhone(String phoneNumber) {
@@ -314,7 +315,6 @@ public class Utils {
     checkArgument(!iter.hasNext(), "Expected one element, but found multiple.");
     return ret;
   }
-
 
   public static String normalize(String s) {
     return s == null ? "" : trim(s);
@@ -438,7 +438,7 @@ public class Utils {
     }
     return ret;
   }
-  
+
   /**
    * 5 "apple" would return "5 apples"<br>
    * 1 "apple" would return "1 apple"

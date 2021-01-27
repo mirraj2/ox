@@ -1,5 +1,7 @@
 package ox.x;
 
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
@@ -46,12 +48,19 @@ public class XSet<T> extends ForwardingSet<T> {
     return Optional.ofNullable(Utils.only(this));
   }
 
+  @SafeVarargs
+  public static <T> XSet<T> of(T... values) {
+    XSet<T> ret = new XSet<>(new LinkedHashSet<>(values.length));
+    Collections.addAll(ret, values);
+    return ret;
+  }
+
   public static <T> XSet<T> create(Set<T> set) {
     return new XSet<T>(set);
   }
 
   public static <T> XSet<T> create(Iterable<T> iter) {
-    return new XSet<T>(Sets.newHashSet(iter));
+    return new XSet<T>(Sets.newLinkedHashSet(iter));
   }
 
 }
