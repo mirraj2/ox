@@ -147,7 +147,24 @@ public class Money implements Comparable<Money> {
   }
 
   public static Money parse(String s) {
-    return fromLong(parseMoney(s).multiply(new BigDecimal(100)).longValueExact());
+    try {
+      return fromLong(parseMoney(s).multiply(new BigDecimal(100)).longValueExact());
+    } catch (Throwable t) {
+      Log.error("Problem parsing: " + s);
+      throw t;
+    }
+  }
+
+  /**
+   * Just like parse(), except this allows values such as "4206.8100000000004" to be rounded to "4206.81"
+   */
+  public static Money parseLoosely(String s) {
+    try {
+      return fromLong(parseMoney(s).multiply(new BigDecimal(100)).longValue());
+    } catch (Throwable t) {
+      Log.error("Problem parsing: " + s);
+      throw t;
+    }
   }
 
 }

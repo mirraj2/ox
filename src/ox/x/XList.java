@@ -51,6 +51,12 @@ public class XList<T> extends ForwardingList<T> {
     this.delgate = delegate;
   }
 
+  public XList<T> replace(int index, Function<T, T> replacementFunction) {
+    T newVal = replacementFunction.apply(get(index));
+    set(index, newVal);
+    return this;
+  }
+
   @Override
   protected List<T> delegate() {
     return delgate;
