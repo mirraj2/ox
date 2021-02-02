@@ -10,7 +10,6 @@ import static java.lang.Long.parseLong;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
-import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
@@ -48,7 +47,6 @@ public class Utils {
   public static final DecimalFormat decimalFormat = new DecimalFormat("#,##0.00#########");
   public static final DecimalFormat decimalFormat2 = new DecimalFormat("#,##0.00");
   public static final DecimalFormat noDecimalFormat = new DecimalFormat("#,##0");
-  private static final CharMatcher moneyMatcher = CharMatcher.anyOf("$£€ ,-–()").precomputed();
 
   private static final SecureRandom random = new SecureRandom();
   private static final Base64.Encoder tokenEncoder = Base64.getUrlEncoder().withoutPadding();
@@ -101,22 +99,6 @@ public class Utils {
     }
     int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
     return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
-  }
-
-  public static BigDecimal parseMoney(String s) {
-    if (isNullOrEmpty(s)) {
-      return null;
-    }
-    BigDecimal ret;
-    try {
-      ret = new BigDecimal(moneyMatcher.removeFrom(s));
-    } catch (Throwable t) {
-      throw new RuntimeException("Couldn't parse money: " + s);
-    }
-    if (s.charAt(0) == '-' || s.charAt(0) == '–' || s.charAt(0) == '(') {
-      ret = ret.negate();
-    }
-    return ret;
   }
 
   public static double parsePercent(String s) {

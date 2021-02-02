@@ -1,12 +1,12 @@
 package ox;
 
 import static ox.util.Utils.format;
-import static ox.util.Utils.parseMoney;
+import static ox.util.Utils.isNullOrEmpty;
 import static ox.util.Utils.signum;
 
-import java.math.BigDecimal;
 import java.util.function.Function;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.base.Functions;
 
 import ox.util.Utils;
@@ -14,6 +14,7 @@ import ox.util.Utils;
 public class Money implements Comparable<Money> {
 
   public static final Money ZERO = Money.dollars(0);
+  private static final CharMatcher moneyMatcher = CharMatcher.anyOf("$£€ ,-–()").precomputed();
 
   private final long cents;
 
@@ -147,24 +148,19 @@ public class Money implements Comparable<Money> {
   }
 
   public static Money parse(String s) {
-    try {
-      return fromLong(parseMoney(s).multiply(new BigDecimal(100)).longValueExact());
-    } catch (Throwable t) {
-      Log.error("Problem parsing: " + s);
-      throw t;
+    if (isNullOrEmpty(s)) {
+      return null;
     }
-  }
+    double d = Double.parseDouble(moneyMatcher.removeFrom(s));
+    d = d * 100;
 
-  /**
-   * Just like parse(), except this allows values such as "4206.8100000000004" to be rounded to "4206.81"
-   */
-  public static Money parseLoosely(String s) {
-    try {
-      return fromLong(parseMoney(s).multiply(new BigDecimal(100)).longValue());
-    } catch (Throwable t) {
-      Log.error("Problem parsing: " + s);
-      throw t;
+    long n = Math.round(d);
+
+    if (s.charAt(0) == '-' || s.charAt(0) == '–' || s.charAt(0) == '(') {
+      n = -n;
     }
+
+    return new Money(n);
   }
 
 }
