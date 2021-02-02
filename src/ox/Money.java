@@ -143,7 +143,7 @@ public class Money implements Comparable<Money> {
   }
 
   public static Money fromDouble(Double d) {
-    return d == null ? null : fromLong((long) (d * 100));
+    return d == null ? null : fromLong(Math.round(d * 100));
   }
 
   public static Money parse(String s) {
