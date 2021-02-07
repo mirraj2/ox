@@ -43,6 +43,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
@@ -280,6 +281,10 @@ public class HttpRequest {
   public static class HttpRequestException extends RuntimeException {
 
     private static final long serialVersionUID = -1170466989781746231L;
+
+    public HttpRequestException(String msg, final IOException cause) {
+      super(msg, cause);
+    }
 
     public HttpRequestException(final IOException cause) {
       super(cause);
@@ -1418,6 +1423,9 @@ public class HttpRequest {
       openOutput();
       output.write(value.toString());
     } catch (IOException e) {
+      if (e instanceof ConnectException) {
+        throw new HttpRequestException("Problem connecting to url: " + url, e);
+      }
       throw new HttpRequestException(e);
     }
     return this;
