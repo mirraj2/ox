@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import com.google.common.base.Functions;
 import com.google.common.collect.ForwardingMap;
 import com.google.common.collect.Maps;
 
@@ -22,10 +23,18 @@ public class XMap<K, V> extends ForwardingMap<K, V> {
     return delgate;
   }
 
-  public <K2> XMap<K2, V> transformKeys(Function<K, K2> mappingFunction) {
-    XMap<K2, V> ret = create();
+  public <K2> XMap<K2, V> transformKeys(Function<K, K2> keyFunction) {
+    return transform(keyFunction, Functions.identity());
+  }
+
+  public <V2> XMap<K, V2> transformValues(Function<V, V2> valueFunction) {
+    return transform(Functions.identity(), valueFunction);
+  }
+
+  public <K2, V2> XMap<K2, V2> transform(Function<K, K2> keyFunction, Function<V, V2> valueFunction) {
+    XMap<K2, V2> ret = create();
     forEach((k, v) -> {
-      ret.put(mappingFunction.apply(k), v);
+      ret.put(keyFunction.apply(k), valueFunction.apply(v));
     });
     return ret;
   }
