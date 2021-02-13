@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -161,23 +160,23 @@ public class XList<T> extends ForwardingList<T> {
     return ret;
   }
 
-  public Optional<T> first() {
+  public XOptional<T> first() {
     if (isEmpty()) {
-      return Optional.empty();
+      return XOptional.empty();
     }
-    return Optional.ofNullable(get(0));
+    return XOptional.ofNullable(get(0));
   }
 
-  public Optional<T> last() {
-    return isEmpty() ? Optional.empty() : Optional.ofNullable(get(size() - 1));
+  public XOptional<T> last() {
+    return isEmpty() ? XOptional.empty() : XOptional.ofNullable(get(size() - 1));
   }
 
-  public Optional<T> only() {
+  public XOptional<T> only() {
     int size = size();
     if (size == 1) {
-      return Optional.ofNullable(get(0));
+      return XOptional.ofNullable(get(0));
     } else if (size == 0) {
-      return Optional.empty();
+      return XOptional.empty();
     } else {
       throw new IllegalStateException("Expected one element, but had " + size());
     }
