@@ -5,6 +5,9 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.util.function.Consumer;
 
+/**
+ * Like Optional, but with some additional functionality.
+ */
 public class XOptional<T> {
 
   private final T value;
