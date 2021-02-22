@@ -191,8 +191,12 @@ public class XList<T> extends ForwardingList<T> {
   }
 
   public XList<T> log() {
-    Log.debug(this);
+    forEach(Log::debug);
     return this;
+  }
+
+  public boolean hasData() {
+    return size() > 0;
   }
 
   public static <T> XList<T> create() {

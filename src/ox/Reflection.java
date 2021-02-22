@@ -5,6 +5,7 @@ import static ox.util.Utils.propagate;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -24,7 +25,6 @@ import java.util.UUID;
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -243,12 +243,12 @@ public class Reflection {
     return ret;
   }
 
-  public static List<Field> getFields(Class<?> c) {
-    return ImmutableList.copyOf(c.getDeclaredFields());
+  public static XList<Field> getFields(Class<?> c) {
+    return XList.of(c.getDeclaredFields());
   }
 
-  public static List<Method> getMethods(Class<?> c) {
-    return ImmutableList.copyOf(c.getDeclaredMethods());
+  public static XList<Method> getMethods(Class<?> c) {
+    return XList.of(c.getDeclaredMethods());
   }
 
   public static Method getMethod(Class<?> c, String methodName) {
@@ -293,6 +293,11 @@ public class Reflection {
 
   private static Class<?> getTypeArgument(Type t) {
     return (Class<?>) ((ParameterizedType) t).getActualTypeArguments()[0];
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T> XList<Constructor<T>> getConstructors(Class<? super T> c) {
+    return XList.of((Constructor<T>[]) c.getConstructors());
   }
 
   @SuppressWarnings("unchecked")
@@ -342,6 +347,27 @@ public class Reflection {
       }
     }
     return classes;
+  }
+
+  public static ClassWrapper is(Class<?> a) {
+    return new ClassWrapper(a);
+  }
+
+  public static class ClassWrapper {
+
+    private final Class<?> a;
+
+    public ClassWrapper(Class<?> a) {
+      this.a = a;
+    }
+
+    public boolean subclassOf(Class<?> b) {
+      return b.isAssignableFrom(a);
+    }
+
+    public boolean superclassOf(Class<?> b) {
+      return a.isAssignableFrom(b);
+    }
   }
 
 }
