@@ -9,8 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import com.google.common.base.Charsets;
@@ -128,12 +127,15 @@ public class Json implements Iterable<String> {
   }
 
   public Object getObject(String key) {
-    JsonElement e = getElement(key);
+    return toObject(getElement(key));
+  }
+
+  private Object toObject(JsonElement e) {
     if (e == null) {
       return null;
     }
     if (e.isJsonObject() || e.isJsonArray()) {
-      return getJson(key);
+      return new Json(e);
     } else if (e.isJsonPrimitive()) {
       JsonPrimitive jp = e.getAsJsonPrimitive();
       if (jp.isNumber()) {
@@ -408,8 +410,7 @@ public class Json implements Iterable<String> {
     if (isArray()) {
       return Iterators.transform(arr().iterator(), JsonElement::getAsString);
     } else {
-      Set<Entry<String, JsonElement>> entries = obj().entrySet();
-      return Iterators.transform(entries.iterator(), Entry::getKey);
+      return obj().keySet().iterator();
     }
   }
 
@@ -421,6 +422,11 @@ public class Json implements Iterable<String> {
   public Json rename(String oldKeyName, String newKeyName) {
     JsonElement e = obj().remove(oldKeyName);
     obj().add(newKeyName, e);
+    return this;
+  }
+
+  public Json forEach(BiConsumer<String, Object> callback) {
+    obj().entrySet().forEach(entry -> callback.accept(entry.getKey(), toObject(entry.getValue())));
     return this;
   }
 

@@ -94,16 +94,20 @@ public class Reflection {
     }
   }
 
-  @SuppressWarnings("unchecked")
   public static <T> T get(Object o, String fieldName) {
     Field field = getField(o.getClass(), fieldName);
+    return get(o, field);
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T> T get(Object o, Field field) {
     if (field == null) {
       return null;
     }
     try {
       return (T) field.get(o);
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      throw propagate(e);
     }
   }
 
@@ -292,7 +296,11 @@ public class Reflection {
   }
 
   private static Class<?> getTypeArgument(Type t) {
-    return (Class<?>) ((ParameterizedType) t).getActualTypeArguments()[0];
+    Type type = ((ParameterizedType) t).getActualTypeArguments()[0];
+    if (type instanceof ParameterizedType) {
+      type = ((ParameterizedType) type).getRawType();
+    }
+    return (Class<?>) type;
   }
 
   @SuppressWarnings("unchecked")
