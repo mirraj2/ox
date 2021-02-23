@@ -349,6 +349,10 @@ public class Reflection {
     return classes;
   }
 
+  public static boolean isAbstract(Class<?> c) {
+    return Modifier.isAbstract(c.getModifiers());
+  }
+
   public static ClassWrapper is(Class<?> a) {
     return new ClassWrapper(a);
   }
