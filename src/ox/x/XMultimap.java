@@ -2,6 +2,7 @@ package ox.x;
 
 import java.util.Collection;
 import java.util.Set;
+import java.util.function.Function;
 
 import com.google.common.collect.ForwardingMultimap;
 import com.google.common.collect.LinkedListMultimap;
@@ -9,10 +10,10 @@ import com.google.common.collect.Multimap;
 
 public class XMultimap<K, V> extends ForwardingMultimap<K, V> {
 
-  private Multimap<K, V> delgate;
+  private Multimap<K, V> delegate;
 
   public XMultimap(Multimap<K, V> delgate) {
-    this.delgate = delgate;
+    this.delegate = delgate;
   }
 
   /**
@@ -35,9 +36,17 @@ public class XMultimap<K, V> extends ForwardingMultimap<K, V> {
     return XSet.create(set);
   }
 
+  public <V2> XMap<K, V2> toMap(Function<Collection<V>, V2> valueReducer) {
+    XMap<K, V2> ret = XMap.create();
+    for (K key : delegate.keySet()) {
+      ret.put(key, valueReducer.apply(delegate.get(key)));
+    }
+    return ret;
+  }
+
   @Override
   protected Multimap<K, V> delegate() {
-    return delgate;
+    return delegate;
   }
 
   public static <K, V> XMultimap<K, V> create() {
