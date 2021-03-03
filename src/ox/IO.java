@@ -129,7 +129,9 @@ public class IO {
 
   public static void close(Closeable c) {
     try {
-      c.close();
+      if (c != null) {
+        c.close();
+      }
     } catch (IOException e) {
       throw propagate(e);
     }
