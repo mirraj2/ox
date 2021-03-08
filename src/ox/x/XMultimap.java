@@ -2,6 +2,7 @@ package ox.x;
 
 import java.util.Collection;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import com.google.common.collect.ForwardingMultimap;
@@ -40,6 +41,14 @@ public class XMultimap<K, V> extends ForwardingMultimap<K, V> {
     XMap<K, V2> ret = XMap.create();
     for (K key : delegate.keySet()) {
       ret.put(key, valueReducer.apply(delegate.get(key)));
+    }
+    return ret;
+  }
+
+  public <T> XList<T> toList(BiFunction<K, Collection<V>, T> mappingFunction) {
+    XList<T> ret = XList.create();
+    for (K key : super.keySet()) {
+      ret.add(mappingFunction.apply(key, super.get(key)));
     }
     return ret;
   }
