@@ -127,6 +127,10 @@ public class Money implements Comparable<Money> {
     return fromLong(ret);
   }
 
+  public static Money sum(Money a, Money b) {
+    return a.add(b);
+  }
+
   public static Money min(Money a, Money b) {
     return a.cents <= b.cents ? a : b;
   }

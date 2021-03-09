@@ -39,6 +39,10 @@ public class XSet<T> extends ForwardingSet<T> {
     return this;
   }
 
+  public XSet<T> minus(XSet<T> set2) {
+    return XSet.create(Sets.difference(this, set2));
+  }
+
   public XSet<T> removeNull() {
     remove(null);
     return this;
@@ -46,6 +50,10 @@ public class XSet<T> extends ForwardingSet<T> {
 
   public Optional<T> only() {
     return Optional.ofNullable(Utils.only(this));
+  }
+
+  public XList<T> toList() {
+    return XList.create(this);
   }
 
   @SafeVarargs

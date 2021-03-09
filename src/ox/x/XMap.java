@@ -48,6 +48,11 @@ public class XMap<K, V> extends ForwardingMap<K, V> {
   }
 
   @Override
+  public XSet<K> keySet() {
+    return XSet.create(super.keySet());
+  }
+
+  @Override
   public XList<V> values() {
     return XList.create(super.values());
   }
