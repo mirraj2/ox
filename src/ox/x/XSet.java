@@ -24,6 +24,14 @@ public class XSet<T> extends ForwardingSet<T> {
     return delegate;
   }
 
+  public <V> XSet<V> map(Function<T, V> function) {
+    XSet<V> ret = XSet.of();
+    for (T item : this) {
+      ret.add(function.apply(item));
+    }
+    return ret;
+  }
+
   /**
    * Unlike map(), which calls the function one time per element, the given function will only be called once. It is
    * passed this entire list as an argument.
