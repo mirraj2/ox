@@ -26,6 +26,10 @@ public class Money implements Comparable<Money> {
     return new Money(-cents);
   }
 
+  public Money abs() {
+    return cents >= 0 ? this : negate();
+  }
+
   public Money add(Money m) {
     return new Money(cents + m.cents);
   }
