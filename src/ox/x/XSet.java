@@ -63,6 +63,10 @@ public class XSet<T> extends ForwardingSet<T> {
     return ret;
   }
 
+  public static <T> XSet<T> create() {
+    return new XSet<>(new LinkedHashSet<>());
+  }
+
   public static <T> XSet<T> create(Set<T> set) {
     return new XSet<T>(set);
   }

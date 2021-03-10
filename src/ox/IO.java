@@ -128,6 +128,9 @@ public class IO {
   }
 
   public static void close(Closeable c) {
+    if (c == null) {
+      return;
+    }
     try {
       c.close();
     } catch (IOException e) {
