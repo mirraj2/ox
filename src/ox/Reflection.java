@@ -31,6 +31,7 @@ import com.google.common.collect.Maps;
 
 import ox.util.Utils;
 import ox.x.XList;
+import ox.x.XOptional;
 import sun.misc.Unsafe;
 
 public class Reflection {
@@ -129,45 +130,48 @@ public class Reflection {
     if (field == null) {
       return;
     }
+    Class<?> originalType = field.getType();
+    Class<?> rawType = originalType;
+    if (originalType == Optional.class || originalType == XOptional.class) {
+      rawType = getTypeArgument(field.getGenericType());
+    }
+    if (value instanceof String) {
+      if (rawType.isEnum()) {
+        value = Utils.parseEnum((String) value, (Class<? extends Enum>) rawType);
+      } else if (rawType == LocalDateTime.class) {
+        value = LocalDateTime.parse((String) value);
+      } else if (rawType == Json.class) {
+        value = new Json((String) value);
+      } else if (rawType == LocalTime.class) {
+        value = LocalTime.parse((String) value);
+      } else if (rawType == UUID.class) {
+        value = UUID.fromString((String) value);
+      }
+    } else if (value instanceof java.sql.Date) {
+      if (rawType == LocalDate.class) {
+        value = ((java.sql.Date) value).toLocalDate();
+      }
+    } else if (value instanceof Long) {
+      if (rawType == Money.class) {
+        value = Money.fromLong((Long) value);
+      } else if (rawType == Instant.class) {
+        value = Instant.ofEpochMilli((Long) value);
+      }
+    } else if (value instanceof Integer) {
+      if (rawType == Money.class) {
+        value = Money.fromLong((Integer) value);
+      } else if (rawType == Long.class) {
+        value = ((Integer) value).longValue();
+      }
+    }
+
+    if (originalType == Optional.class) {
+      value = Optional.ofNullable(value);
+    } else if (originalType == XOptional.class) {
+      value = XOptional.ofNullable(value);
+    }
+
     try {
-      Class<?> type = field.getType();
-      boolean wrapWithOptional = false;
-      if (type == Optional.class) {
-        wrapWithOptional = true;
-        type = getTypeArgument(field.getGenericType());
-      }
-      if (value instanceof String) {
-        if (type.isEnum()) {
-          value = Utils.parseEnum((String) value, (Class<? extends Enum>) type);
-        } else if (type == LocalDateTime.class) {
-          value = LocalDateTime.parse((String) value);
-        } else if (type == Json.class) {
-          value = new Json((String) value);
-        } else if (type == LocalTime.class) {
-          value = LocalTime.parse((String) value);
-        } else if (type == UUID.class) {
-          value = UUID.fromString((String) value);
-        }
-      } else if (value instanceof java.sql.Date) {
-        if (type == LocalDate.class) {
-          value = ((java.sql.Date) value).toLocalDate();
-        }
-      } else if (value instanceof Long) {
-        if (type == Money.class) {
-          value = Money.fromLong((Long) value);
-        } else if (type == Instant.class) {
-          value = Instant.ofEpochMilli((Long) value);
-        }
-      } else if (value instanceof Integer) {
-        if (type == Money.class) {
-          value = Money.fromLong((Integer) value);
-        } else if (type == Long.class) {
-          value = ((Integer) value).longValue();
-        }
-      }
-      if (wrapWithOptional) {
-        value = Optional.ofNullable(value);
-      }
       field.set(o, value);
     } catch (Exception e) {
       throw new RuntimeException(e);
