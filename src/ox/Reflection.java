@@ -304,7 +304,7 @@ public class Reflection {
   }
 
   @SuppressWarnings("unchecked")
-  public static <T> XList<Constructor<T>> getConstructors(Class<? super T> c) {
+  public static <T> XList<Constructor<T>> getConstructors(Class<?> c) {
     return XList.of((Constructor<T>[]) c.getConstructors());
   }
 
