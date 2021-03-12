@@ -22,6 +22,7 @@ public class Time {
   public static final ZoneId CENTRAL = ZoneId.of("US/Central");
   public static final ZoneId NEW_YORK = ZoneId.of("America/New_York");
   public static ZoneId DEFAULT_TIME_ZONE = PACIFIC_TIME;
+  public static TimeWrapper timeWrapper = new TimeWrapper();
 
   public static final DateTimeFormatter slashFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
   private static final DateTimeFormatter longFormat = DateTimeFormatter.ofPattern("MMM d, yyyy");
@@ -58,7 +59,7 @@ public class Time {
   }
 
   public static LocalDate now() {
-    return LocalDate.now(DEFAULT_TIME_ZONE);
+    return timeWrapper.now();
   }
 
   public static int daysSince(long timestamp) {
@@ -158,6 +159,12 @@ public class Time {
 
   public static void setDefaultTimeZone(ZoneId zone) {
     Time.DEFAULT_TIME_ZONE = checkNotNull(zone);
+  }
+
+  public static class TimeWrapper {
+    public LocalDate now() {
+      return LocalDate.now(DEFAULT_TIME_ZONE);
+    }
   }
 
 }
