@@ -64,6 +64,10 @@ public class XMap<K, V> extends ForwardingMap<K, V> {
     return this;
   }
 
+  public boolean hasData() {
+    return size() > 0;
+  }
+
   public static <K, V> XMap<K, V> create() {
     return new XMap<>(Maps.newLinkedHashMap());
   }

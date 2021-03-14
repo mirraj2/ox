@@ -369,6 +369,10 @@ public class Reflection {
     return Modifier.isAbstract(c.getModifiers());
   }
 
+  public static boolean isPublic(Field f) {
+    return Modifier.isPublic(f.getModifiers());
+  }
+
   public static ClassWrapper is(Class<?> a) {
     return new ClassWrapper(a);
   }
