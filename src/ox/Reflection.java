@@ -219,7 +219,11 @@ public class Reflection {
     }
   }
 
-  private static Field getField(Class<?> c, String fieldName) {
+  public static Field getField(Object o, String fieldName) {
+    return getField(o.getClass(), fieldName);
+  }
+
+  public static Field getField(Class<?> c, String fieldName) {
     String key = c.getName() + fieldName;
 
     Field ret = fieldCache.get(key);
