@@ -2,7 +2,6 @@ package ox.x;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -48,8 +47,8 @@ public class XSet<T> extends ForwardingSet<T> {
     return this;
   }
 
-  public Optional<T> only() {
-    return Optional.ofNullable(Utils.only(this));
+  public XOptional<T> only() {
+    return XOptional.ofNullable(Utils.only(this));
   }
 
   public XList<T> toList() {
