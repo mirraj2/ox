@@ -5,6 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import com.google.common.collect.ForwardingSet;
 import com.google.common.collect.Sets;
@@ -41,6 +42,16 @@ public class XSet<T> extends ForwardingSet<T> {
 
   public XSet<T> minus(XSet<T> set2) {
     return XSet.create(Sets.difference(this, set2));
+  }
+
+  public XSet<T> filter(Predicate<T> filter) {
+    XSet<T> ret = XSet.create();
+    for (T item : this) {
+      if (filter.test(item)) {
+        ret.add(item);
+      }
+    }
+    return ret;
   }
 
   public XSet<T> removeNull() {
