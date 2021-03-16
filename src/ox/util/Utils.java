@@ -16,6 +16,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.SecureRandom;
 import java.text.DecimalFormat;
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Base64;
@@ -92,6 +93,10 @@ public class Utils {
   }
 
   private static final String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
+
+  public static String f(String format, Object... args) {
+    return MessageFormat.format(format, args);
+  }
 
   public static String formatBytes(long size) {
     if (size <= 0) {

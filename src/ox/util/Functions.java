@@ -139,6 +139,11 @@ public final class Functions {
     return ret;
   }
 
+  @SafeVarargs
+  public static <T extends Comparable<? super T>> T min(T... values) {
+    return min(values);
+  }
+
   public static <T extends Comparable<? super T>> T min(Iterable<T> iter) {
     T ret = null;
     for (T t : iter) {
