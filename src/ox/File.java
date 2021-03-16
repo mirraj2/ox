@@ -6,9 +6,11 @@ import static ox.util.Utils.getExtension;
 import static ox.util.Utils.propagate;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.function.Consumer;
@@ -120,6 +122,14 @@ public class File {
 
   public boolean isDirectory() {
     return file.isDirectory();
+  }
+
+  public OutputStream getOutputStream() {
+    try {
+      return new FileOutputStream(this.file);
+    } catch (Exception e) {
+      throw propagate(e);
+    }
   }
 
   public InputStream stream() {
