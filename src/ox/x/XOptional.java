@@ -38,7 +38,7 @@ public class XOptional<T> {
   }
 
   public XOptional<T> ifEmpty(Runnable callback) {
-    if (!isEmpty()) {
+    if (isEmpty()) {
       callback.run();
     }
     return this;
