@@ -48,8 +48,8 @@ import ox.util.CSVReader;
 
 public class IO {
 
-  public static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36"
-      + " (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36";
+  public static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36"
+      + " (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36";
 
   public static Input from(Json json) {
     return from(json.toString());
