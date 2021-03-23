@@ -140,7 +140,7 @@ public final class Functions {
   }
 
   @SafeVarargs
-  public static <T extends Comparable<? super T>> T maxOf(T... values) {
+  public static <T extends Comparable<? super T>> T max(T... values) {
     return max(Arrays.asList(values));
   }
 
@@ -155,7 +155,7 @@ public final class Functions {
   }
 
   @SafeVarargs
-  public static <T extends Comparable<? super T>> T minOf(T... values) {
+  public static <T extends Comparable<? super T>> T min(T... values) {
     return min(Arrays.asList(values));
   }
 
