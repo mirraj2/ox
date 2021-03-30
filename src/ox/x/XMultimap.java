@@ -19,6 +19,10 @@ public class XMultimap<K, V> extends ForwardingMultimap<K, V> {
 
   /**
    * Note: unlike a normal multimap, changes to this returned list will NOT affect the underlying multimap.
+   * 
+   * If the key is missing, returns an empty list (as opposed to null).
+   * 
+   * {@code null} is a valid value of {@code key}. It is treated the same as any other key.
    */
   @Override
   public XList<V> get(K key) {
