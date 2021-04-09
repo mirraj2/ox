@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 import com.google.common.base.CharMatcher;
@@ -457,6 +458,24 @@ public class Utils {
   public static RuntimeException propagate(Throwable throwable) {
     Throwables.throwIfUnchecked(throwable);
     throw new RuntimeException(throwable);
+  }
+
+  public static <T> T attempt(Supplier<T> function, int maxTries, int delayBetweenTriesMillis) {
+    checkState(maxTries > 0);
+
+    Throwable toThrow = null;
+    for (int i = 0; i < maxTries; i++) {
+      try {
+        return function.get();
+      } catch (Throwable t) {
+        Log.error("Utils.attempt: Exception thrown, trying again...");
+        toThrow = t;
+        if (i < maxTries - 1) {
+          sleep(delayBetweenTriesMillis);
+        }
+      }
+    }
+    throw propagate(toThrow);
   }
 
 }
