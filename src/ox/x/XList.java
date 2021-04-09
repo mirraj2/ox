@@ -230,7 +230,7 @@ public class XList<T> extends ForwardingList<T> {
     return new XList<T>(Lists.newArrayList(iter));
   }
 
-  public static <T> XList<T> create(Collection<T> c) {
+  public static <T> XList<T> create(Collection<? extends T> c) {
     return new XList<T>(Lists.newArrayList(c));
   }
 

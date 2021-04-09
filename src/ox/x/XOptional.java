@@ -52,6 +52,11 @@ public class XOptional<T> {
     return value == null ? defaultValue : callback.apply(value);
   }
 
+  @Override
+  public String toString() {
+    return value == null ? "[Empty]" : value.toString();
+  }
+
   public static <T> XOptional<T> empty() {
     return new XOptional<>(null);
   }
