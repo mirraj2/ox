@@ -50,6 +50,10 @@ public class Money implements Comparable<Money> {
     return new Money(cents / n);
   }
 
+  public double divide(Money m) {
+    return ((double) this.cents) / m.cents;
+  }
+
   public boolean isGreaterThan(Money m) {
     return this.cents > m.cents;
   }
