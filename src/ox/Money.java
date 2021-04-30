@@ -47,10 +47,18 @@ public class Money implements Comparable<Money> {
   }
 
   public Money divide(int n) {
+    if (n == 0) {
+      throw new RuntimeException("Divide by zero.");
+    }
+
     return new Money(cents / n);
   }
 
   public double divide(Money m) {
+    if (m.isZero()) {
+      throw new RuntimeException("Divide by zero.");
+    }
+
     return ((double) this.cents) / m.cents;
   }
 
