@@ -47,10 +47,6 @@ public class Money implements Comparable<Money> {
   }
 
   public Money divide(int n) {
-    if (n == 0) {
-      throw new RuntimeException("Divide by zero.");
-    }
-
     return new Money(cents / n);
   }
 
