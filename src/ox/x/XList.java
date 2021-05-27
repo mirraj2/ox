@@ -234,4 +234,23 @@ public class XList<T> extends ForwardingList<T> {
     return new XList<T>(Lists.newArrayList(c));
   }
 
+  @Override
+  public boolean equals(Object other) {
+    if (!(other instanceof XList<?>)) {
+      return false;
+    }
+    
+    XList<?> that = (XList<?>) other;
+    if(this.size() != that.size()) {
+      return false;
+    }
+    
+    for (int i = 0; i < size(); i++) {
+      if (!get(i).equals(that.get(i))) {
+        return false;
+      }
+    }
+    return true;
+  }
+
 }
