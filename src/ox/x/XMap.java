@@ -68,6 +68,12 @@ public class XMap<K, V> extends ForwardingMap<K, V> {
     return size() > 0;
   }
 
+  public static <K, V> XMap<K, V> of(K key, V value) {
+    XMap<K, V> ret = create();
+    ret.put(key, value);
+    return ret;
+  }
+
   public static <K, V> XMap<K, V> create() {
     return new XMap<>(Maps.newLinkedHashMap());
   }
