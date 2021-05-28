@@ -158,6 +158,17 @@ public class File {
     }
   }
 
+  /**
+   * Determines (from data within the file) what MIME type this file has e.g. image/gif
+   */
+  public String getContentType() {
+    try {
+      return file.toURI().toURL().openConnection().getContentType();
+    } catch (Exception e) {
+      throw propagate(e);
+    }
+  }
+
   public static File desktop() {
     return new File(OS.getDesktop());
   }
