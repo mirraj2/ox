@@ -47,6 +47,14 @@ public class XMap<K, V> extends ForwardingMap<K, V> {
     return ret;
   }
 
+  public XMultimap<V, K> invertToMultimap() {
+    XMultimap<V, K> ret = XMultimap.create();
+    forEach((k, v) -> {
+      ret.put(v, k);
+    });
+    return ret;
+  }
+
   @Override
   public XSet<K> keySet() {
     return XSet.create(super.keySet());
@@ -66,6 +74,13 @@ public class XMap<K, V> extends ForwardingMap<K, V> {
 
   public boolean hasData() {
     return size() > 0;
+  }
+
+  public XMap<K, V> removeAll(Iterable<K> keys) {
+    for (K key : keys) {
+      this.remove(key);
+    }
+    return this;
   }
 
   public static <K, V> XMap<K, V> of(K key, V value) {
