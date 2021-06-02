@@ -201,6 +201,18 @@ public class File {
     }
   }
 
+  /**
+   * This method will automatically delete the file after the callback is run.
+   */
+  public static void temp(Consumer<File> callback) {
+    File file = temp();
+    try {
+      callback.accept(file);
+    } finally {
+      file.delete();
+    }
+  }
+
   public static File temp(String child) {
     return new File(new java.io.File(OS.getTemporaryFolder(), child));
   }

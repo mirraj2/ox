@@ -14,6 +14,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
@@ -380,6 +381,10 @@ public class Utils {
 
   public static Money toMoney(String s) {
     return isNullOrEmpty(s) ? null : Money.parse(s);
+  }
+
+  public static String bytesToString(byte[] data) {
+    return new String(data, StandardCharsets.UTF_8);
   }
 
   public static String uuid() {
