@@ -1,16 +1,16 @@
 package ox;
 
-import static com.google.common.base.Preconditions.checkState;
+import static ox.util.Utils.first;
 import static ox.util.Utils.propagate;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.net.URI;
 import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -20,14 +20,17 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
 
-import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 import ox.util.Utils;
 import ox.x.XList;
@@ -327,42 +330,78 @@ public class Reflection {
     return ret;
   }
 
-  public static XList<Class<?>> findClasses(String packageName) {
-    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-    Enumeration<URL> resources;
+  public static List<Class<?>> findClasses(String packageName) {
     try {
-      resources = classLoader.getResources(packageName.replace('.', '/'));
-    } catch (IOException e) {
-      throw propagate(e);
-    }
-    List<File> dirs = Lists.newArrayList();
-    Iterators.forEnumeration(resources).forEachRemaining(url -> {
-      dirs.add(new File(url.getFile()));
-    });
-    XList<Class<?>> classes = XList.create();
-    for (File directory : dirs) {
-      classes.addAll(findClasses(directory, packageName));
-    }
-    return classes;
-  }
-
-  private static List<Class<?>> findClasses(File dir, String packageName) {
-    List<Class<?>> classes = Lists.newArrayList();
-    for (File file : dir.listFiles()) {
-      String name = file.getName();
-      if (file.isDirectory()) {
-        checkState(!name.contains("."));
-        classes.addAll(findClasses(file, packageName + "." + name));
-      } else if (name.endsWith(".class")) {
-        try {
-          String s = packageName + '.' + name.substring(0, name.length() - 6);
-          classes.add(Class.forName(s));
-        } catch (ClassNotFoundException e) {
-          throw propagate(e);
+      ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+      String path = packageName.replace('.', '/');
+      Enumeration<URL> resources = classLoader.getResources(path);
+      List<URI> dirs = Lists.newArrayList();
+      while (resources.hasMoreElements()) {
+        URL resource = resources.nextElement();
+        dirs.add(resource.toURI());
+      }
+      Set<String> classes = Sets.newHashSet();
+      for (URI directory : dirs) {
+        classes.addAll(findClasses(directory, packageName));
+      }
+      List<Class<?>> classList = Lists.newArrayList();
+      for (String className : classes) {
+        if (className.startsWith(packageName) && !className.contains("$")) {
+          classList.add(Class.forName(className));
         }
       }
+      return classList;
+    } catch (Exception e) {
+      throw propagate(e);
     }
-    return classes;
+  }
+
+  private static Set<String> findClasses(URI directory, String packageName) throws Exception {
+    final String scheme = directory.getScheme();
+
+    if (scheme.equals("jar") && directory.getSchemeSpecificPart().contains("!")) {
+      return findClassesInJar(directory);
+    } else if (scheme.equals("file")) {
+      return findClassesInFileSystemDirectory(directory, packageName);
+    }
+
+    throw new IllegalStateException(
+        "cannot handle URI with scheme [" + scheme + "]" +
+            "; received directory=[" + directory + "], packageName=[" + packageName + "]");
+  }
+
+  private static Set<String> findClassesInJar(URI jarDirectory) throws Exception {
+    Set<String> ret = Sets.newHashSet();
+
+    URL jar = new URL(first(jarDirectory.getSchemeSpecificPart(), "!"));
+    ZipInputStream zip = new ZipInputStream(jar.openStream());
+    while (true) {
+      ZipEntry entry = zip.getNextEntry();
+      if (entry == null) {
+        break;
+      }
+      String name = entry.getName();
+      if (name.endsWith(".class") && !name.contains("$")) {
+        ret.add(name.substring(0, name.length() - 6).replace('/', '.'));
+      }
+    }
+
+    return ret;
+  }
+
+  private static Set<String> findClassesInFileSystemDirectory(URI fileSystemDirectory, String packageName) {
+    Set<String> ret = Sets.newHashSet();
+
+    for (File file : new File(fileSystemDirectory).listFiles()) {
+      String name = file.getName();
+      if (file.isDirectory()) {
+        ret.addAll(findClassesInFileSystemDirectory(file.getAbsoluteFile().toURI(), packageName + "." + name));
+      } else if (name.endsWith(".class")) {
+        ret.add(packageName + '.' + name.substring(0, name.length() - 6));
+      }
+    }
+
+    return ret;
   }
 
   public static boolean isAbstract(Class<?> c) {
