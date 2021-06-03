@@ -50,6 +50,14 @@ public class XList<T> extends ForwardingList<T> {
     this.delgate = delegate;
   }
 
+  @SuppressWarnings("unchecked")
+  public XList<T> add(T... items) {
+    for (T item : items) {
+      add(item);
+    }
+    return this;
+  }
+
   public XList<T> replace(int index, Function<T, T> replacementFunction) {
     T newVal = replacementFunction.apply(get(index));
     set(index, newVal);

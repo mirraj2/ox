@@ -6,9 +6,12 @@ import static ox.util.Utils.getExtension;
 import static ox.util.Utils.propagate;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.function.Consumer;
@@ -87,6 +90,16 @@ public class File {
     children().forEach(child -> child.walkTree(callback));
   }
 
+  public XList<File> filterTree(Predicate<File> filter) {
+    XList<File> ret = XList.create();
+    walkTree(file -> {
+      if (filter.test(file)) {
+        ret.add(file);
+      }
+    });
+    return ret;
+  }
+
   public File mkdirs() {
     file.mkdirs();
     return this;
@@ -109,6 +122,22 @@ public class File {
     return this;
   }
 
+  public File deleteRecursive() {
+    if (file.isDirectory()) {
+      children().forEach(File::deleteRecursive);
+    }
+    file.delete();
+    return this;
+  }
+
+  /**
+   * Deletes all children of this file
+   */
+  public File empty() {
+    children().forEach(File::deleteRecursive);
+    return this;
+  }
+
   public File deleteOnExit() {
     file.deleteOnExit();
     return this;
@@ -122,8 +151,21 @@ public class File {
     return file.isDirectory();
   }
 
-  public InputStream stream() {
+  public InputStream inputStream() {
     return IO.from(file).asStream();
+  }
+
+  public OutputStream outputStream() {
+    try {
+      return new FileOutputStream(file);
+    } catch (FileNotFoundException e) {
+      throw propagate(e);
+    }
+  }
+
+  public File log() {
+    Log.debug(IO.from(file).toString());
+    return this;
   }
 
   @Override
@@ -133,6 +175,10 @@ public class File {
 
   public void openUI() {
     OS.open(file);
+  }
+
+  public String getRelativePath(File parentFile) {
+    return getPath().substring(parentFile.getPath().length() + 1);
   }
 
   public void streamLines(Predicate<String> callback) {
@@ -156,6 +202,19 @@ public class File {
     } catch (IOException e) {
       throw propagate(e);
     }
+  }
+
+  @Override
+  public int hashCode() {
+    return file.hashCode();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (!(obj instanceof File)) {
+      return false;
+    }
+    return this.file.equals(((File) obj).file);
   }
 
   /**

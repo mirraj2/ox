@@ -1,18 +1,18 @@
 package ox;
 
-import org.junit.Assert;
-import org.junit.jupiter.api.Test;
+import static com.google.common.base.Preconditions.checkState;
+
+import com.google.common.base.Objects;
 
 public class MoneyTest {
 
-  @Test
   public void parse() {
-    Assert.assertEquals(Money.parse("$12.34").toLong(), 1234L);
-    Assert.assertEquals(Money.parse("12.34").toLong(), 1234L);
-    Assert.assertEquals(Money.parse("$12").toLong(), 1200L);
-    Assert.assertEquals(Money.parse("-$12").toLong(), -1200L);
-    Assert.assertEquals(Money.parse("(12)").toLong(), -1200L);
-    Assert.assertEquals(Money.parse("$12.34567").toLong(), 1235L);
+    checkState(Objects.equal(Money.parse("$12.34").toLong(), 1234L));
+    checkState(Objects.equal(Money.parse("12.34").toLong(), 1234L));
+    checkState(Objects.equal(Money.parse("$12").toLong(), 1200L));
+    checkState(Objects.equal(Money.parse("-$12").toLong(), -1200L));
+    checkState(Objects.equal(Money.parse("(12)").toLong(), -1200L));
+    checkState(Objects.equal(Money.parse("$12.34567").toLong(), 1235L));
   }
 
 }
