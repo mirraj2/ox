@@ -228,6 +228,21 @@ public class File {
     }
   }
 
+  /**
+   * If this is a directory, gets the size of all files in this directory, otherwise gets the size of this file.
+   */
+  public long totalSize() {
+    if (this.isDirectory()) {
+      long ret = 0;
+      for (File child : children()) {
+        ret += child.totalSize();
+      }
+      return ret;
+    } else {
+      return this.length();
+    }
+  }
+
   public static File desktop() {
     return new File(OS.getDesktop());
   }
