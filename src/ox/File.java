@@ -51,6 +51,16 @@ public class File {
     return this;
   }
 
+  public File copyTo(File destination) {
+    checkState(!this.equals(destination));
+    try {
+      Files.copy(this.file, destination.file);
+    } catch (IOException e) {
+      throw propagate(e);
+    }
+    return this;
+  }
+
   public File parent() {
     return new File(file.getParentFile());
   }
