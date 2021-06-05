@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.StandardCopyOption;
 import java.util.function.Consumer;
 
 import com.google.common.base.Predicate;
@@ -54,7 +55,7 @@ public class File {
   public File copyTo(File destination) {
     checkState(!this.equals(destination));
     try {
-      Files.copy(this.file, destination.file);
+      java.nio.file.Files.copy(this.file.toPath(), destination.file.toPath(), StandardCopyOption.REPLACE_EXISTING);
     } catch (IOException e) {
       throw propagate(e);
     }
