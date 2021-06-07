@@ -67,6 +67,10 @@ public class XSet<T> extends ForwardingSet<T> {
     return this;
   }
 
+  public boolean hasData() {
+    return size() > 0;
+  }
+
   public XOptional<T> only() {
     return XOptional.ofNullable(Utils.only(this));
   }
