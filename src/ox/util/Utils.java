@@ -37,6 +37,7 @@ import com.google.common.collect.Iterables;
 
 import ox.Log;
 import ox.Money;
+import ox.Percent;
 import ox.x.XList;
 
 public class Utils {
@@ -106,22 +107,6 @@ public class Utils {
     }
     int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
     return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
-  }
-
-  public static double parsePercent(String s) {
-    return parseDouble(s.replace("%", "")) / 100.0;
-  }
-
-  public static String percent(double d) {
-    return percent(d, false);
-  }
-
-  public static String percent(double d, boolean decimals) {
-    if (decimals) {
-      return formatDecimal2(d * 100) + "%";
-    } else {
-      return format(d * 100) + "%";
-    }
   }
 
   public static String money(double d) {
@@ -327,6 +312,10 @@ public class Utils {
 
   public static Money normalize(Money m) {
     return m == null ? Money.ZERO : m;
+  }
+
+  public static Percent normalize(Percent p) {
+    return p == null ? Percent.ZERO : p;
   }
 
   public static String checkNotEmpty(String s) {

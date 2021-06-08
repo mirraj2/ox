@@ -1,5 +1,8 @@
 package ox;
 
+/**
+ * A simple lock based on a counter.
+ */
 public class Lock {
 
   private Object lock = new Object();
@@ -13,12 +16,18 @@ public class Lock {
     this.counter = counter;
   }
 
+  /**
+   * Increases the counter by one.
+   */
   public void increment() {
     synchronized (lock) {
       counter++;
     }
   }
 
+  /**
+   * Decreases the counter by one.
+   */
   public void decrement() {
     synchronized (lock) {
       counter--;
@@ -28,6 +37,9 @@ public class Lock {
     }
   }
 
+  /**
+   * Blocks until the counter is back to zero.
+   */
   public void await() {
     synchronized (lock) {
       while (counter != 0) {
