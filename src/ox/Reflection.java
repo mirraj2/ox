@@ -166,6 +166,10 @@ public class Reflection {
       } else if (rawType == Long.class) {
         value = ((Integer) value).longValue();
       }
+    } else if (value instanceof Double) {
+      if (rawType == Percent.class) {
+        value = Percent.of((Double) value);
+      }
     }
 
     if (originalType == Optional.class) {
