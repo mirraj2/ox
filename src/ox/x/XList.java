@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -110,6 +111,22 @@ public class XList<T> extends ForwardingList<T> {
     return function.apply(this);
   }
 
+  public T reduce(T identity, BinaryOperator<T> reducer) {
+    T ret = identity;
+    for (T item : this) {
+      ret = reducer.apply(ret, item);
+    }
+    return ret;
+  }
+
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+  /**
+   * Returns the maximum value in this collection. Assumes that all elements in this collection are Comparable
+   */
+  public T max() {
+    return (T) Collections.max((Collection<? extends Comparable>) this);
+  }
+
   public XSet<T> toSet() {
     return XSet.create(this);
   }
@@ -124,6 +141,10 @@ public class XList<T> extends ForwardingList<T> {
 
   public <V> XMultimap<V, T> indexMultimap(Function<? super T, V> function) {
     return Functions.indexMultimap(this, function);
+  }
+
+  public <B> XMap<T, B> toMap(Function<T, B> valueFunction) {
+    return toMap(Function.identity(), valueFunction);
   }
 
   public <A, B> XMap<A, B> toMap(Function<T, A> keyFunction, Function<T, B> valueFunction) {
@@ -188,14 +209,6 @@ public class XList<T> extends ForwardingList<T> {
     } else {
       throw new IllegalStateException("Expected one element, but had " + size());
     }
-  }
-
-  @SuppressWarnings({ "unchecked", "rawtypes" })
-  /**
-   * Returns the maximum value in this collection. Assumes that all elements in this collection are Comparable
-   */
-  public T max() {
-    return (T) Collections.max((Collection<? extends Comparable>) this);
   }
 
   public XList<T> log() {
