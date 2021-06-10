@@ -74,8 +74,16 @@ public class Percent implements Comparable<Percent> {
     return new Percent(1.0 - value);
   }
 
+  public Percent multiply(Percent p) {
+    return new Percent(value * p.value);
+  }
+
   public static Percent of(double value) {
     return new Percent(value);
+  }
+
+  public static Percent divide(double numerator, double denominator) {
+    return new Percent(numerator / denominator);
   }
 
   public static Percent parse(String s) {

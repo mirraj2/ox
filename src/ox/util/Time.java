@@ -161,6 +161,11 @@ public class Time {
     Time.DEFAULT_TIME_ZONE = checkNotNull(zone);
   }
 
+  public static int getDaysInYear(int year) {
+    LocalDate date = LocalDate.ofYearDay(year, 1);
+    return Math.toIntExact(ChronoUnit.DAYS.between(date, date.plusYears(1)));
+  }
+
   public static class TimeWrapper {
     public LocalDate now() {
       return LocalDate.now(DEFAULT_TIME_ZONE);

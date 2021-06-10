@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -218,6 +219,18 @@ public class XList<T> extends ForwardingList<T> {
 
   public boolean hasData() {
     return size() > 0;
+  }
+
+  /**
+   * Iterates through all pairs of elements in this List. O(n^2)
+   */
+  public XList<T> iterateAllPairs(BiConsumer<T, T> callback) {
+    for(int i = 0; i < size();i++) {
+      for (int j = i + 1; j < size(); j++) {
+        callback.accept(get(i), get(j));
+      }
+    }
+    return this;
   }
 
   public static <T> XList<T> create() {
