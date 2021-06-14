@@ -1540,11 +1540,13 @@ public class HttpRequest {
 
   public HttpRequest checkStatus() {
     if (hasError()) {
+      String body = null;
       try {
-        Log.error(getBody());
+        body = getBody();
+        Log.debug(body);
       } catch (Throwable t) {
       }
-      throw new IllegalStateException("Error status: " + status());
+      throw new IllegalStateException(body == null ? "Error status: " + status() : body);
     }
     return this;
   }
