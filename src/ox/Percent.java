@@ -34,6 +34,22 @@ public class Percent implements Comparable<Percent> {
     return this.value == 1.0;
   }
 
+  public boolean isGreaterThan(Percent m) {
+    return this.value > m.value;
+  }
+
+  public boolean isLessThan(Percent m) {
+    return this.value < m.value;
+  }
+
+  public boolean isPositive() {
+    return this.value > 0;
+  }
+
+  public boolean isNegative() {
+    return this.value < 0;
+  }
+
   @Override
   public int compareTo(Percent o) {
     return signum(this.value - o.value);
@@ -72,6 +88,10 @@ public class Percent implements Comparable<Percent> {
    */
   public Percent compliment() {
     return new Percent(1.0 - value);
+  }
+
+  public Percent inverse() {
+    return new Percent(1.0 / value);
   }
 
   public Percent multiply(Percent p) {

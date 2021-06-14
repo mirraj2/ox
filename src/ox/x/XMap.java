@@ -76,6 +76,16 @@ public class XMap<K, V> extends ForwardingMap<K, V> {
     return size() > 0;
   }
 
+  public XMap<K, V> filter(BiFunction<K, V, Boolean> predicate) {
+    XMap<K, V> ret = XMap.create();
+    forEach((k, v) -> {
+      if (predicate.apply(k, v)) {
+        ret.put(k, v);
+      }
+    });
+    return ret;
+  }
+
   public XMap<K, V> removeAll(Iterable<K> keys) {
     for (K key : keys) {
       this.remove(key);
