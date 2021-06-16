@@ -94,6 +94,10 @@ public class Percent implements Comparable<Percent> {
     return new Percent(1.0 / value);
   }
 
+  public Percent subtract(Percent p) {
+    return new Percent(value - p.value);
+  }
+
   public Percent multiply(Percent p) {
     return new Percent(value * p.value);
   }
@@ -104,6 +108,10 @@ public class Percent implements Comparable<Percent> {
 
   public static Percent divide(double numerator, double denominator) {
     return new Percent(numerator / denominator);
+  }
+
+  public static Percent divide(Money numerator, Money denominator) {
+    return new Percent(1.0 * numerator.toLong() / denominator.toLong());
   }
 
   public static Percent parse(String s) {

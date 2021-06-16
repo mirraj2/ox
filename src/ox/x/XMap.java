@@ -1,5 +1,6 @@
 package ox.x;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -97,6 +98,10 @@ public class XMap<K, V> extends ForwardingMap<K, V> {
     XMap<K, V> ret = create();
     ret.put(key, value);
     return ret;
+  }
+
+  public static <K, V> XMap<K, V> empty() {
+    return new XMap<>(new LinkedHashMap<>(0));
   }
 
   public static <K, V> XMap<K, V> create() {
