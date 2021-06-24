@@ -3,6 +3,7 @@ package ox.x;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -59,6 +60,15 @@ public class XOptional<T> {
   @Override
   public String toString() {
     return value == null ? "[Empty]" : value.toString();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (!(obj instanceof XOptional)) {
+      return false;
+    }
+    XOptional<?> that = (XOptional<?>) obj;
+    return Objects.equals(this.value, that.value);
   }
 
   public static <T> XOptional<T> empty() {
