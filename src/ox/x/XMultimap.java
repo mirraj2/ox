@@ -57,6 +57,14 @@ public class XMultimap<K, V> extends ForwardingMultimap<K, V> {
     return ret;
   }
 
+  public <K2, V2> XMultimap<K2, V2> transform(Function<K, K2> keyFunction, Function<V, V2> valueFunction) {
+    XMultimap<K2, V2> ret = create();
+    forEach((k, v) -> {
+      ret.put(keyFunction.apply(k), valueFunction.apply(v));
+    });
+    return ret;
+  }
+
   @Override
   protected Multimap<K, V> delegate() {
     return delegate;
