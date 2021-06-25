@@ -153,4 +153,8 @@ public class Log {
     log(o);
   }
 
+  public static void error(Object o, Object... args) {
+    log(o, args);
+  }
+
 }

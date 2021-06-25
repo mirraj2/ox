@@ -65,6 +65,14 @@ public class XMultimap<K, V> extends ForwardingMultimap<K, V> {
     return ret;
   }
 
+  public XMap<K, XList<V>> asXMap() {
+    XMap<K, XList<V>> ret = XMap.create();
+    for (K key : this.keySet()) {
+      ret.put(key, XList.create(get(key)));
+    }
+    return ret;
+  }
+
   @Override
   protected Multimap<K, V> delegate() {
     return delegate;
