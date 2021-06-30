@@ -67,7 +67,6 @@ public class Log {
   }
 
   private static synchronized void logToFile(File file) {
-    Log.debug("Logging to file: " + file);
     try {
       OutputStream os = new BufferedOutputStream(new FileOutputStream(file.file, true));
       System.setOut(new PrintStream(new SplitOutputStream(originalOut, os)));
