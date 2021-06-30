@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Array;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.concurrent.Executors;
@@ -87,6 +88,7 @@ public class Log {
   }
 
   private static void log(Object o, Object... args) {
+    out.print(Instant.now() + " ");
     if (debugMode) {
       Thread.dumpStack();
     }
