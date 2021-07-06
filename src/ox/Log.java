@@ -9,7 +9,6 @@ import java.io.PrintStream;
 import java.lang.reflect.Array;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -18,8 +17,6 @@ import ox.util.SplitOutputStream;
 import ox.util.Time;
 
 public class Log {
-
-  public static final ZoneId PACIFIC_TIME = ZoneId.of("America/Los_Angeles");
 
   /**
    * If you're trying to find the source of a pesky log statement, set this to true.
@@ -35,6 +32,12 @@ public class Log {
 
   private static File logFolder;
   private static LocalDate currentLogDate;
+
+  private static boolean showTimestamps = false;
+
+  public static void showTimestamps() {
+    showTimestamps = true;
+  }
 
   public static void logToFolder(String appName) {
     logToFolder(File.appFolder(appName, "log"));
@@ -88,7 +91,10 @@ public class Log {
   }
 
   private static void log(Object o, Object... args) {
-    out.print(Instant.now() + " ");
+    if (showTimestamps) {
+      out.print(Instant.now() + " ");
+    }
+
     if (debugMode) {
       Thread.dumpStack();
     }
