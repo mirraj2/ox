@@ -60,7 +60,14 @@ public final class Functions {
 
   public static <K, V> XMap<K, V> index(Iterable<V> input, Function<V, K> function) {
     XMap<K, V> ret = XMap.create();
-    input.forEach(x -> ret.put(function.apply(x), x));
+    input.forEach(x -> {
+      K key = function.apply(x);
+      V existing = ret.put(key, x);
+      if (existing != null) {
+        throw new IllegalStateException(
+            String.format("This is not a unique index. Multiple items mapped to " + key));
+      }
+    });
     return ret;
   }
 
