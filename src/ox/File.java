@@ -158,6 +158,10 @@ public class File {
     return file.length();
   }
 
+  public long getLastModifiedTimestamp() {
+    return file.lastModified();
+  }
+
   public boolean isDirectory() {
     return file.isDirectory();
   }
