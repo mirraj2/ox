@@ -5,6 +5,7 @@ import static ox.util.Utils.isNullOrEmpty;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -60,6 +61,14 @@ public class Time {
 
   public static LocalDate now() {
     return timeWrapper.now();
+  }
+
+  public static Instant nowInstant() {
+    return timeWrapper.nowInstant();
+  }
+
+  public static LocalDateTime nowLocalDateTime() {
+    return timeWrapper.nowLocalDateTime();
   }
 
   public static int daysSince(long timestamp) {
@@ -169,6 +178,14 @@ public class Time {
   public static class TimeWrapper {
     public LocalDate now() {
       return LocalDate.now(DEFAULT_TIME_ZONE);
+    }
+
+    public Instant nowInstant() {
+      return Instant.now();
+    }
+
+    public LocalDateTime nowLocalDateTime() {
+      return LocalDateTime.now(DEFAULT_TIME_ZONE);
     }
   }
 
