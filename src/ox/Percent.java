@@ -1,10 +1,9 @@
 package ox;
 
-import static java.lang.Double.parseDouble;
-import static ox.util.Utils.formatDecimal2;
-import static ox.util.Utils.signum;
+import static ox.util.Utils.isNullOrEmpty;
 
-import ox.util.Utils;
+import java.math.BigDecimal;
+import java.util.function.Function;
 
 /**
  * Immutable class representing a fractional percentage.
@@ -13,93 +12,105 @@ public class Percent implements Comparable<Percent> {
 
   public static final Percent ZERO = new Percent(0.0), ONE_HUNDRED = new Percent(1.0);
 
-  private final double value;
+  private final BigDecimal value;
 
   private Percent(double value) {
+    this.value = new BigDecimal(value);
+  }
+
+  private Percent(String value) {
+    this.value = new BigDecimal(value);
+  }
+
+  private Percent(BigDecimal value) {
     this.value = value;
   }
 
   /**
    * Gets the raw value, 1.0 representing 100%
    */
-  public double getValue() {
+  public BigDecimal getValue() {
     return value;
   }
 
   public boolean isZero() {
-    return this.value == 0.0;
+    return value.compareTo(BigDecimal.ZERO) == 0;
   }
 
   public boolean isOneHundred() {
-    return this.value == 1.0;
+    return value.compareTo(BigDecimal.ONE) == 0;
   }
 
   public boolean isGreaterThan(Percent m) {
-    return this.value > m.value;
+    return this.value.compareTo(m.value) > 0;
   }
 
   public boolean isLessThan(Percent m) {
-    return this.value < m.value;
+    return this.value.compareTo(m.value) < 0;
   }
 
   public boolean isPositive() {
-    return this.value > 0;
+    return isGreaterThan(Percent.ZERO);
   }
 
   public boolean isNegative() {
-    return this.value < 0;
+    return isLessThan(Percent.ZERO);
   }
 
   @Override
   public int compareTo(Percent o) {
-    return signum(this.value - o.value);
+    return this.value.compareTo(o.value);
   }
 
   @Override
   public String toString() {
-    return formatNoDecimals();
+    return formatWithDecimals();
   }
 
   public String formatNoDecimals() {
-    return format(false);
+    return this.value.multiply(BigDecimal.valueOf(100)).setScale(0, BigDecimal.ROUND_HALF_EVEN).toPlainString() + "%";
   }
 
   public String formatWithDecimals() {
-    return format(true);
-  }
-
-  private String format(boolean decimals) {
-    if (decimals) {
-      return formatDecimal2(value * 100) + "%";
-    } else {
-      return Utils.format(value * 100) + "%";
-    }
+    return this.value.multiply(BigDecimal.valueOf(100)).stripTrailingZeros().toPlainString() + "%";
   }
 
   /**
    * Gets if this Percent is between 0% and 100%, inclusive.
    */
   public boolean isNormal() {
-    return 0.0 <= value && value <= 1.0;
+    return !isNegative() && !isGreaterThan(Percent.ONE_HUNDRED);
   }
 
   /**
    * Returns the compliment to this percentage, which when combined with this, adds to 100%.
    */
   public Percent compliment() {
-    return new Percent(1.0 - value);
+    return new Percent(BigDecimal.ONE.subtract(value));
   }
 
   public Percent inverse() {
-    return new Percent(1.0 / value);
+    return new Percent(BigDecimal.ONE.divide(value));
   }
 
   public Percent subtract(Percent p) {
-    return new Percent(value - p.value);
+    return new Percent(value.subtract(p.value));
   }
 
   public Percent multiply(Percent p) {
-    return new Percent(value * p.value);
+    return new Percent(value.multiply(p.value));
+  }
+
+  public Percent multiply(long n) {
+    return new Percent(value.multiply(BigDecimal.valueOf(n)));
+  }
+
+  public static <T> Percent sum(Iterable<T> iter, Function<T, Percent> function) {
+    BigDecimal ret = BigDecimal.ZERO;
+    for (T t : iter) {
+      ret = ret.add(function.apply(t).value);
+    }
+    return new Percent(ret);
   }
 
   public static Percent of(double value) {
@@ -115,7 +126,10 @@ public class Percent implements Comparable<Percent> {
   }
 
   public static Percent parse(String s) {
-    return new Percent(parseDouble(s.replace("%", "")) / 100.0);
+    if (isNullOrEmpty(s)) {
+      return null;
+    }
+    return new Percent(new BigDecimal(s.replace("%", "")).divide(BigDecimal.valueOf(100)));
   }
 
 }
