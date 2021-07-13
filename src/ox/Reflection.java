@@ -149,6 +149,8 @@ public class Reflection {
         value = LocalTime.parse((String) value);
       } else if (rawType == UUID.class) {
         value = UUID.fromString((String) value);
+      } else if (rawType == Percent.class) {
+        value = Percent.parse((String) value);
       }
     } else if (value instanceof java.sql.Date) {
       if (rawType == LocalDate.class) {
@@ -165,10 +167,6 @@ public class Reflection {
         value = Money.fromLong((Integer) value);
       } else if (rawType == Long.class) {
         value = ((Integer) value).longValue();
-      }
-    } else if (value instanceof Double) {
-      if (rawType == Percent.class) {
-        value = Percent.of((Double) value);
       }
     }
 

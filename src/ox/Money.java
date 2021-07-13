@@ -43,7 +43,7 @@ public class Money implements Comparable<Money> {
   }
 
   public Money multiply(Percent p) {
-    return multiply(p.getValue());
+    return multiply(p.getValue().doubleValue());
   }
 
   public Money multiply(double n) {
