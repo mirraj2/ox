@@ -57,10 +57,10 @@ public class XMultimap<K, V> extends ForwardingMultimap<K, V> {
     return ret;
   }
 
-  public <T> XList<T> toList(BiFunction<K, Collection<V>, T> mappingFunction) {
+  public <T> XList<T> toList(BiFunction<K, XList<V>, T> mappingFunction) {
     XList<T> ret = XList.create();
     for (K key : super.keySet()) {
-      ret.add(mappingFunction.apply(key, super.get(key)));
+      ret.add(mappingFunction.apply(key, get(key)));
     }
     return ret;
   }
