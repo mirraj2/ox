@@ -3,6 +3,7 @@ package ox;
 import static ox.util.Utils.isNullOrEmpty;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.function.Function;
 
 /**
@@ -90,7 +91,7 @@ public class Percent implements Comparable<Percent> {
   }
 
   public Percent inverse() {
-    return new Percent(BigDecimal.ONE.divide(value));
+    return new Percent(BigDecimal.ONE.divide(value, 20, RoundingMode.HALF_EVEN));
   }
 
   public Percent subtract(Percent p) {
