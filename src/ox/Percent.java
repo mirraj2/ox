@@ -65,7 +65,7 @@ public class Percent implements Comparable<Percent> {
 
   @Override
   public String toString() {
-    return formatWithDecimals();
+    return formatNoDecimals();
   }
 
   public String formatNoDecimals() {
