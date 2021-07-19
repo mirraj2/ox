@@ -91,31 +91,34 @@ public class Log {
   }
 
   private static void log(Object o, Object... args) {
-    if (showTimestamps) {
-      out.print(Instant.now() + " ");
-    }
-
-    if (debugMode) {
-      Thread.dumpStack();
-    }
-
-    if (o == null) {
-      o = "null";
-    }
-
-    if (o instanceof Throwable) {
-      Throwable t = (Throwable) o;
-      t.printStackTrace(out);
-      return;
-    }
-
-    if (args == null) {
-      if (o.getClass().isArray()) {
-        o = arrayToString(o);
+    // without synchronizing here, you end up with weird cases like timestamps on their own line
+    synchronized (out) {
+      if (showTimestamps) {
+        out.print(Instant.now() + " ");
       }
-      out.println(o);
-    } else {
-      out.println(String.format(String.valueOf(o), args));
+
+      if (debugMode) {
+        Thread.dumpStack();
+      }
+
+      if (o == null) {
+        o = "null";
+      }
+
+      if (o instanceof Throwable) {
+        Throwable t = (Throwable) o;
+        t.printStackTrace(out);
+        return;
+      }
+
+      if (args == null) {
+        if (o.getClass().isArray()) {
+          o = arrayToString(o);
+        }
+        out.println(o);
+      } else {
+        out.println(String.format(String.valueOf(o), args));
+      }
     }
   }
 
