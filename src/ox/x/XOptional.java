@@ -53,6 +53,14 @@ public class XOptional<T> {
     return value == null ? defaultValue : callback.apply(value);
   }
 
+  public <U> XOptional<U> map(Function<? super T, ? extends U> function) {
+    if (isEmpty()) {
+      return empty();
+    } else {
+      return XOptional.ofNullable(function.apply(value));
+    }
+  }
+
   public XList<T> toList() {
     return value == null ? XList.empty() : XList.of(value);
   }
