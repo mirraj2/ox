@@ -167,6 +167,11 @@ public class XList<T> extends ForwardingList<T> {
     return this;
   }
 
+  public XList<T> shuffleSelf() {
+    Collections.shuffle(this);
+    return this;
+  }
+
   public XList<T> reverse() {
     return XList.create(Lists.reverse(this));
   }
