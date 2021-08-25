@@ -230,7 +230,7 @@ public class XList<T> extends ForwardingList<T> {
    * Iterates through all pairs of elements in this List. O(n^2)
    */
   public XList<T> iterateAllPairs(BiConsumer<T, T> callback) {
-    for(int i = 0; i < size();i++) {
+    for (int i = 0; i < size(); i++) {
       for (int j = i + 1; j < size(); j++) {
         callback.accept(get(i), get(j));
       }
