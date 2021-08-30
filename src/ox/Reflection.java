@@ -176,6 +176,13 @@ public class Reflection {
       value = XOptional.ofNullable(value);
     }
 
+    if (value != null) {
+      if (!originalType.isPrimitive() && !originalType.isAssignableFrom(value.getClass())) {
+        throw new IllegalStateException(
+            "Trying to set " + field.getType().getSimpleName() + " " + o.getClass().getSimpleName() + "."
+                + field.getName() + " to incompatible type: " + value.getClass());
+      }
+    }
     try {
       field.set(o, value);
     } catch (Exception e) {
