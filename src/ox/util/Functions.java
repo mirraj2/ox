@@ -65,7 +65,7 @@ public final class Functions {
       V existing = ret.put(key, x);
       if (existing != null) {
         throw new IllegalStateException(
-            String.format("This is not a unique index. Multiple items mapped to " + key));
+            String.format("This is not a unique index. %s and %s both mapped to %s", x, existing, key));
       }
     });
     return ret;
