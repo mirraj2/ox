@@ -89,6 +89,7 @@ public class IO {
   }
 
   public static Input fromURL(String url) {
+    checkNotNull(url);
     return from(url(url)).gzipInput();
   }
 
