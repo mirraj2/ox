@@ -11,6 +11,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import ox.util.SplitOutputStream;
@@ -50,7 +51,15 @@ public class Log {
     currentLogDate = LocalDate.now(Time.DEFAULT_TIME_ZONE);
     logToFile(logFolder.child(currentLogDate + ".log"));
 
-    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1, new ThreadFactory() {
+      @Override
+      public Thread newThread(Runnable r) {
+        Thread t = new Thread(r);
+        t.setName("ox.Log thread");
+        t.setDaemon(true);
+        return t;
+      }
+    });
 
     executor.scheduleAtFixedRate(() -> {
       System.out.flush();
@@ -167,5 +176,6 @@ public class Log {
   public static void error(Object o, Object... args) {
     log(o, args);
   }
+
 
 }
