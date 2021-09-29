@@ -47,6 +47,32 @@ public class Time {
     return instant.atZone(DEFAULT_TIME_ZONE);
   }
 
+  /**
+   * Max of two LocalDates, treating null as negative infinity.
+   */
+  public static LocalDate leftMax(LocalDate a, LocalDate b) {
+    if (a == null) {
+      return b;
+    } else if (b == null) {
+      return a;
+    } else {
+      return Time.max(a, b);
+    }
+  }
+
+  /**
+   * Min of two LocalDates treating null as positive infinity.
+   */
+  public static LocalDate rightMin(LocalDate a, LocalDate b) {
+    if (a == null) {
+      return b;
+    } else if (b == null) {
+      return a;
+    } else {
+      return Time.min(a, b);
+    }
+  }
+
   public static LocalDate min(LocalDate a, LocalDate b) {
     return a.isBefore(b) ? a : b;
   }
