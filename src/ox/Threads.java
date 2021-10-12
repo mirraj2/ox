@@ -1,5 +1,6 @@
 package ox;
 
+import static com.google.common.base.Preconditions.checkState;
 import static ox.util.Utils.only;
 import static ox.util.Utils.propagate;
 
@@ -63,6 +64,7 @@ public class Threads {
     private boolean failFast = false;
 
     private Parallelizer(int numThreads) {
+      checkState(numThreads > 0, "numThreads=" + numThreads);
       executor = Executors.newFixedThreadPool(numThreads);
     }
 

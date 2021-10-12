@@ -6,6 +6,7 @@ import static com.google.common.base.Preconditions.checkState;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Like Optional, but with some additional functionality.
@@ -47,6 +48,14 @@ public class XOptional<T> {
 
   public T orElse(T alternativeValue) {
     return isPresent() ? this.value : alternativeValue;
+  }
+
+  public T orElse(Supplier<T> alternativeValue) {
+    return isPresent() ? this.value : alternativeValue.get();
+  }
+
+  public T orElseNull() {
+    return isPresent() ? this.value : null;
   }
 
   public <V> V compute(Function<T, V> callback, V defaultValue) {

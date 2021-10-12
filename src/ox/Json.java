@@ -96,7 +96,7 @@ public class Json implements Iterable<String> {
     return e.getAsBoolean();
   }
 
-  public Boolean getBoolean(String key, boolean defaultValue) {
+  public boolean getBoolean(String key, boolean defaultValue) {
     Boolean b = getBoolean(key);
     return b == null ? defaultValue : b;
   }
