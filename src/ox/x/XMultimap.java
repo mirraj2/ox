@@ -65,6 +65,10 @@ public class XMultimap<K, V> extends ForwardingMultimap<K, V> {
     return ret;
   }
 
+  public <V2> XMultimap<K, V2> transformValues(Function<V, V2> valueFunction) {
+    return transform(Function.identity(), valueFunction);
+  }
+
   public <K2, V2> XMultimap<K2, V2> transform(Function<K, K2> keyFunction, Function<V, V2> valueFunction) {
     XMultimap<K2, V2> ret = create();
     forEach((k, v) -> {
