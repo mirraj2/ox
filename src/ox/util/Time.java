@@ -19,10 +19,11 @@ import com.google.common.collect.Maps;
 
 public class Time {
 
-  public static final ZoneId PACIFIC_TIME = ZoneId.of("America/Los_Angeles");
+  public static final ZoneId PACIFIC = ZoneId.of("US/Pacific");
+  public static final ZoneId MOUNTAIN = ZoneId.of("US/Mountain");
   public static final ZoneId CENTRAL = ZoneId.of("US/Central");
-  public static final ZoneId NEW_YORK = ZoneId.of("America/New_York");
-  public static ZoneId DEFAULT_TIME_ZONE = PACIFIC_TIME;
+  public static final ZoneId EASTERN = ZoneId.of("US/Eastern");
+  public static ZoneId DEFAULT_TIME_ZONE = PACIFIC;
   public static TimeWrapper timeWrapper = new TimeWrapper();
 
   public static final DateTimeFormatter slashFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
@@ -61,6 +62,10 @@ public class Time {
 
   public static LocalDate now() {
     return timeWrapper.now();
+  }
+
+  public static LocalDate now(ZoneId timezone) {
+    return timeWrapper.now(timezone);
   }
 
   public static Instant nowInstant() {
@@ -177,7 +182,11 @@ public class Time {
 
   public static class TimeWrapper {
     public LocalDate now() {
-      return LocalDate.now(DEFAULT_TIME_ZONE);
+      return now(DEFAULT_TIME_ZONE);
+    }
+
+    public LocalDate now(ZoneId timezone) {
+      return LocalDate.now(timezone);
     }
 
     public Instant nowInstant() {
