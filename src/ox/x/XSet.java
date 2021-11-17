@@ -10,6 +10,7 @@ import com.google.common.collect.ForwardingSet;
 import com.google.common.collect.Sets;
 
 import ox.Log;
+import ox.util.Functions;
 import ox.util.Utils;
 
 public class XSet<T> extends ForwardingSet<T> {
@@ -31,6 +32,10 @@ public class XSet<T> extends ForwardingSet<T> {
       ret.add(mappingFunction.apply(t));
     }
     return ret;
+  }
+  
+  public <K> XMap<K, T> index(Function<T, K> function) {
+    return Functions.index(this, function);
   }
 
   /**
