@@ -1,5 +1,7 @@
 package ox.x;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -100,6 +102,20 @@ public class XList<T> extends ForwardingList<T> {
     XList<V> ret = new XList<>();
     for (T item : this) {
       ret.add(function.apply(item));
+    }
+    return ret;
+  }
+
+  /**
+   * [[A, B], [C, D, E]] -> [A, B, C, D, E]
+   */
+  @SuppressWarnings("unchecked")
+  public <V> XList<V> flatten() {
+    XList<V> ret = new XList<>();
+    for (T item : this) {
+      checkState(item instanceof Iterable, "Expected all elements in this list to be Iterable, but found: "+item);
+      Iterable<V> iter = (Iterable<V>) item;
+      iter.forEach(ret::add);
     }
     return ret;
   }
