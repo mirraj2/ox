@@ -3,6 +3,7 @@ package ox.x;
 import java.util.Collection;
 import java.util.Set;
 import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 
 import com.google.common.collect.ForwardingMultimap;
@@ -73,6 +74,16 @@ public class XMultimap<K, V> extends ForwardingMultimap<K, V> {
     XMultimap<K2, V2> ret = create();
     forEach((k, v) -> {
       ret.put(keyFunction.apply(k), valueFunction.apply(v));
+    });
+    return ret;
+  }
+  
+  public XMultimap<K, V> filter(BiPredicate<K,V> predicate) {
+    XMultimap<K, V> ret = create();
+    forEach((k,v) -> {
+      if (predicate.test(k, v)) {
+        ret.put(k, v);
+      }
     });
     return ret;
   }
