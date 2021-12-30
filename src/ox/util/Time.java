@@ -76,6 +76,10 @@ public class Time {
     return timeWrapper.nowLocalDateTime();
   }
 
+  public static LocalDateTime nowLocalDateTime(ZoneId timezone) {
+    return timeWrapper.nowLocalDateTime(timezone);
+  }
+
   public static int daysSince(long timestamp) {
     return daysSince(Instant.ofEpochMilli(timestamp));
   }
@@ -180,6 +184,7 @@ public class Time {
     return Math.toIntExact(ChronoUnit.DAYS.between(date, date.plusYears(1)));
   }
 
+  // this wrapper is useful for unit tests
   public static class TimeWrapper {
     public LocalDate now() {
       return now(DEFAULT_TIME_ZONE);
@@ -194,7 +199,11 @@ public class Time {
     }
 
     public LocalDateTime nowLocalDateTime() {
-      return LocalDateTime.now(DEFAULT_TIME_ZONE);
+      return nowLocalDateTime(DEFAULT_TIME_ZONE);
+    }
+
+    public LocalDateTime nowLocalDateTime(ZoneId timezone) {
+      return LocalDateTime.now(timezone);
     }
   }
 
