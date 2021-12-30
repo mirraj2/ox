@@ -16,6 +16,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
@@ -151,6 +152,8 @@ public class Reflection {
         value = UUID.fromString((String) value);
       } else if (rawType == Percent.class) {
         value = Percent.parse((String) value);
+      } else if(rawType == ZoneId.class) {
+        value = ZoneId.of((String) value);
       }
     } else if (value instanceof java.sql.Date) {
       if (rawType == LocalDate.class) {
