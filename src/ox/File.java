@@ -171,8 +171,12 @@ public class File {
   }
 
   public OutputStream outputStream() {
+    return outputStream(false);
+  }
+
+  public OutputStream outputStream(boolean append) {
     try {
-      return new FileOutputStream(file);
+      return new FileOutputStream(file, append);
     } catch (FileNotFoundException e) {
       throw propagate(e);
     }
