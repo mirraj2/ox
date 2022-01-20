@@ -56,6 +56,16 @@ public class XSet<T> extends ForwardingSet<T> {
     return XSet.create(Sets.intersection(this, set2));
   }
 
+  public <S extends T> XSet<S> filter(Class<S> classFilter) {
+    XSet<S> ret = XSet.create();
+    for (T item : this) {
+      if (item != null && classFilter.isAssignableFrom(item.getClass())) {
+        ret.add((S) item);
+      }
+    }
+    return ret;
+  }
+
   public XSet<T> filter(Predicate<T> filter) {
     XSet<T> ret = XSet.create();
     for (T item : this) {
