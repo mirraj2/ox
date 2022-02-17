@@ -4,6 +4,7 @@ import static ox.util.Utils.format;
 import static ox.util.Utils.isNullOrEmpty;
 import static ox.util.Utils.signum;
 
+import java.math.BigDecimal;
 import java.util.function.Function;
 
 import com.google.common.base.CharMatcher;
@@ -43,11 +44,15 @@ public class Money implements Comparable<Money> {
   }
 
   public Money multiply(Percent p) {
-    return multiply(p.getValue().doubleValue());
+    return multiply(p.getValue());
   }
 
   public Money multiply(double n) {
     return new Money((long) (cents * n));
+  }
+
+  public Money multiply(BigDecimal n) {
+    return new Money(new BigDecimal(cents).multiply(n).setScale(0, BigDecimal.ROUND_HALF_UP).longValueExact());
   }
 
   public Money divide(int n) {
