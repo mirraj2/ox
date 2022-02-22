@@ -48,7 +48,7 @@ public class Money implements Comparable<Money> {
   }
 
   public Money multiply(double n) {
-    return new Money((long) (cents * n));
+    return new Money(Math.round(cents * n));
   }
 
   public Money multiply(BigDecimal n) {

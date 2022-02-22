@@ -66,6 +66,10 @@ public class XMultimap<K, V> extends ForwardingMultimap<K, V> {
     return ret;
   }
 
+  public <K2> XMultimap<K2, V> transformKeys(Function<K, K2> keyFunction) {
+    return transform(keyFunction, Function.identity());
+  }
+
   public <V2> XMultimap<K, V2> transformValues(Function<V, V2> valueFunction) {
     return transform(Function.identity(), valueFunction);
   }
@@ -77,10 +81,10 @@ public class XMultimap<K, V> extends ForwardingMultimap<K, V> {
     });
     return ret;
   }
-  
-  public XMultimap<K, V> filter(BiPredicate<K,V> predicate) {
+
+  public XMultimap<K, V> filter(BiPredicate<K, V> predicate) {
     XMultimap<K, V> ret = create();
-    forEach((k,v) -> {
+    forEach((k, v) -> {
       if (predicate.test(k, v)) {
         ret.put(k, v);
       }
