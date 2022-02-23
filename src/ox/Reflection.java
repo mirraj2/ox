@@ -32,6 +32,7 @@ import org.objenesis.ObjenesisStd;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.google.common.reflect.TypeToken;
 
 import ox.util.Utils;
 import ox.x.XList;
@@ -128,69 +129,81 @@ public class Reflection {
     }
   }
 
-  @SuppressWarnings({ "unchecked", "rawtypes" })
   public static void set(Object o, String fieldName, Object value) {
     Field field = getField(o.getClass(), fieldName);
     if (field == null) {
       return;
     }
-    Class<?> originalType = field.getType();
-    Class<?> rawType = originalType;
-    if (originalType == Optional.class || originalType == XOptional.class) {
-      rawType = getTypeArgument(field.getGenericType());
-    }
-    if (value instanceof String) {
-      if (rawType.isEnum()) {
-        value = Utils.parseEnum((String) value, (Class<? extends Enum>) rawType);
-      } else if (rawType == LocalDateTime.class) {
-        value = LocalDateTime.parse((String) value);
-      } else if (rawType == Json.class) {
-        value = new Json((String) value);
-      } else if (rawType == LocalTime.class) {
-        value = LocalTime.parse((String) value);
-      } else if (rawType == UUID.class) {
-        value = UUID.fromString((String) value);
-      } else if (rawType == Percent.class) {
-        value = Percent.parse((String) value);
-      } else if(rawType == ZoneId.class) {
-        value = ZoneId.of((String) value);
-      }
-    } else if (value instanceof java.sql.Date) {
-      if (rawType == LocalDate.class) {
-        value = ((java.sql.Date) value).toLocalDate();
-      }
-    } else if (value instanceof Long) {
-      if (rawType == Money.class) {
-        value = Money.fromLong((Long) value);
-      } else if (rawType == Instant.class) {
-        value = Instant.ofEpochMilli((Long) value);
-      }
-    } else if (value instanceof Integer) {
-      if (rawType == Money.class) {
-        value = Money.fromLong((Integer) value);
-      } else if (rawType == Long.class) {
-        value = ((Integer) value).longValue();
-      }
-    }
-
-    if (originalType == Optional.class) {
-      value = Optional.ofNullable(value);
-    } else if (originalType == XOptional.class) {
-      value = XOptional.ofNullable(value);
-    }
-
-    if (value != null) {
-      if (!originalType.isPrimitive() && !originalType.isAssignableFrom(value.getClass())) {
-        throw new IllegalStateException(
-            "Trying to set " + field.getType().getSimpleName() + " " + o.getClass().getSimpleName() + "."
-                + field.getName() + " to incompatible type: " + value.getClass());
-      }
-    }
+    value = convert(value, field.getGenericType());
     try {
       field.set(o, value);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+  }
+
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+  public static Object convert(Object value, Type targetType) {
+    Class<?> wrappedClass = TypeToken.of(targetType).getRawType();
+    Class<?> targetClass;
+    if (wrappedClass == Optional.class || wrappedClass == XOptional.class) {
+      targetClass = getTypeArgument(targetType);
+    } else {
+      targetClass = wrappedClass;
+    }
+    if (value instanceof String) {
+      if (targetClass.isEnum()) {
+        value = Utils.parseEnum((String) value, (Class<? extends Enum>) targetClass);
+      } else if (targetClass == LocalDateTime.class) {
+        value = LocalDateTime.parse((String) value);
+      } else if (targetClass == Json.class) {
+        value = new Json((String) value);
+      } else if (targetClass == LocalTime.class) {
+        value = LocalTime.parse((String) value);
+      } else if (targetClass == UUID.class) {
+        value = UUID.fromString((String) value);
+      } else if (targetClass == Percent.class) {
+        value = Percent.parse((String) value);
+      } else if (targetClass == ZoneId.class) {
+        value = ZoneId.of((String) value);
+      }
+    } else if (value instanceof java.sql.Date) {
+      if (targetClass == LocalDate.class) {
+        value = ((java.sql.Date) value).toLocalDate();
+      }
+    } else if (value instanceof Long) {
+      if (targetClass == Money.class) {
+        value = Money.fromLong((Long) value);
+      } else if (targetClass == Instant.class) {
+        value = Instant.ofEpochMilli((Long) value);
+      }
+    } else if (value instanceof Integer) {
+      if (targetClass == Money.class) {
+        value = Money.fromLong((Integer) value);
+      } else if (targetClass == Long.class) {
+        value = ((Integer) value).longValue();
+      } else if (targetClass == String.class) {
+        value = value.toString();
+      }
+    }
+
+    if (value != null) {
+      if (!targetClass.isPrimitive() && !targetClass.isAssignableFrom(value.getClass())) {
+        throw new IllegalStateException(
+            "Trying to convert " + value.getClass() + " to incompatible type: " + targetClass.getSimpleName());
+        // throw new IllegalStateException(
+        // "Trying to set " + field.getType().getSimpleName() + " " + o.getClass().getSimpleName() + "."
+        // + field.getName() + " to incompatible type: " + value.getClass());
+      }
+    }
+    
+    if (wrappedClass == Optional.class) {
+      value = Optional.ofNullable(value);
+    } else if (wrappedClass == XOptional.class) {
+      value = XOptional.ofNullable(value);
+    }
+
+    return value;
   }
 
   public static Object call(Object o, String methodName) {
