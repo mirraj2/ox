@@ -10,6 +10,8 @@ import com.google.common.collect.ForwardingMultimap;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
+import ox.Log;
+
 public class XMultimap<K, V> extends ForwardingMultimap<K, V> {
 
   private Multimap<K, V> delegate;
@@ -99,6 +101,13 @@ public class XMultimap<K, V> extends ForwardingMultimap<K, V> {
   @Override
   protected Multimap<K, V> delegate() {
     return delegate;
+  }
+
+  public XMultimap<K, V> log() {
+    this.forEach((k, v) -> {
+      Log.debug(k + " = " + v);
+    });
+    return this;
   }
 
   public static <K, V> XMultimap<K, V> create() {
