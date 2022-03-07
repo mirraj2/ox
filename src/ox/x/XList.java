@@ -78,7 +78,7 @@ public class XList<T> extends ForwardingList<T> {
   }
 
   @SuppressWarnings("unchecked")
-  public <S extends T> XList<S> filter(Class<S> classFilter) {
+  public <S> XList<S> filter(Class<S> classFilter) {
     XList<S> ret = new XList<>();
     for (T item : this) {
       if (item != null && classFilter.isAssignableFrom(item.getClass())) {
@@ -113,7 +113,7 @@ public class XList<T> extends ForwardingList<T> {
   public <V> XList<V> flatten() {
     XList<V> ret = new XList<>();
     for (T item : this) {
-      checkState(item instanceof Iterable, "Expected all elements in this list to be Iterable, but found: "+item);
+      checkState(item instanceof Iterable, "Expected all elements in this list to be Iterable, but found: " + item);
       Iterable<V> iter = (Iterable<V>) item;
       iter.forEach(ret::add);
     }

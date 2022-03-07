@@ -114,7 +114,7 @@ public class XSet<T> extends ForwardingSet<T> {
     return new XSet<T>(set);
   }
 
-  public static <T> XSet<T> create(Iterable<T> iter) {
+  public static <T> XSet<T> create(Iterable<? extends T> iter) {
     return new XSet<T>(Sets.newLinkedHashSet(iter));
   }
 
