@@ -1,5 +1,6 @@
 package ox;
 
+import static com.google.common.base.Preconditions.checkState;
 import static ox.util.Utils.isNullOrEmpty;
 
 import java.math.BigDecimal;
@@ -72,8 +73,31 @@ public class Percent implements Comparable<Percent> {
     return this.value.multiply(BigDecimal.valueOf(100)).setScale(0, BigDecimal.ROUND_HALF_EVEN).toPlainString() + "%";
   }
 
+  public String formatWithDecimals(int nDecimals) {
+    return this.value.multiply(BigDecimal.valueOf(100))
+        .setScale(nDecimals, RoundingMode.HALF_EVEN).stripTrailingZeros()
+        .toPlainString() + "%";
+  }
+
   public String formatWithDecimals() {
     return this.value.multiply(BigDecimal.valueOf(100)).stripTrailingZeros().toPlainString() + "%";
+  }
+
+  public String formatWithMaxLength(int maxLen) {
+    String s = this.value.multiply(BigDecimal.valueOf(100))
+        .setScale(20, RoundingMode.HALF_EVEN).stripTrailingZeros().toPlainString();
+    if (s.length() + 1 <= maxLen) {
+      return s + "%";
+    }
+
+    int i = s.indexOf('.');
+    if (i == -1) {
+      checkState(s.length() < maxLen);
+      return s + "%";
+    }
+    checkState(i + 2 < maxLen);
+
+    return s.substring(0, maxLen - 1) + "%";
   }
 
   /**
