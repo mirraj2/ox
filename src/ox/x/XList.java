@@ -152,6 +152,14 @@ public class XList<T> extends ForwardingList<T> {
     return Functions.toSet(this, function);
   }
 
+  /**
+   * @exception if the set of values of {@code function} does not have exactly one element.
+   * @return the unique value obtained from applying the function to the elements in this list.
+   */
+  public <V> V toUnique(Function<T, ? extends V> function) {
+    return toSet(function).only().get();
+  }
+
   public <V> XMap<V, T> index(Function<T, V> function) {
     return Functions.index(this, function);
   }
@@ -172,12 +180,18 @@ public class XList<T> extends ForwardingList<T> {
     return ret;
   }
 
+  /**
+   * Mutates this list.
+   */
   @SuppressWarnings({ "unchecked", "rawtypes" })
   public XList<T> sortSelf() {
     Collections.sort((List<? extends Comparable>) this);
     return this;
   }
 
+  /**
+   * Mutates this list.
+   */
   public XList<T> sortSelf(Comparator<? super T> comparator) {
     sort(comparator);
     return this;
