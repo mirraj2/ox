@@ -98,6 +98,19 @@ public class XList<T> extends ForwardingList<T> {
     return ret;
   }
 
+  /**
+   * Return true if any elements satisfy the condition.
+   */
+  public boolean any(Predicate<T> condition) {
+    for (T item : this) {
+      if (condition.test(item)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   public <V> XList<V> map(Function<T, V> function) {
     XList<V> ret = new XList<>();
     for (T item : this) {
