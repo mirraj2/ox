@@ -56,6 +56,10 @@ public class XSet<T> extends ForwardingSet<T> {
     return XSet.create(Sets.intersection(this, set2));
   }
 
+  public XSet<T> union(XSet<T> set2) {
+    return XSet.create(Sets.union(this, set2));
+  }
+
   @SuppressWarnings("unchecked")
   public <S extends T> XSet<S> filter(Class<S> classFilter) {
     XSet<S> ret = XSet.create();
