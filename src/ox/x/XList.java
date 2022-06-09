@@ -170,7 +170,7 @@ public class XList<T> extends ForwardingList<T> {
    * @return the unique value obtained from applying the function to the elements in this list.
    */
   public <V> V toUnique(Function<T, ? extends V> function) {
-    return toSet(function).only().get();
+    return toSet(function).<V>only().orElseNull();
   }
 
   public <V> XMap<V, T> index(Function<T, V> function) {
