@@ -118,6 +118,14 @@ public class Percent implements Comparable<Percent> {
     return new Percent(BigDecimal.ONE.divide(value, 20, RoundingMode.HALF_EVEN));
   }
 
+  public Percent add(Percent p) {
+    return new Percent(value.add(p.value));
+  }
+
+  public Percent add(double d) {
+    return add(Percent.of(d));
+  }
+
   public Percent subtract(Percent p) {
     return new Percent(value.subtract(p.value));
   }

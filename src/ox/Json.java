@@ -122,8 +122,8 @@ public class Json implements Iterable<String> {
   }
 
   public Percent getPercent(String key) {
-    Double d = getDouble(key);
-    return d == null ? null : Percent.of(d);
+    String s = get(key);
+    return isNullOrEmpty(s) ? null : Percent.parse(s);
   }
 
   public Json getJson(String key) {
