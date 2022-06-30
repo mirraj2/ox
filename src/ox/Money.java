@@ -63,6 +63,10 @@ public class Money implements Comparable<Money> {
     return new Money((long) (cents / n));
   }
 
+  public Money divide(BigDecimal n) {
+    return new Money(new BigDecimal(cents).divide(n).setScale(0, BigDecimal.ROUND_HALF_UP).longValueExact());
+  }
+
   public double divide(Money m) {
     if (m.isZero()) {
       throw new RuntimeException("Divide by zero.");
