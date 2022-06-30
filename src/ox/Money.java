@@ -64,7 +64,7 @@ public class Money implements Comparable<Money> {
   }
 
   public Money divide(BigDecimal n) {
-    return new Money(new BigDecimal(cents).divide(n).setScale(0, BigDecimal.ROUND_HALF_UP).longValueExact());
+    return new Money(new BigDecimal(cents).divide(n, 0, BigDecimal.ROUND_HALF_UP).longValueExact());
   }
 
   public Money divide(Percent p) {
