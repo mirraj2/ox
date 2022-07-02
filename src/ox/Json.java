@@ -439,6 +439,26 @@ public class Json implements Iterable<String> {
     return new Json(toString());
   }
 
+  /**
+   * This will merge all fields from the given object into this object (except for fields already contained in this
+   * object).
+   */
+  public Json merge(Json object) {
+    return merge(object, false);
+  }
+
+  /**
+   * @param override If override is on, values in the given object will override values
+   */
+  public Json merge(Json object, boolean override) {
+    for (String key : object) {
+      if (override || !this.hasKey(key)) {
+        this.with(key, object.getObject(key));
+      }
+    }
+    return this;
+  }
+
   @Override
   public int hashCode() {
     return e.hashCode();
