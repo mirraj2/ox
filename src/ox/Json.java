@@ -186,6 +186,8 @@ public class Json implements Iterable<String> {
     }
     if (value instanceof String) {
       return with(key, (String) value);
+    } else if (value instanceof Percent) {
+      return with(key, ((Percent) value).formatWithDecimals());
     } else if (value instanceof Number) {
       return with(key, (Number) value);
     } else if (value instanceof Boolean) {
