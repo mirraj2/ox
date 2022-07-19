@@ -28,6 +28,7 @@ public class Time {
 
   public static final DateTimeFormatter slashFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
   private static final DateTimeFormatter longFormat = DateTimeFormatter.ofPattern("MMM d, yyyy");
+  public static final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("M/d/yyyy h:mm a");
 
   private static final Map<String, DateTimeFormatter> formatCache = Maps.newHashMap();
 
