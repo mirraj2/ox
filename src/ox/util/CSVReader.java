@@ -1,6 +1,5 @@
 package ox.util;
 
-import static com.google.common.base.Preconditions.checkState;
 import static ox.util.Utils.propagate;
 
 import java.io.BufferedReader;
@@ -153,10 +152,8 @@ public class CSVReader {
 
     if (lastSize == 0) {
       lastSize = ret.size();
-    } else {
-      checkState(ret.size() == lastSize, "Found a row with " + ret.size() +
-          " elements when we previously saw a row with " + lastSize + " elements.");
     }
+
     return ret;
   }
 
