@@ -37,6 +37,7 @@ import com.google.common.reflect.TypeToken;
 import ox.util.Utils;
 import ox.x.XList;
 import ox.x.XOptional;
+
 import sun.misc.Unsafe;
 
 public class Reflection {
@@ -206,29 +207,6 @@ public class Reflection {
     return value;
   }
 
-  public static Object call(Object o, String methodName) {
-    try {
-      for (Method m : o.getClass().getDeclaredMethods()) {
-        if (m.getName().equals(methodName)) {
-          if (m.getParameterCount() == 0) {
-            return m.invoke(o);
-          }
-        }
-      }
-      for (Method m : o.getClass().getMethods()) {
-        if (m.getName().equals(methodName)) {
-          if (m.getParameterCount() == 0) {
-            return m.invoke(o);
-          }
-        }
-      }
-      throw new RuntimeException("Method not found: " + o.getClass().getSimpleName() + "." + methodName);
-    } catch (Exception e) {
-      Log.error("Problem calling method: " + methodName);
-      throw propagate(e);
-    }
-  }
-
   /**
    * Constructs an instance of the class without calling any constructors.
    */
@@ -292,17 +270,39 @@ public class Reflection {
   }
 
   public static Method getMethod(Class<?> c, String methodName) {
-    return methodCache.computeIfAbsent(c.getName() + methodName, s -> {
-      try {
-        Method ret = c.getMethod(methodName);
-        ret.setAccessible(true);
-        return ret;
-      } catch (NoSuchMethodException e) {
-        return NULL_METHOD;
-      } catch (Exception e) {
-        throw propagate(e);
+    Method ret = methodCache.computeIfAbsent(c.getName() + methodName, s -> {
+      Method varargs = null;
+      for (Method m : c.getDeclaredMethods()) {
+        if (m.getName().equals(methodName)) {
+          if (m.isVarArgs()) {
+            varargs = m;
+          }
+          if (m.getParameterCount() == 0) {
+            return m;
+          }
+        }
       }
+      for (Method m : c.getMethods()) {
+        if (m.getName().equals(methodName)) {
+          if (m.getParameterCount() == 0) {
+            return m;
+          }
+        }
+      }
+      if (varargs != null) {
+        return varargs;
+      }
+      
+      return NULL_METHOD;
     });
+
+    if (ret == NULL_METHOD) {
+      throw new RuntimeException("Method not found: " + c.getSimpleName() + "." + methodName);
+    }
+
+    ret.setAccessible(true);
+
+    return ret;
   }
 
   @SuppressWarnings("unchecked")
