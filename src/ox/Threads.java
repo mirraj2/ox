@@ -103,7 +103,7 @@ public class Threads {
       }
     }
 
-    public void run(Consumer<T> callback) {
+    public void run(Consumer<? super T> callback) {
       List<Throwable> exceptions = Lists.newCopyOnWriteArrayList();
       Lock lock = new Lock();
       for (T o : input) {

@@ -1,14 +1,17 @@
 package ox.x;
 
 import static com.google.common.base.Preconditions.checkState;
+import static ox.util.Utils.sleep;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -17,6 +20,7 @@ import com.google.common.collect.ForwardingList;
 import com.google.common.collect.Lists;
 
 import ox.Log;
+import ox.Threads;
 import ox.util.Functions;
 
 /**
@@ -44,7 +48,11 @@ import ox.util.Functions;
  */
 public class XList<T> extends ForwardingList<T> {
 
+  private static final int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors();
+
   private final List<T> delgate;
+
+  private int maxThreads = 1;
 
   public XList() {
     this(new ArrayList<>());
@@ -109,6 +117,41 @@ public class XList<T> extends ForwardingList<T> {
     }
 
     return false;
+  }
+
+  @Override
+  public void forEach(Consumer<? super T> callback) {
+    if (maxThreads == 1) {
+      super.forEach(callback);
+    } else {
+      Threads.get(Math.min(size(), maxThreads)).input(this).run(callback);
+      resetConcurrency();
+    }
+  }
+
+  /**
+   * Just like a forEach(), but ensures that the callback is not called too often -- based on the time specified.
+   */
+  public void forEachRateLimited(long time, TimeUnit unit, Consumer<? super T> callback) {
+    final long minMillisToWait = unit.toMillis(time);
+
+    final int size = size();
+
+    for (int i = 0; i < size; i++) {
+      if (i == size - 1) {
+        // we reached the last item, no need to wait after.
+        callback.accept(get(i));
+      } else {
+        long startTime = System.currentTimeMillis();
+        callback.accept(get(i));
+        long endTime = System.currentTimeMillis();
+
+        long timeToWait = minMillisToWait - (endTime - startTime);
+        if (timeToWait > 0) {
+          sleep(timeToWait);
+        }
+      }
+    }
   }
 
   public <V> XList<V> map(Function<T, V> function) {
@@ -279,6 +322,37 @@ public class XList<T> extends ForwardingList<T> {
       }
     }
     return this;
+  }
+
+  /**
+   * Splits this list into chunks.
+   * 
+   * Example: If this list had 13 items and chunkSize was set to 5, the result would have 3 chunks: [5 items, 5 items, 3
+   * items]
+   */
+  public XList<XList<T>> chunks(int chunkSize) {
+    XList<XList<T>> ret = XList.create();
+    for (int i = 0; i < size(); i += chunkSize) {
+      ret.add(limit(i, chunkSize));
+    }
+    return ret;
+  }
+
+  public XList<T> concurrent() {
+    return concurrent(NUM_PROCESSORS * 2);
+  }
+
+  /**
+   * Sets up the next operation to run on multiple threads (if supported).
+   */
+  public XList<T> concurrent(int maxThreads) {
+    checkState(maxThreads > 0, "maxThreads must be a positive number.");
+    this.maxThreads = maxThreads;
+    return this;
+  }
+
+  private void resetConcurrency() {
+    this.maxThreads = 1;
   }
 
   public static <T> XList<T> create() {
