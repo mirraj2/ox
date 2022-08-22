@@ -329,7 +329,7 @@ public class IO {
         } else if (o instanceof RenderedImage) {
           // we could maybe use a PipedInputStream to be more efficient
           ByteArrayOutputStream baos = new ByteArrayOutputStream();
-          ImageIO.write((RenderedImage) o, imageFormat.isEmpty() ? "jpg" : "png", baos);
+          ImageIO.write((RenderedImage) o, imageFormat.isEmpty() ? "jpg" : imageFormat, baos);
           ret = new ByteArrayInputStream(baos.toByteArray());
         }
         if (ret == null) {
