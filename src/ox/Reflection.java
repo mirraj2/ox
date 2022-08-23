@@ -157,10 +157,12 @@ public class Reflection {
         value = Utils.parseEnum((String) value, (Class<? extends Enum>) targetClass);
       } else if (targetClass == LocalDateTime.class) {
         value = LocalDateTime.parse((String) value);
-      } else if (targetClass == Json.class) {
-        value = new Json((String) value);
+      } else if (targetClass == LocalDate.class) {
+        value = LocalDate.parse((String) value);
       } else if (targetClass == LocalTime.class) {
         value = LocalTime.parse((String) value);
+      } else if (targetClass == Json.class) {
+        value = new Json((String) value);
       } else if (targetClass == UUID.class) {
         value = UUID.fromString((String) value);
       } else if (targetClass == Percent.class) {
@@ -185,6 +187,10 @@ public class Reflection {
         value = ((Integer) value).longValue();
       } else if (targetClass == String.class) {
         value = value.toString();
+      }
+    } else if (value instanceof Number) {
+      if (targetClass == Money.class) {
+        value = Money.parse(value.toString());
       }
     }
 
