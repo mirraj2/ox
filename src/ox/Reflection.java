@@ -34,6 +34,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.reflect.TypeToken;
 
+import ox.util.Time;
 import ox.util.Utils;
 import ox.x.XList;
 import ox.x.XOptional;
@@ -158,7 +159,7 @@ public class Reflection {
       } else if (targetClass == LocalDateTime.class) {
         value = LocalDateTime.parse((String) value);
       } else if (targetClass == LocalDate.class) {
-        value = LocalDate.parse((String) value);
+        value = Time.parseDate((String) value);
       } else if (targetClass == LocalTime.class) {
         value = LocalTime.parse((String) value);
       } else if (targetClass == Json.class) {
@@ -169,6 +170,8 @@ public class Reflection {
         value = Percent.parse((String) value);
       } else if (targetClass == ZoneId.class) {
         value = ZoneId.of((String) value);
+      } else if (targetClass == Money.class) {
+        value = Money.parse((String) value);
       }
     } else if (value instanceof java.sql.Date) {
       if (targetClass == LocalDate.class) {
