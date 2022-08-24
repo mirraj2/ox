@@ -46,7 +46,7 @@ public class Log {
   }
 
   public static synchronized void logToFolder(File folder) {
-    checkState(logFolder == null, "You've already called logToFolder!");
+    checkState(logFolder == null || logFolder.equals(folder), "You've already called logToFolder!");
 
     logFolder = folder;
     logFolder.mkdirs();
