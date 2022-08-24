@@ -1,5 +1,6 @@
 package ox;
 
+import static com.google.common.base.Preconditions.checkState;
 import static ox.util.Utils.propagate;
 
 import java.io.BufferedOutputStream;
@@ -31,7 +32,7 @@ public class Log {
 
   private static OutputStream lastFileOutput = null;
 
-  private static File logFolder;
+  private static File logFolder = null;
   private static LocalDate currentLogDate;
 
   private static boolean showTimestamps = false;
@@ -44,7 +45,9 @@ public class Log {
     logToFolder(File.appFolder(appName, "log"));
   }
 
-  public static void logToFolder(File folder) {
+  public static synchronized void logToFolder(File folder) {
+    checkState(logFolder == null, "You've already called logToFolder!");
+
     logFolder = folder;
     logFolder.mkdirs();
 
@@ -61,12 +64,16 @@ public class Log {
       }
     });
 
-    executor.scheduleAtFixedRate(() -> {
-      System.out.flush();
-      System.err.flush();
-    }, 0, 100, TimeUnit.MILLISECONDS);
-
+    executor.scheduleAtFixedRate(Log::flush, 0, 100, TimeUnit.MILLISECONDS);
     executor.scheduleAtFixedRate(Log::rolloverLog, 1, 1, TimeUnit.MINUTES);
+
+    // right before the JVM shuts down, make sure we flush the last of the log data
+    Runtime.getRuntime().addShutdownHook(new Thread(Log::flush));
+  }
+
+  private static void flush() {
+    System.out.flush();
+    System.err.flush();
   }
 
   private static void rolloverLog() {
