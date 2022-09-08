@@ -507,18 +507,9 @@ public class Json implements Iterable<String> {
       ret.add((Json) data);
       return ret;
     }
+
     for (Object o : data) {
-      if (o instanceof String) {
-        ret.add((String) o);
-      } else if (o instanceof Number) {
-        ret.add((Number) o);
-      } else if (o instanceof Json) {
-        ret.add((Json) o);
-      } else if (o == null) {
-        ret.e.getAsJsonArray().add((String) null);
-      } else {
-        ret.add(o.toString());
-      }
+      ret.add(o);
     }
     return ret;
   }
