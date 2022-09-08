@@ -256,6 +256,25 @@ public class Json implements Iterable<String> {
     return this;
   }
 
+  public Json add(Object o) {
+    if (o instanceof Json) {
+      return add((Json) o);
+    } else if (o instanceof Boolean) {
+      return add((Boolean) o);
+    } else if (o instanceof String) {
+      return add((String) o);
+    } else if (o instanceof Number) {
+      return add((Number) o);
+    } else {
+      if (o == null) {
+        arr().add((JsonElement) null);
+        return this;
+      } else {
+        return add(o.toString());
+      }
+    }
+  }
+
   public Json add(Boolean b) {
     arr().add(new JsonPrimitive(b));
     return this;
@@ -275,9 +294,9 @@ public class Json implements Iterable<String> {
     arr().set(index, new JsonPrimitive(s));
     return this;
   }
-  
-  public Json remove(String...keys) {
-    for(String key : keys) {
+
+  public Json remove(String... keys) {
+    for (String key : keys) {
       remove(key);
     }
     return this;
