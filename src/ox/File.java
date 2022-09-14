@@ -14,7 +14,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileChannel.MapMode;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.function.Consumer;
 
 import com.google.common.base.Predicate;
@@ -182,6 +186,15 @@ public class File {
     }
   }
 
+  public MappedByteBuffer toByteBuffer() {
+    try {
+      FileChannel channel = FileChannel.open(file.toPath(), StandardOpenOption.READ);
+      return channel.map(MapMode.READ_ONLY, 0, channel.size());
+    } catch (Exception e) {
+      throw propagate(e);
+    }
+  }
+
   public File log() {
     Log.debug(IO.from(file).toString());
     return this;
@@ -299,6 +312,18 @@ public class File {
    */
   public static void temp(Consumer<File> callback) {
     File file = temp();
+    try {
+      callback.accept(file);
+    } finally {
+      file.delete();
+    }
+  }
+
+  /**
+   * This method will automatically delete the file after the callback is run.
+   */
+  public static void temp(String fileName, Consumer<File> callback) {
+    File file = temp(fileName);
     try {
       callback.accept(file);
     } finally {
