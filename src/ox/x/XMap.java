@@ -24,6 +24,10 @@ public class XMap<K, V> extends ForwardingMap<K, V> {
     return delgate;
   }
 
+  public XOptional<V> getOptional(K key) {
+    return XOptional.ofNullable(get(key));
+  }
+
   public <K2> XMap<K2, V> transformKeys(Function<K, K2> keyFunction) {
     return transform(keyFunction, Functions.identity());
   }
