@@ -1,7 +1,11 @@
 package ox.util;
 
 import static com.google.common.base.Preconditions.checkState;
+import static ox.util.Utils.f;
+import static ox.util.Utils.normalize;
 import static ox.util.Utils.propagate;
+import static ox.util.Utils.toDouble;
+import static ox.util.Utils.toInt;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,6 +15,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -18,10 +23,14 @@ import java.util.function.Consumer;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import ox.Money;
+import ox.x.XList;
+
 public class CSVReader {
 
-  private final BufferedReader br;
+  private static final LocalDate EXCEL_EPOCH_DATE = LocalDate.ofYearDay(1900, 1).minusDays(2);
 
+  private final BufferedReader br;
   private StringBuilder sb = new StringBuilder();
   private int lastSize = 0;
   private char delimiter = ',';
@@ -78,6 +87,10 @@ public class CSVReader {
       ret.put(row.get(i), i);
     }
     return ret;
+  }
+
+  public void forEachRow(Map<String, Integer> header, Consumer<CSVRow> callback) {
+    forEach(rowList -> callback.accept(new CSVRow(rowList, header)));
   }
 
   public void forEach(Consumer<List<String>> callback) {
@@ -158,6 +171,91 @@ public class CSVReader {
           " elements when we previously saw a row with " + lastSize + " elements.");
     }
     return ret;
+  }
+
+  public class CSVRow {
+    private List<String> row;
+    private Map<String, Integer> header;
+
+    public CSVRow(List<String> row, Map<String, Integer> header) {
+      this.row = row;
+      this.header = header;
+    }
+
+    public XList<String> asList() {
+      return XList.create(row);
+    }
+
+    public String get(String s) {
+      Integer index = header.get(s);
+      if (index == null) {
+        // Log.warn("Could not find header: " + s);
+        return "";
+      }
+      if (index >= row.size()) {
+        return "";
+      }
+      return normalize(row.get(index));
+    }
+
+    /**
+     * See also `getExcelDate()`.
+     */
+    public LocalDate getISODate(String colName) {
+      String val = get(colName);
+      try {
+        return LocalDate.parse(val);
+      } catch (Exception e) {
+        throw new RuntimeException(f("Couldn't parse '%s' as Date, for %s column.", val, colName));
+      }
+    }
+
+    /**
+     * Get date assuming it is stored as an "Excel" date, which is a number of days since the Excel epoch date.
+     */
+    public LocalDate getExcelDate(String colName) {
+      String s = get(colName);
+      try {
+        return EXCEL_EPOCH_DATE.plusDays((int) Double.parseDouble(s));
+      } catch (Exception e) {
+        throw new RuntimeException(f("Couldn't parse '%s' as Date, for %s column.", s, colName));
+      }
+    }
+
+    public Money getMoney(String colName) {
+      String val = get(colName);
+      try {
+        return Money.parse(val);
+      } catch (NumberFormatException e) {
+        throw new RuntimeException("Couldn't parse '" + val + "' as Money, for " + colName + " column.", e);
+      }
+    }
+
+    public Integer getInt(String colName) {
+      String val = get(colName);
+      try {
+        return toInt(val);
+      } catch (NumberFormatException e) {
+        throw new RuntimeException("Couldn't parse '" + val + "' as Integer, for " + colName + " column.", e);
+      }
+    }
+
+    public Double getDouble(String colName) {
+      String val = get(colName);
+      try {
+        return toDouble(val);
+      } catch (NumberFormatException e) {
+        throw new RuntimeException("Couldn't parse '" + val + "' as Double, for " + colName + " column.", e);
+      }
+    }
+
+    public <T extends Enum<T>> T getEnum(String colName, Class<T> enumType) {
+      String s = get(colName);
+      if (s.isEmpty()) {
+        return null;
+      }
+      return Utils.parseEnum(s, enumType);
+    }
   }
 
   public static CSVReader from(InputStream is) {
