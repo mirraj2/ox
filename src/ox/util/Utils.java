@@ -97,6 +97,9 @@ public class Utils {
 
   private static final String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
 
+  /**
+   * example: f("I ate {0} {1}", 3, "apples")
+   */
   public static String f(String format, Object... args) {
     return MessageFormat.format(format, args);
   }
@@ -291,7 +294,18 @@ public class Utils {
   }
 
   public static String normalize(String s) {
-    return s == null ? "" : trim(s);
+    if (s == null) {
+      return "";
+    }
+
+    String ret = trim(s);
+
+    // convert multiple spaces into a single space
+    while (ret.contains("  ")) {
+      ret = ret.replace("  ", " ");
+    }
+
+    return ret;
   }
 
   public static double normalize(Double n) {
