@@ -1,5 +1,6 @@
 package ox;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static ox.util.Utils.propagate;
 
@@ -14,6 +15,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 import ox.util.SplitOutputStream;
 import ox.util.Time;
@@ -35,10 +37,14 @@ public class Log {
   private static File logFolder = null;
   private static LocalDate currentLogDate;
 
-  private static boolean showTimestamps = false;
+  private static Supplier<String> prefixSupplier = () -> "";
 
   public static void showTimestamps() {
-    showTimestamps = true;
+    prefix(() -> Instant.now() + " ");
+  }
+
+  public static void prefix(Supplier<String> prefixSupplier) {
+    Log.prefixSupplier = checkNotNull(prefixSupplier);
   }
 
   public static void logToFolder(String appName) {
@@ -109,8 +115,9 @@ public class Log {
   private static void log(Object o, Object... args) {
     // without synchronizing here, you end up with weird cases like timestamps on their own line
     synchronized (out) {
-      if (showTimestamps) {
-        out.print(Instant.now() + " ");
+      String prefix = prefixSupplier.get();
+      if (!prefix.isEmpty()) {
+        out.print(prefix);
       }
 
       if (debugMode) {
