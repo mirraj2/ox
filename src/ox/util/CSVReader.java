@@ -173,7 +173,7 @@ public class CSVReader {
     return ret;
   }
 
-  public class CSVRow {
+  public static class CSVRow {
     private List<String> row;
     private Map<String, Integer> header;
 
