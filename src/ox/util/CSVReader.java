@@ -203,6 +203,10 @@ public class CSVReader {
      */
     public LocalDate getISODate(String colName) {
       String val = get(colName);
+      if (val.isEmpty()) {
+        return null;
+      }
+
       try {
         return LocalDate.parse(val);
       } catch (Exception e) {
@@ -214,11 +218,15 @@ public class CSVReader {
      * Get date assuming it is stored as an "Excel" date, which is a number of days since the Excel epoch date.
      */
     public LocalDate getExcelDate(String colName) {
-      String s = get(colName);
+      String val = get(colName);
+      if (val.isEmpty()) {
+        return null;
+      }
+
       try {
-        return EXCEL_EPOCH_DATE.plusDays((int) Double.parseDouble(s));
+        return EXCEL_EPOCH_DATE.plusDays((int) Double.parseDouble(val));
       } catch (Exception e) {
-        throw new RuntimeException(f("Couldn't parse '%s' as Date, for %s column.", s, colName));
+        throw new RuntimeException(f("Couldn't parse '%s' as Date, for %s column.", val, colName));
       }
     }
 
