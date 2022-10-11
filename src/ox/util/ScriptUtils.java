@@ -13,15 +13,24 @@ import com.google.common.collect.Lists;
 
 import ox.IO;
 import ox.Log;
+import ox.x.XList;
 
 public class ScriptUtils {
 
   public static void run(String s) {
     Log.debug(s);
-    List<String> m = Lists.newArrayList("/bin/zsh", "-c", "--login", "source ~/.zshrc;" + s);
+    run(XList.of(s));
+  }
+
+  public static void runZSH(String s) {
+    Log.debug(s);
+    run(XList.of("/bin/zsh", "-c", "--login", "source ~/.zshrc;" + s));
+  }
+
+  private static void run(XList<String> command) {
     int exitStatus;
     try {
-      ProcessBuilder pb = new ProcessBuilder().command(m);
+      ProcessBuilder pb = new ProcessBuilder().command(command);
       exitStatus = pb.inheritIO().start().waitFor();
     } catch (Exception e) {
       throw propagate(e);
