@@ -18,8 +18,9 @@ import ox.x.XList;
 public class ScriptUtils {
 
   public static void run(String s) {
-    Log.debug(s);
-    run(XList.of(s));
+    runZSH(s);
+    // Log.debug(s);
+    // run(XList.of(s));
   }
 
   public static void runZSH(String s) {
