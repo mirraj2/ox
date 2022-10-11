@@ -128,7 +128,18 @@ public class Json implements Iterable<String> {
 
   public Json getJson(String key) {
     JsonElement e = getElement(key);
-    return e == null ? null : new Json(e);
+    if (e == null) {
+      return null;
+    } else if (e.isJsonPrimitive()) {
+      JsonPrimitive p = (JsonPrimitive) e;
+      if (p.isString()) {
+        return new Json(p.getAsString());
+      } else {
+        return new Json(p);
+      }
+    } else {
+      return new Json(e);
+    }
   }
 
   public Object getObject(String key) {
