@@ -1,6 +1,5 @@
 package ox;
 
-import java.io.File;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
@@ -66,7 +65,7 @@ public class Config {
   }
 
   public static Config load(String appName) {
-    return load(new File(OS.getAppFolder(appName), "config.json"));
+    return load(File.appFolder(appName, "config.json"));
   }
 
   public static Config load(File file) {
