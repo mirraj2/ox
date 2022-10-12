@@ -18,25 +18,30 @@ import ox.x.XList;
 public class ScriptUtils {
 
   public static void run(String s) {
-    runZSH(s);
-    // Log.debug(s);
-    // run(XList.of(s));
+    Log.debug(s);
+    XList<String> m = XList.of("/bin/sh", "-c", s);
+    checkState(0 == run(m, true));
+  }
+
+  public static int runWithNoErrorCheck(String s) {
+    Log.debug(s);
+    XList<String> m = XList.of("/bin/sh", "-c", s);
+    return run(m, false);
   }
 
   public static void runZSH(String s) {
     Log.debug(s);
-    run(XList.of("/bin/zsh", "-c", "--login", "source ~/.zshrc;" + s));
+    XList<String> m = XList.of("/bin/zsh", "-c", "--login", "source ~/.zshrc;" + s);
+    checkState(0 == run(m, true));
   }
 
-  private static void run(XList<String> command) {
-    int exitStatus;
+  private static int run(XList<String> command, boolean checkError) {
     try {
       ProcessBuilder pb = new ProcessBuilder().command(command);
-      exitStatus = pb.inheritIO().start().waitFor();
+      return pb.inheritIO().start().waitFor();
     } catch (Exception e) {
       throw propagate(e);
     }
-    checkState(exitStatus == 0);
   }
 
   /**
