@@ -20,7 +20,7 @@ public class ScriptUtils {
   public static void run(String s) {
     Log.debug(s);
     XList<String> m = XList.of("/bin/sh", "-c", s);
-    checkState(0 == run(m, true));
+    checkState(0 == run(m, true), "Problem with command: " + s);
   }
 
   public static int runWithNoErrorCheck(String s) {
