@@ -75,7 +75,7 @@ public class Reflection {
 
   /**
    * Turns off the warning that puts 5 warnings out to the console:
-   * 
+   *
    * WARNING: An illegal reflective access operation has occurred
    */
   public static void disableWarning() {
@@ -194,6 +194,8 @@ public class Reflection {
     } else if (value instanceof Number) {
       if (targetClass == Money.class) {
         value = Money.parse(value.toString());
+      } else if (targetClass == int.class || targetClass == Integer.class) {
+        value = Integer.parseInt(value.toString());
       }
     }
 
@@ -206,7 +208,7 @@ public class Reflection {
         // + field.getName() + " to incompatible type: " + value.getClass());
       }
     }
-    
+
     if (wrappedClass == Optional.class) {
       value = Optional.ofNullable(value);
     } else if (wrappedClass == XOptional.class) {
@@ -301,7 +303,7 @@ public class Reflection {
       if (varargs != null) {
         return varargs;
       }
-      
+
       return NULL_METHOD;
     });
 
