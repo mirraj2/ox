@@ -15,7 +15,6 @@ import ox.x.XList;
 public class ScriptUtils {
 
   public static String run(String s) {
-    Log.debug(s);
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     run(s, baos);
     return IO.from(baos.toByteArray()).toString();
