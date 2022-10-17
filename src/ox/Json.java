@@ -1,6 +1,7 @@
 package ox;
 
 import static ox.util.Functions.map;
+import static ox.util.Utils.abbreviate;
 import static ox.util.Utils.isNullOrEmpty;
 import static ox.util.Utils.parseEnum;
 
@@ -41,7 +42,7 @@ public class Json implements Iterable<String> {
   }
 
   public Json(String data) {
-    this(parser.parse(data));
+    this(parse(data));
   }
 
   public Json(Reader reader) {
@@ -493,6 +494,14 @@ public class Json implements Iterable<String> {
     return this.e.equals(((Json) o).e);
   }
 
+  private static JsonElement parse(String data) {
+    try {
+      return parser.parse(data);
+    } catch (Exception e) {
+      throw new RuntimeException("Problem parsing json: " + abbreviate(data, 100), e);
+    }
+  }
+
   public static Json object() {
     return new Json();
   }
@@ -555,5 +564,7 @@ public class Json implements Iterable<String> {
   public static Json array(Object... data) {
     return array(Arrays.asList(data));
   }
+
+
 
 }
