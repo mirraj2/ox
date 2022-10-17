@@ -7,9 +7,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.lang.ProcessBuilder.Redirect;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-
-import com.google.common.collect.Lists;
 
 import ox.IO;
 import ox.Log;
@@ -17,10 +14,11 @@ import ox.x.XList;
 
 public class ScriptUtils {
 
-  public static void run(String s) {
+  public static String run(String s) {
     Log.debug(s);
-    XList<String> m = XList.of("/bin/sh", "-c", s);
-    checkState(0 == run(m, true), "Problem with command: " + s);
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    run(s, baos);
+    return IO.from(baos.toByteArray()).toString();
   }
 
   public static int runWithNoErrorCheck(String s) {
@@ -29,10 +27,13 @@ public class ScriptUtils {
     return run(m, false);
   }
 
-  public static void runZSH(String s) {
+  public static String runZSH(String s) {
     Log.debug(s);
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
     XList<String> m = XList.of("/bin/zsh", "-c", "--login", "source ~/.zshrc;" + s);
-    checkState(0 == run(m, true));
+    run(m, baos);
+    return IO.from(baos.toByteArray()).toString();
+    // checkState(0 == run(m, true));
   }
 
   private static int run(XList<String> command, boolean checkError) {
@@ -49,7 +50,14 @@ public class ScriptUtils {
    */
   public static void run(String s, OutputStream out) {
     Log.debug(s);
-    List<String> m = Lists.newArrayList("/bin/sh", "-c", s);
+    XList<String> m = XList.of("/bin/sh", "-c", s);
+    run(m, out);
+  }
+
+  /**
+   * Redirects the outputstream of the process to the given one.
+   */
+  private static void run(XList<String> m, OutputStream out) {
     int exitStatus;
     try {
       ProcessBuilder pb = new ProcessBuilder().command(m);
