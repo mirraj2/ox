@@ -54,8 +54,12 @@ public class Json implements Iterable<String> {
   }
 
   public String get(String key) {
+    return getOrDefault(key, null);
+  }
+
+  public String getOrDefault(String key, String defaultValue) {
     JsonElement e = getElement(key);
-    return e == null || e.isJsonNull() ? null : e.getAsString();
+    return e == null || e.isJsonNull() ? defaultValue : e.getAsString();
   }
 
   public Integer getInt(String key) {
