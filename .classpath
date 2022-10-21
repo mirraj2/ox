@@ -8,7 +8,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/guava-27.0.1-jre.jar" sourcepath="open_src/guava-27.0.1.zip"/>
 	<classpathentry kind="lib" path="lib/failureaccess-1.0.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/objenesis-3.1.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
