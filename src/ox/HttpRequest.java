@@ -23,6 +23,7 @@ package ox;
 
 import static com.google.common.base.Preconditions.checkState;
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
+import static ox.util.Utils.normalize;
 import static ox.util.Utils.urlEncode;
 
 import java.io.BufferedInputStream;
@@ -1540,13 +1541,13 @@ public class HttpRequest {
 
   public HttpRequest checkStatus() {
     if (hasError()) {
-      String body = null;
+      String body = "";
       try {
-        body = getBody();
+        body = normalize(getBody());
         Log.debug(body);
       } catch (Throwable t) {
       }
-      throw new IllegalStateException(body == null ? "Error status: " + status() : body);
+      throw new IllegalStateException(body.isEmpty() ? "Error status: " + status() : body);
     }
     return this;
   }
