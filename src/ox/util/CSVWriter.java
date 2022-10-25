@@ -1,12 +1,11 @@
 package ox.util;
 
-import static ox.util.Utils.propagate;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
+
+import ox.File;
 
 public class CSVWriter {
 
@@ -14,11 +13,7 @@ public class CSVWriter {
   private StringBuilder buffer = new StringBuilder();
 
   public CSVWriter(File file) {
-    try {
-      out = new PrintStream(new FileOutputStream(file));
-    } catch (Exception e) {
-      throw propagate(e);
-    }
+    this(file.outputStream());
   }
 
   public CSVWriter(OutputStream os) {

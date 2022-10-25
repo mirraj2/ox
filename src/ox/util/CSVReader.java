@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import ox.Money;
@@ -36,7 +35,7 @@ public class CSVReader {
   private char delimiter = ',';
   private char escape = '"';
   private boolean reuseBuffer = false;
-  private List<String> buffer;
+  private XList<String> buffer;
 
   public CSVReader(InputStream is) {
     this(new InputStreamReader(is, StandardCharsets.UTF_8));
@@ -93,21 +92,21 @@ public class CSVReader {
     forEach(rowList -> callback.accept(new CSVRow(rowList, header)));
   }
 
-  public void forEach(Consumer<List<String>> callback) {
-    List<String> m = nextLine();
+  public void forEach(Consumer<XList<String>> callback) {
+    XList<String> m = nextLine();
     while (m != null) {
       callback.accept(m);
       m = nextLine();
     }
   }
 
-  public List<List<String>> getLines() {
-    List<List<String>> ret = Lists.newArrayList();
+  public XList<XList<String>> getLines() {
+    XList<XList<String>> ret = XList.create();
     forEach(ret::add);
     return ret;
   }
 
-  public List<String> nextLine() {
+  public XList<String> nextLine() {
     String line;
     try {
       line = br.readLine();
@@ -125,10 +124,10 @@ public class CSVReader {
     }
   }
 
-  private List<String> parseLine(String line, BufferedReader br) throws Exception {
-    List<String> ret = buffer;
+  private XList<String> parseLine(String line, BufferedReader br) throws Exception {
+    XList<String> ret = buffer;
     if (ret == null) {
-      ret = Lists.newArrayListWithCapacity(lastSize);
+      ret = XList.createWithCapacity(lastSize);
       if (reuseBuffer) {
         buffer = ret;
       }
@@ -168,7 +167,7 @@ public class CSVReader {
       lastSize = ret.size();
     } else {
       checkState(ret.size() == lastSize, "Found a row with " + ret.size() +
-          " elements when we previously saw a row with " + lastSize + " elements.");
+          " elements when we previously saw a row with " + lastSize + " elements. " + ret);
     }
     return ret;
   }
