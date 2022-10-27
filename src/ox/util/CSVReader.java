@@ -1,7 +1,7 @@
 package ox.util;
 
 import static com.google.common.base.Preconditions.checkState;
-import static ox.util.Utils.f;
+import static ox.util.Utils.format;
 import static ox.util.Utils.normalize;
 import static ox.util.Utils.propagate;
 import static ox.util.Utils.toDouble;
@@ -209,7 +209,7 @@ public class CSVReader {
       try {
         return LocalDate.parse(val);
       } catch (Exception e) {
-        throw new RuntimeException(f("Couldn't parse '{0}' as Date, for {1} column.", val, colName));
+        throw new RuntimeException(format("Couldn't parse '{0}' as Date, for {1} column.", val, colName));
       }
     }
 
@@ -225,7 +225,7 @@ public class CSVReader {
       try {
         return EXCEL_EPOCH_DATE.plusDays((int) Double.parseDouble(val));
       } catch (Exception e) {
-        throw new RuntimeException(f("Couldn't parse '{0}' as Date, for {1} column.", val, colName));
+        throw new RuntimeException(format("Couldn't parse '{0}' as Date, for {1} column.", val, colName));
       }
     }
 

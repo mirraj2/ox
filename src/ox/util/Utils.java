@@ -17,7 +17,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.text.DecimalFormat;
-import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Base64;
@@ -47,6 +46,8 @@ public class Utils {
   private static final Pattern emailPattern = Pattern.compile(
       "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\." +
           "[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$");
+
+  private static final Pattern formatPattern = Pattern.compile("\\{(\\d+)\\}");
 
   public static final DecimalFormat decimalFormat = new DecimalFormat("#,##0.00#########");
   public static final DecimalFormat decimalFormat2 = new DecimalFormat("#,##0.00");
@@ -98,10 +99,22 @@ public class Utils {
   private static final String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
 
   /**
-   * example: f("I ate {0} {1}", 3, "apples")
+   * example: format("I ate {0} {1}", 3, "apples")
    */
-  public static String f(String format, Object... args) {
-    return MessageFormat.format(format, args);
+  public static String format(String s, Object... args) {
+    return Regex.replaceAll(formatPattern, s, matcher -> {
+      String group = matcher.group(1);
+      int index;
+      try {
+        index = parseInt(group);
+      } catch (Exception e) {
+        return group;
+      }
+      if (index < args.length) {
+        return String.valueOf(args[index]);
+      }
+      return group;
+    });
   }
 
   public static String formatBytes(long size) {
