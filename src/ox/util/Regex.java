@@ -81,7 +81,9 @@ public class Regex {
   public static String replaceAll(Pattern pattern, String document, Function<Matcher, String> callback) {
     StringBuffer ret = new StringBuffer();
     run(pattern, document, m -> {
-      m.appendReplacement(ret, callback.apply(m));
+      String s = callback.apply(m);
+      m.appendReplacement(ret, "");
+      ret.append(s);
     }).appendTail(ret);
     return ret.toString();
   }
