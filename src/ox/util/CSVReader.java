@@ -209,7 +209,7 @@ public class CSVReader {
       try {
         return LocalDate.parse(val);
       } catch (Exception e) {
-        throw new RuntimeException(f("Couldn't parse '%s' as Date, for %s column.", val, colName));
+        throw new RuntimeException(f("Couldn't parse '{0}' as Date, for {1} column.", val, colName));
       }
     }
 
@@ -225,7 +225,7 @@ public class CSVReader {
       try {
         return EXCEL_EPOCH_DATE.plusDays((int) Double.parseDouble(val));
       } catch (Exception e) {
-        throw new RuntimeException(f("Couldn't parse '%s' as Date, for %s column.", val, colName));
+        throw new RuntimeException(f("Couldn't parse '{0}' as Date, for {1} column.", val, colName));
       }
     }
 
