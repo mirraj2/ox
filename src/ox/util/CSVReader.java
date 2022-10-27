@@ -197,6 +197,14 @@ public class CSVReader {
       return normalize(row.get(index));
     }
 
+    public LocalDate getDate(String colName) {
+      if (get(colName).length() == 10) {
+        return getISODate(colName);
+      } else {
+        return getExcelDate(colName);
+      }
+    }
+
     /**
      * See also `getExcelDate()`.
      */
