@@ -16,6 +16,10 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 import ox.util.SplitOutputStream;
 import ox.util.Time;
@@ -189,6 +193,18 @@ public class Log {
 
   public static void error(Object o, Object... args) {
     log(o, args);
+  }
+
+  public static void showAllJavaLogs() {
+    setJavaLoggingLevel(Level.FINEST);
+  }
+
+  public static void setJavaLoggingLevel(Level level) {
+    Logger rootLogger = LogManager.getLogManager().getLogger("");
+    rootLogger.setLevel(level);
+    for (Handler h : rootLogger.getHandlers()) {
+      h.setLevel(level);
+    }
   }
 
 
