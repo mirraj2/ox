@@ -81,9 +81,13 @@ public class Json implements Iterable<String> {
   }
 
   public Double getDouble(String key) {
+    return getDouble(key, null);
+  }
+
+  public Double getDouble(String key, Double defaultValue) {
     String s = get(key);
     if (isNullOrEmpty(s)) {
-      return null;
+      return defaultValue;
     } else {
       try {
         return Double.valueOf(s.replace(",", ""));
