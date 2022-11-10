@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.lang.ProcessBuilder.Redirect;
 import java.nio.charset.StandardCharsets;
 
+import ox.File;
 import ox.IO;
 import ox.Log;
 import ox.x.XList;
@@ -23,7 +24,7 @@ public class ScriptUtils {
   public static int runWithNoErrorCheck(String s) {
     Log.debug(s);
     XList<String> m = XList.of("/bin/sh", "-c", s);
-    return run(m, false);
+    return run(m, false, (File) null);
   }
 
   public static String runZSH(String s) {
@@ -35,10 +36,23 @@ public class ScriptUtils {
     // checkState(0 == run(m, true));
   }
 
-  private static int run(XList<String> command, boolean checkError) {
+  public static void run(String command, File workingDir) {
+    Log.debug(command);
+    XList<String> m = XList.of("/bin/sh", "-c", command);
+    run(m, true, workingDir);
+  }
+
+  private static int run(XList<String> command, boolean errorCheck, File workingDir) {
     try {
       ProcessBuilder pb = new ProcessBuilder().command(command);
-      return pb.inheritIO().start().waitFor();
+      if (workingDir != null) {
+        pb.directory(workingDir.file);
+      }
+      int ret = pb.inheritIO().start().waitFor();
+      if(errorCheck) {
+        checkState(ret == 0, "Return code: " + ret + " on command: " + command);
+      }
+      return ret;
     } catch (Exception e) {
       throw propagate(e);
     }
@@ -53,13 +67,21 @@ public class ScriptUtils {
     run(m, out);
   }
 
+  private static void run(XList<String> m, OutputStream out) {
+    run(m, out, null);
+  }
+
   /**
    * Redirects the outputstream of the process to the given one.
    */
-  private static void run(XList<String> m, OutputStream out) {
+  private static void run(XList<String> m, OutputStream out, File workingDir) {
     int exitStatus;
     try {
       ProcessBuilder pb = new ProcessBuilder().command(m);
+      if (workingDir != null) {
+        pb.directory(workingDir.file);
+      }
+
       pb.redirectError(Redirect.INHERIT);
       Process process = pb.start();
       IO.from(process.getInputStream()).to(out);
