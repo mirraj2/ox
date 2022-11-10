@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import ox.Log;
 import ox.Money;
 import ox.x.XList;
 import ox.x.XMap;
@@ -34,6 +35,7 @@ public class CSVReader {
   private char delimiter = ',';
   private char escape = '"';
   private boolean reuseBuffer = false;
+  private boolean debug = false;
   private XList<String> buffer;
 
   public CSVReader(InputStream is) {
@@ -54,6 +56,11 @@ public class CSVReader {
 
   public CSVReader reuseBuffer() {
     reuseBuffer = true;
+    return this;
+  }
+
+  public CSVReader debug() {
+    debug = true;
     return this;
   }
 
@@ -99,6 +106,22 @@ public class CSVReader {
     }
   }
 
+  public void forEachBatch(int batchSize, Consumer<XList<XList<String>>> callback) {
+    checkState(batchSize > 0, "Bad batchSize.");
+
+    XList<XList<String>> batch = XList.create();
+    forEach(row -> {
+      batch.add(row);
+      if (batch.size() == batchSize) {
+        callback.accept(batch);
+        batch.clear();
+      }
+    });
+    if (batch.hasData()) {
+      callback.accept(batch);
+    }
+  }
+
   public XList<XList<String>> getLines() {
     XList<XList<String>> ret = XList.create();
     forEach(ret::add);
@@ -109,6 +132,9 @@ public class CSVReader {
     String line;
     try {
       line = br.readLine();
+      if (debug) {
+        Log.debug("Read %s character line.", line.length());
+      }
     } catch (IOException e) {
       throw propagate(e);
     }
@@ -154,7 +180,9 @@ public class CSVReader {
       }
       if (i == line.length() - 1) {
         if (escaped) {
-          // there was a newline which was escaped!
+          if (debug) {
+            Log.debug("there was a newline which was escaped!");
+          }
           line = line + '\n' + br.readLine();
         }
       }
