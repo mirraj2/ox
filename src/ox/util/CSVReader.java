@@ -20,10 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import com.google.common.collect.Maps;
-
 import ox.Money;
 import ox.x.XList;
+import ox.x.XMap;
 
 public class CSVReader {
 
@@ -79,8 +78,8 @@ public class CSVReader {
     return this;
   }
 
-  public Map<String, Integer> getHeaderIndex() {
-    Map<String, Integer> ret = Maps.newLinkedHashMap();
+  public XMap<String, Integer> getHeaderIndex() {
+    XMap<String, Integer> ret = XMap.create();
     List<String> row = nextLine();
     for (int i = 0; i < row.size(); i++) {
       ret.put(row.get(i), i);
