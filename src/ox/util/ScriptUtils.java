@@ -28,12 +28,15 @@ public class ScriptUtils {
   }
 
   public static String runZSH(String s) {
+    return runZSH(s, null);
+  }
+
+  public static String runZSH(String s, File workingDir) {
     Log.debug(s);
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     XList<String> m = XList.of("/bin/zsh", "-c", "--login", "source ~/.zshrc;" + s);
-    run(m, baos);
+    run(m, baos, workingDir);
     return IO.from(baos.toByteArray()).toString();
-    // checkState(0 == run(m, true));
   }
 
   public static void run(String command, File workingDir) {
