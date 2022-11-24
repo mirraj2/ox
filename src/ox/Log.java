@@ -29,7 +29,7 @@ public class Log {
   /**
    * If you're trying to find the source of a pesky log statement, set this to true.
    */
-  private static final boolean debugMode = false;
+  public static boolean enableDebugMode = false;
 
   private static PrintStream originalOut = System.out;
   private static PrintStream originalErr = System.err;
@@ -128,7 +128,7 @@ public class Log {
         out.print(prefix);
       }
 
-      if (debugMode) {
+      if (enableDebugMode) {
         Thread.dumpStack();
       }
 

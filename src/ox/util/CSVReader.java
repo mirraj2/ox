@@ -298,6 +298,11 @@ public class CSVReader {
       }
       return Utils.parseEnum(s, enumType);
     }
+
+    @Override
+    public String toString() {
+      return row.toString();
+    }
   }
 
   public static CSVReader from(InputStream is) {
