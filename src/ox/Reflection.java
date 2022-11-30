@@ -328,8 +328,8 @@ public class Reflection {
 
   /**
    * For example:<br>
-   * public abstract class AbstractDB<T><br>
-   * public class UserDB extends AbstractDB<User> <br>
+   * public abstract class AbstractDB&lt;T&gt;<br>
+   * public class UserDB extends AbstractDB&lt;User&gt; <br>
    * <br>
    * If this method is given UserDB.class as input, it will return User.class
    */
