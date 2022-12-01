@@ -342,6 +342,10 @@ public class XList<T> extends ForwardingList<T> {
     return concurrent(NUM_PROCESSORS * 2);
   }
 
+  public XList<T> concurrentAll() {
+    return concurrent(Integer.MAX_VALUE);
+  }
+
   /**
    * Sets up the next operation to run on multiple threads (if supported).
    */
