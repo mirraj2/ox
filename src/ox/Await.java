@@ -9,10 +9,11 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.function.Supplier;
 
-import ox.Log;
 import ox.x.XOptional;
 
 public class Await {
+
+  private static final Duration MIN_TIME_BETWEEN_LOGS = Duration.ofSeconds(2);
 
   private Duration timeBetweenChecks;
   private XOptional<Duration> timeout = XOptional.empty();
@@ -35,6 +36,7 @@ public class Await {
   public void await(Supplier<Boolean> callback) {
     XOptional<Instant> timeoutInstant = timeout.map(t -> Instant.now().plus(t));
     
+    Instant lastLogTime = null;
     while (true) {
       if (callback.get()) {
         return;
@@ -42,7 +44,9 @@ public class Await {
       timeoutInstant.ifPresent(t -> {
         checkState(Instant.now().isBefore(t), "await() call timed out after " + timeout);
       });
-      if (!taskName.isEmpty()) {
+      if (!taskName.isEmpty()
+          && (lastLogTime == null || lastLogTime.plus(MIN_TIME_BETWEEN_LOGS).isBefore(Instant.now()))) {
+        lastLogTime = Instant.now();
         Log.debug("Awaiting " + taskName);
       }
       sleep(timeBetweenChecks.toMillis());
