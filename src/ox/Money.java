@@ -5,6 +5,7 @@ import static ox.util.Utils.isNullOrEmpty;
 import static ox.util.Utils.signum;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.function.Function;
 
 import com.google.common.base.CharMatcher;
@@ -52,7 +53,7 @@ public class Money implements Comparable<Money> {
   }
 
   public Money multiply(BigDecimal n) {
-    return new Money(new BigDecimal(cents).multiply(n).setScale(0, BigDecimal.ROUND_HALF_UP).longValueExact());
+    return new Money(new BigDecimal(cents).multiply(n).setScale(0, RoundingMode.HALF_UP).longValueExact());
   }
 
   public Money divide(int n) {
@@ -64,7 +65,7 @@ public class Money implements Comparable<Money> {
   }
 
   public Money divide(BigDecimal n) {
-    return new Money(new BigDecimal(cents).divide(n, 0, BigDecimal.ROUND_HALF_UP).longValueExact());
+    return new Money(new BigDecimal(cents).divide(n, 0, RoundingMode.HALF_UP).longValueExact());
   }
 
   public Money divide(Percent p) {
