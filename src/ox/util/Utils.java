@@ -38,6 +38,7 @@ import ox.Log;
 import ox.Money;
 import ox.Percent;
 import ox.x.XList;
+import ox.x.XOptional;
 
 public class Utils {
 
@@ -479,6 +480,10 @@ public class Utils {
   public static RuntimeException propagate(Throwable throwable) {
     Throwables.throwIfUnchecked(throwable);
     throw new RuntimeException(throwable);
+  }
+
+  public static <T extends Throwable> XOptional<T> getCause(Throwable t, Class<T> causeType) {
+    return XList.create(Throwables.getCausalChain(t)).filter(causeType).first();
   }
 
   public static <T> T attempt(Supplier<T> function, int maxTries, int delayBetweenTriesMillis) {
