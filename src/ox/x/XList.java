@@ -46,7 +46,7 @@ import ox.util.Functions;
  * foo.map(...) //much easier!
  * </pre>
  */
-public class XList<T> extends ForwardingList<T> {
+public class XList<T> extends ForwardingList<T> implements XCollection<T> {
 
   private static final int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors();
 
@@ -154,6 +154,7 @@ public class XList<T> extends ForwardingList<T> {
     }
   }
 
+  @Override
   public <V> XList<V> map(Function<T, V> function) {
     XList<V> ret = new XList<>();
     for (T item : this) {
@@ -214,10 +215,6 @@ public class XList<T> extends ForwardingList<T> {
    */
   public <V> V toUnique(Function<T, ? extends V> function) {
     return toSet(function).<V>only().orElseNull();
-  }
-
-  public <V> XMap<V, T> index(Function<T, V> function) {
-    return Functions.index(this, function);
   }
 
   public <V> XMultimap<V, T> indexMultimap(Function<? super T, V> function) {

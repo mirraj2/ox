@@ -10,10 +10,9 @@ import com.google.common.collect.ForwardingSet;
 import com.google.common.collect.Sets;
 
 import ox.Log;
-import ox.util.Functions;
 import ox.util.Utils;
 
-public class XSet<T> extends ForwardingSet<T> {
+public class XSet<T> extends ForwardingSet<T> implements XCollection<T> {
 
   private final Set<T> delegate;
 
@@ -26,6 +25,7 @@ public class XSet<T> extends ForwardingSet<T> {
     return delegate;
   }
 
+  @Override
   public <V> XSet<V> map(Function<T, V> mappingFunction) {
     XSet<V> ret = XSet.create();
     for (T t : this) {
@@ -34,10 +34,6 @@ public class XSet<T> extends ForwardingSet<T> {
     return ret;
   }
   
-  public <K> XMap<K, T> index(Function<T, K> function) {
-    return Functions.index(this, function);
-  }
-
   /**
    * Unlike map(), which calls the function one time per element, the given function will only be called once. It is
    * passed this entire list as an argument.
