@@ -1,7 +1,6 @@
 package ox;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 import static ox.util.Utils.normalize;
 import static ox.util.Utils.sleep;
 
@@ -42,7 +41,9 @@ public class Await {
         return;
       }
       timeoutInstant.ifPresent(t -> {
-        checkState(Instant.now().isBefore(t), "await() call timed out after " + timeout);
+        if (!Instant.now().isBefore(t)) {
+          throw new AwaitTimeoutException("await() call timed out after " + timeout);
+        }
       });
       if (!taskName.isEmpty()
           && (lastLogTime == null || lastLogTime.plus(MIN_TIME_BETWEEN_LOGS).isBefore(Instant.now()))) {
@@ -55,6 +56,12 @@ public class Await {
 
   public static Await every(Duration timeBetweenChecks) {
     return new Await(timeBetweenChecks);
+  }
+
+  public static class AwaitTimeoutException extends RuntimeException {
+    public AwaitTimeoutException(String s) {
+      super(s);
+    }
   }
 
 }
