@@ -70,6 +70,14 @@ public class XOptional<T> {
     }
   }
 
+  public T orElseThrow(String exceptionString) {
+    if (value != null) {
+      return value;
+    } else {
+      throw new RuntimeException(exceptionString);
+    }
+  }
+
   public <X extends Throwable> T orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
     if (value != null) {
       return value;
