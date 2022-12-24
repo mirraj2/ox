@@ -20,20 +20,23 @@ public class CSVWriter {
     this.out = new PrintStream(os);
   }
 
-  public void write(String... row) {
+  public void write(Object... row) {
     write(Arrays.asList(row));
   }
 
-  public void write(List<String> row) {
+  public void write(List<? extends Object> row) {
     int size = row.size();
     for (int i = 0; i < size; i++) {
-      String s = row.get(i);
-      if (s.indexOf(',') != -1) {
-        buffer.append('"');
-        buffer.append(s);
-        buffer.append('"');
-      } else {
-        buffer.append(s);
+      Object o = row.get(i);
+      if (o != null) {
+        String s = o.toString();
+        if (s.indexOf(',') != -1 || s.indexOf('\n') != -1 || s.indexOf('"') != -1) {
+          buffer.append('"');
+          buffer.append(s);
+          buffer.append('"');
+        } else {
+          buffer.append(s);
+        }
       }
       if (i < size - 1) {
         buffer.append(',');

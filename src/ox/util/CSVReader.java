@@ -94,6 +94,10 @@ public class CSVReader {
     return ret;
   }
 
+  public void forEachRow(Consumer<CSVRow> callback) {
+    forEachRow(getHeaderIndex(), callback);
+  }
+
   public void forEachRow(Map<String, Integer> header, Consumer<CSVRow> callback) {
     forEach(rowList -> callback.accept(new CSVRow(rowList, header)));
   }
@@ -168,6 +172,8 @@ public class CSVReader {
           // next character must be a delimiter in order to unescape (or we've reached end of file)
           if (i == line.length() - 1 || line.charAt(i + 1) == delimiter) {
             escaped = false;
+          } else {
+            sb.append(c);
           }
         } else {
           escaped = true;
@@ -183,7 +189,10 @@ public class CSVReader {
           if (debug) {
             Log.debug("there was a newline which was escaped!");
           }
-          line = line + '\n' + br.readLine();
+          String nextLine = br.readLine();
+          if (nextLine != null) {
+            line = line + '\n' + nextLine;
+          }
         }
       }
     }
