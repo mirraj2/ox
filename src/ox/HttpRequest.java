@@ -84,6 +84,8 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.Multimap;
 import com.google.common.io.BaseEncoding;
 
+import ox.x.XMap;
+
 //taken from https://github.com/kevinsawicki/http-request
 public class HttpRequest {
 
@@ -939,9 +941,9 @@ public class HttpRequest {
     return getConnection().getHeaderField(name);
   }
 
-  public Map<String, List<String>> headers() throws HttpRequestException {
+  public XMap<String, List<String>> headers() throws HttpRequestException {
     closeOutputQuietly();
-    return getConnection().getHeaderFields();
+    return XMap.create(getConnection().getHeaderFields());
   }
 
   public long dateHeader(final String name) throws HttpRequestException {

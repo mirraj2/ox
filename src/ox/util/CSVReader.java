@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import ox.IO;
 import ox.Log;
 import ox.Money;
 import ox.x.XList;
@@ -108,6 +109,7 @@ public class CSVReader {
       callback.accept(m);
       m = nextLine();
     }
+    IO.close(br);
   }
 
   public void forEachBatch(int batchSize, Consumer<XList<XList<String>>> callback) {
