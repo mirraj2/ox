@@ -366,7 +366,7 @@ public class Reflection {
     return ret;
   }
 
-  public static List<Class<?>> findClasses(String packageName) {
+  public static XList<Class<?>> findClasses(String packageName) {
     try {
       ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
       String path = packageName.replace('.', '/');
@@ -380,7 +380,7 @@ public class Reflection {
       for (URI directory : dirs) {
         classes.addAll(findClasses(directory, packageName));
       }
-      List<Class<?>> classList = Lists.newArrayList();
+      XList<Class<?>> classList = XList.create();
       for (String className : classes) {
         if (className.startsWith(packageName) && !className.contains("$")) {
           classList.add(Class.forName(className));
