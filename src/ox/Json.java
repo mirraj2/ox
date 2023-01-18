@@ -510,7 +510,7 @@ public class Json implements Iterable<String> {
     try {
       return parser.parse(data);
     } catch (Exception e) {
-      throw new RuntimeException("Problem parsing json: " + data == null ? null : abbreviate(data, 100), e);
+      throw new RuntimeException("Problem parsing json: " + (data == null ? null : abbreviate(data, 100)), e);
     }
   }
 
