@@ -12,4 +12,16 @@ public interface XCollection<T> extends Iterable<T> {
     return Functions.index(this, function);
   }
 
+  public default <B> XMap<T, B> toMap(Function<T, B> valueFunction) {
+    return toMap(Function.identity(), valueFunction);
+  }
+
+  public default <A, B> XMap<A, B> toMap(Function<T, A> keyFunction, Function<T, B> valueFunction) {
+    XMap<A, B> ret = XMap.create();
+    this.forEach(t -> {
+      ret.put(keyFunction.apply(t), valueFunction.apply(t));
+    });
+    return ret;
+  }
+
 }

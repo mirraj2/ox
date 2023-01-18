@@ -221,18 +221,6 @@ public class XList<T> extends ForwardingList<T> implements XCollection<T> {
     return Functions.indexMultimap(this, function);
   }
 
-  public <B> XMap<T, B> toMap(Function<T, B> valueFunction) {
-    return toMap(Function.identity(), valueFunction);
-  }
-
-  public <A, B> XMap<A, B> toMap(Function<T, A> keyFunction, Function<T, B> valueFunction) {
-    XMap<A, B> ret = XMap.create();
-    this.forEach(t -> {
-      ret.put(keyFunction.apply(t), valueFunction.apply(t));
-    });
-    return ret;
-  }
-
   /**
    * Mutates this list.
    */
