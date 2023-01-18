@@ -13,7 +13,16 @@ import java.util.function.Supplier;
  */
 public class XOptional<T> {
 
+  /**
+   * Common instance for {@code empty()}.
+   */
+  private static final XOptional<?> EMPTY = new XOptional<>();
+
   private final T value;
+
+  private XOptional() {
+    this.value = null;
+}
 
   private XOptional(T value) {
     this.value = value;
@@ -105,7 +114,9 @@ public class XOptional<T> {
   }
 
   public static <T> XOptional<T> empty() {
-    return new XOptional<>(null);
+    @SuppressWarnings("unchecked")
+    XOptional<T> t = (XOptional<T>) EMPTY;
+    return t;
   }
 
   public static <T> XOptional<T> of(T value) {
@@ -114,7 +125,7 @@ public class XOptional<T> {
   }
 
   public static <T> XOptional<T> ofNullable(T value) {
-    return new XOptional<>(value);
+    return value == null ? empty() : of(value);
   }
 
 }
