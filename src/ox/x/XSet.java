@@ -104,6 +104,11 @@ public class XSet<T> extends ForwardingSet<T> implements XCollection<T> {
     return this;
   }
 
+  @Override
+  public int size() {
+    return delegate.size();
+  }
+
   @SafeVarargs
   public static <T> XSet<T> of(T... values) {
     XSet<T> ret = new XSet<>(new LinkedHashSet<>(values.length));

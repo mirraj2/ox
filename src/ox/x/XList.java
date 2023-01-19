@@ -277,6 +277,7 @@ public class XList<T> extends ForwardingList<T> implements XCollection<T> {
     return isEmpty() ? XOptional.empty() : XOptional.ofNullable(get(size() - 1));
   }
 
+  @Override
   public XOptional<T> only() {
     int size = size();
     if (size == 1) {
@@ -342,6 +343,16 @@ public class XList<T> extends ForwardingList<T> implements XCollection<T> {
 
   private void resetConcurrency() {
     this.maxThreads = 1;
+  }
+
+  @Override
+  public int size() {
+    return delgate.size();
+  }
+
+  @Override
+  public XList<T> toList() {
+    return this;
   }
 
   public static <T> XList<T> create() {

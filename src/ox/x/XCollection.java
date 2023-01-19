@@ -8,6 +8,12 @@ public interface XCollection<T> extends Iterable<T> {
 
   public <V> XCollection<V> map(Function<T, V> function);
 
+  public XOptional<T> only();
+
+  public int size();
+
+  public XList<T> toList();
+
   public default <V> XMap<V, T> index(Function<T, V> function) {
     return Functions.index(this, function);
   }
