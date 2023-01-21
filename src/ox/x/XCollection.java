@@ -1,16 +1,15 @@
 package ox.x;
 
+import java.util.Collection;
 import java.util.function.Function;
 
 import ox.util.Functions;
 
-public interface XCollection<T> extends Iterable<T> {
+public interface XCollection<T> extends Iterable<T>, Collection<T> {
 
   public <V> XCollection<V> map(Function<T, V> function);
 
   public XOptional<T> only();
-
-  public int size();
 
   public XList<T> toList();
 

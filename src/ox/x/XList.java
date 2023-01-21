@@ -197,8 +197,22 @@ public class XList<T> extends ForwardingList<T> implements XCollection<T> {
   /**
    * Returns the maximum value in this collection. Assumes that all elements in this collection are Comparable
    */
-  public T max() {
-    return (T) Collections.max((Collection<? extends Comparable>) this);
+  public XOptional<T> max() {
+    if (isEmpty()) {
+      return XOptional.empty();
+    }
+    return XOptional.of((T) Collections.max((Collection<? extends Comparable>) this));
+  }
+
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+  /**
+   * Returns the maximum value in this collection. Assumes that all elements in this collection are Comparable
+   */
+  public XOptional<T> min() {
+    if (isEmpty()) {
+      return XOptional.empty();
+    }
+    return XOptional.of((T) Collections.min((Collection<? extends Comparable>) this));
   }
 
   public XSet<T> toSet() {
@@ -214,7 +228,7 @@ public class XList<T> extends ForwardingList<T> implements XCollection<T> {
    * @return the unique value obtained from applying the function to the elements in this list.
    */
   public <V> V toUnique(Function<T, ? extends V> function) {
-    return toSet(function).<V>only().orElseNull();
+    return toSet(function).only().orElseNull();
   }
 
   public <V> XMultimap<V, T> indexMultimap(Function<? super T, V> function) {
