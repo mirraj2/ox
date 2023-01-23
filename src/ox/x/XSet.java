@@ -12,7 +12,7 @@ import com.google.common.collect.Sets;
 import ox.Log;
 import ox.util.Utils;
 
-public class XSet<T> extends ForwardingSet<T> implements XCollection<T> {
+public class XSet<T> extends ForwardingSet<T> implements XCollection<T>, Set<T> {
 
   private final Set<T> delegate;
 
@@ -91,10 +91,12 @@ public class XSet<T> extends ForwardingSet<T> implements XCollection<T> {
     return size() > 0;
   }
 
+  @Override
   public XOptional<T> only() {
     return XOptional.ofNullable(Utils.only(this));
   }
 
+  @Override
   public XList<T> toList() {
     return XList.create(this);
   }
