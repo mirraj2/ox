@@ -101,6 +101,11 @@ public class XSet<T> extends ForwardingSet<T> implements XCollection<T>, Set<T> 
     return XList.create(this);
   }
 
+  @Override
+  public XSet<T> toSet() {
+    return this;
+  }
+
   public XSet<T> log() {
     forEach(Log::debug);
     return this;

@@ -13,6 +13,8 @@ public interface XCollection<T> extends Iterable<T>, Collection<T> {
 
   public XList<T> toList();
 
+  public XSet<T> toSet();
+
   public default <V> XMap<V, T> index(Function<T, V> function) {
     return Functions.index(this, function);
   }

@@ -3,6 +3,7 @@ package ox.x;
 import static com.google.common.base.Preconditions.checkState;
 import static ox.util.Utils.sleep;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -215,6 +216,7 @@ public class XList<T> extends ForwardingList<T> implements XCollection<T> {
     return XOptional.of((T) Collections.min((Collection<? extends Comparable>) this));
   }
 
+  @Override
   public XSet<T> toSet() {
     return XSet.create(this);
   }
@@ -367,6 +369,15 @@ public class XList<T> extends ForwardingList<T> implements XCollection<T> {
   @Override
   public XList<T> toList() {
     return this;
+  }
+
+  @SuppressWarnings("unchecked")
+  public T[] toArray(Class<T> componentType) {
+    T[] ret = (T[]) Array.newInstance(componentType, size());
+    for (int i = 0; i < size(); i++) {
+      ret[i] = get(i);
+    }
+    return ret;
   }
 
   public static <T> XList<T> create() {
