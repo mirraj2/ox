@@ -23,15 +23,18 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
 
+import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.google.common.collect.Table;
 import com.google.common.reflect.TypeToken;
 
 import ox.util.Time;
@@ -46,6 +49,7 @@ public class Reflection {
   private static final Objenesis objenesis = new ObjenesisStd(true);
   private static final Map<String, Field> fieldCache = Maps.newConcurrentMap();
   private static final Map<String, Method> methodCache = Maps.newConcurrentMap();
+  private static final Table<Class<?>, Class<?>, Function<Object, Object>> converters = HashBasedTable.create();
   private static final Field modifiersField;
 
   private static final Field NULL_FIELD;
@@ -199,14 +203,13 @@ public class Reflection {
       }
     }
 
-    if (value != null) {
-      if (!targetClass.isPrimitive() && !targetClass.isAssignableFrom(value.getClass())) {
+    if (value != null && !targetClass.isPrimitive() && !targetClass.isAssignableFrom(value.getClass())) {
+      Function<Object, Object> converter = converters.get(value.getClass(), targetClass);
+      if (converter == null) {
         throw new IllegalStateException(
             "Trying to convert " + value.getClass() + " to incompatible type: " + targetClass.getSimpleName());
-        // throw new IllegalStateException(
-        // "Trying to set " + field.getType().getSimpleName() + " " + o.getClass().getSimpleName() + "."
-        // + field.getName() + " to incompatible type: " + value.getClass());
       }
+      value = converter.apply(value);
     }
 
     if (wrappedClass == Optional.class) {
@@ -342,12 +345,17 @@ public class Reflection {
     }
   }
 
-  private static Class<?> getTypeArgument(Type t) {
+  public static Class<?> getTypeArgument(Type t) {
     Type type = ((ParameterizedType) t).getActualTypeArguments()[0];
     if (type instanceof ParameterizedType) {
       type = ((ParameterizedType) type).getRawType();
     }
     return (Class<?>) type;
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <I, O> void registerConverter(Class<I> inputClass, Class<O> outputClass, Function<I, O> converter) {
+    converters.put(inputClass, outputClass, (Function<Object, Object>) converter);
   }
 
   @SuppressWarnings("unchecked")
