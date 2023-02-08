@@ -5,7 +5,6 @@ import static com.google.common.collect.Iterables.size;
 
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -44,7 +43,7 @@ public final class Functions {
     checkNotNull(input, "input");
     checkNotNull(function, "function");
 
-    XSet<B> ret = XSet.create(new LinkedHashSet<>(size(input)));
+    XSet<B> ret = XSet.createWithCapacity(size(input));
     for (A element : input) {
       ret.add(function.apply(element));
     }
