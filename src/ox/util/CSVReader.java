@@ -90,7 +90,7 @@ public class CSVReader {
     XMap<String, Integer> ret = XMap.create();
     List<String> row = nextLine();
     for (int i = 0; i < row.size(); i++) {
-      ret.put(row.get(i), i);
+      ret.put(row.get(i).strip().replace("\uFEFF", ""), i);
     }
     return ret;
   }
