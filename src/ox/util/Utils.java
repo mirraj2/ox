@@ -42,7 +42,8 @@ import ox.x.XOptional;
 
 public class Utils {
 
-  private static final CharMatcher whiteSpace = CharMatcher.whitespace().or(CharMatcher.is('\0')).precomputed();
+  private static final CharMatcher whiteSpace = CharMatcher.whitespace().or(CharMatcher.anyOf("\0\uFEFF"))
+      .precomputed();
 
   private static final Pattern emailPattern = Pattern.compile(
       "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\." +
