@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import ox.IO;
+import ox.Json;
 import ox.Log;
 import ox.Money;
 import ox.x.XList;
@@ -313,6 +314,14 @@ public class CSVReader {
     @Override
     public String toString() {
       return row.toString();
+    }
+
+    public Json toJson() {
+      Json ret = Json.object();
+      header.forEach((key, index) -> {
+        ret.with(key, row.get(index));
+      });
+      return ret;
     }
   }
 
