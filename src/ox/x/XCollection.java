@@ -3,6 +3,8 @@ package ox.x;
 import java.util.Collection;
 import java.util.function.Function;
 
+import com.google.common.base.Joiner;
+
 import ox.util.Functions;
 
 public interface XCollection<T> extends Iterable<T>, Collection<T> {
@@ -29,6 +31,10 @@ public interface XCollection<T> extends Iterable<T>, Collection<T> {
       ret.put(keyFunction.apply(t), valueFunction.apply(t));
     });
     return ret;
+  }
+
+  public default String join(String separator) {
+    return Joiner.on(separator).join(this);
   }
 
 }
