@@ -98,7 +98,7 @@ public class XList<T> extends ForwardingList<T> implements XCollection<T> {
   }
 
   public XList<T> filter(Predicate<T> filter) {
-    XList<T> ret = new XList<>();
+    XList<T> ret = new XList<>(new ArrayList<>(Math.min(size(), 10)));
     for (T item : this) {
       if (filter.test(item)) {
         ret.add(item);
@@ -252,6 +252,13 @@ public class XList<T> extends ForwardingList<T> implements XCollection<T> {
   public XList<T> sortSelf(Comparator<? super T> comparator) {
     sort(comparator);
     return this;
+  }
+
+  @SuppressWarnings("unchecked")
+  public <V> XList<T> sortSelf(Function<T, Comparable<V>> mapping) {
+    return sortSelf((a, b) -> {
+      return mapping.apply(a).compareTo((V) mapping.apply(b));
+    });
   }
 
   public XList<T> shuffleSelf() {
