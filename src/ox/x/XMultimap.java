@@ -115,6 +115,10 @@ public class XMultimap<K, V> extends ForwardingMultimap<K, V> {
     return delegate;
   }
 
+  public boolean hasData() {
+    return size() > 0;
+  }
+
   public XMultimap<K, V> log() {
     this.forEach((k, v) -> {
       Log.debug(k + " = " + v);
