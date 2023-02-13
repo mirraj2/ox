@@ -507,7 +507,7 @@ public class Utils {
   }
 
   public static XList<String> split(String s, String separator) {
-    return XList.create(Splitter.on(separator).split(s));
+    return XList.create(Splitter.on(separator).trimResults().omitEmptyStrings().split(s));
   }
 
 }
