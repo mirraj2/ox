@@ -31,6 +31,7 @@ import java.util.regex.Pattern;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Enums;
 import com.google.common.base.Optional;
+import com.google.common.base.Splitter;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Iterables;
 
@@ -503,6 +504,10 @@ public class Utils {
       }
     }
     throw propagate(toThrow);
+  }
+
+  public static XList<String> split(String s, String separator) {
+    return XList.create(Splitter.on(separator).split(s));
   }
 
 }
