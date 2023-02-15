@@ -75,7 +75,7 @@ public class Percent implements Comparable<Percent> {
 
   public String formatWithDecimals(int nDecimals) {
     return this.value.multiply(BigDecimal.valueOf(100))
-        .setScale(nDecimals, RoundingMode.HALF_EVEN).stripTrailingZeros()
+        .setScale(nDecimals, RoundingMode.HALF_EVEN)
         .toPlainString() + "%";
   }
 
