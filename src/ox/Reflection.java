@@ -140,10 +140,11 @@ public class Reflection {
     if (field == null) {
       return;
     }
-    value = convert(value, field.getGenericType());
     try {
+      value = convert(value, field.getGenericType());
       field.set(o, value);
     } catch (Exception e) {
+      Log.error("Problem setting field: " + fieldName);
       throw new RuntimeException(e);
     }
   }
@@ -152,7 +153,8 @@ public class Reflection {
   public static Object convert(Object value, Type targetType) {
     Class<?> wrappedClass = TypeToken.of(targetType).getRawType();
     Class<?> targetClass;
-    if (wrappedClass == Optional.class || wrappedClass == XOptional.class) {
+    if (!(value instanceof XOptional || value instanceof Optional)
+        && (wrappedClass == Optional.class || wrappedClass == XOptional.class)) {
       targetClass = getTypeArgument(targetType);
     } else {
       targetClass = wrappedClass;
@@ -213,9 +215,13 @@ public class Reflection {
     }
 
     if (wrappedClass == Optional.class) {
-      value = Optional.ofNullable(value);
+      if (!(value instanceof Optional)) {
+        value = Optional.ofNullable(value);
+      }
     } else if (wrappedClass == XOptional.class) {
-      value = XOptional.ofNullable(value);
+      if (!(value instanceof XOptional)) {
+        value = XOptional.ofNullable(value);
+      }
     }
 
     return value;
