@@ -180,7 +180,7 @@ public class Reflection {
       } else if (targetClass == Money.class) {
         value = Money.parse(s);
       } else if (targetClass == int.class || targetClass == Integer.class) {
-        value = Integer.parseInt(value.toString());
+        value = Integer.parseInt(s);
       }
     } else if (value instanceof java.sql.Date) {
       if (targetClass == LocalDate.class) {
