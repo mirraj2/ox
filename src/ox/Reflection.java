@@ -160,24 +160,25 @@ public class Reflection {
       targetClass = wrappedClass;
     }
     if (value instanceof String) {
+      String s = (String) value;
       if (targetClass.isEnum()) {
-        value = Utils.parseEnum((String) value, (Class<? extends Enum>) targetClass);
+        value = Utils.parseEnum(s, (Class<? extends Enum>) targetClass);
       } else if (targetClass == LocalDateTime.class) {
-        value = LocalDateTime.parse((String) value);
+        value = LocalDateTime.parse(s);
       } else if (targetClass == LocalDate.class) {
-        value = Time.parseDate((String) value);
+        value = Time.parseDate(s);
       } else if (targetClass == LocalTime.class) {
-        value = LocalTime.parse((String) value);
+        value = LocalTime.parse(s);
       } else if (targetClass == Json.class) {
-        value = new Json((String) value);
+        value = new Json(s);
       } else if (targetClass == UUID.class) {
-        value = UUID.fromString((String) value);
+        value = UUID.fromString(s);
       } else if (targetClass == Percent.class) {
-        value = Percent.parse((String) value);
+        value = Percent.parse(s);
       } else if (targetClass == ZoneId.class) {
-        value = ZoneId.of((String) value);
+        value = ZoneId.of(s);
       } else if (targetClass == Money.class) {
-        value = Money.parse((String) value);
+        value = Money.parse(s);
       }
     } else if (value instanceof java.sql.Date) {
       if (targetClass == LocalDate.class) {

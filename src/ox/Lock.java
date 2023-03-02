@@ -1,5 +1,8 @@
 package ox;
 
+import java.time.Duration;
+import java.time.Instant;
+
 /**
  * A simple lock based on a counter.
  */
@@ -37,19 +40,29 @@ public class Lock {
     }
   }
 
+  public void await() {
+    await(null);
+  }
+
   /**
    * Blocks until the counter is back to zero.
+   *
+   * @return false if we timed out.
    */
-  public void await() {
+  public boolean await(Duration timeout) {
+    Instant t = timeout == null ? null : Instant.now().plus(timeout);
     synchronized (lock) {
       while (counter != 0) {
+        if (t != null && Instant.now().isAfter(t)) {
+          return false;
+        }
         try {
-          lock.wait();
+          lock.wait(timeout == null ? 0 : timeout.toMillis());
         } catch (InterruptedException e) {
-          return;
         }
       }
     }
+    return true;
   }
 
   public int getCounter() {
