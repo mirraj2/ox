@@ -176,19 +176,24 @@ public class Utils {
   }
 
   public static <T extends Enum<T>> T parseEnum(String s, Class<T> enumType) {
-    if (s == null) {
-      return null;
+    return tryParseEnum(s, enumType).orElseThrow(() -> new IllegalArgumentException("No enum: " + enumType + "." + s));
+  }
+
+  public static <T extends Enum<T>> XOptional<T> tryParseEnum(String s, Class<T> enumType) {
+    if (isNullOrEmpty(s)) {
+      return XOptional.empty();
     }
     Optional<T> o = Enums.getIfPresent(enumType, s.replace(' ', '_').replace('-', '_').toUpperCase());
     if (o.isPresent()) {
-      return o.get();
+      return XOptional.of(o.get());
     }
     for (T constant : enumType.getEnumConstants()) {
       if (Matchers.javaLetterOrDigit().retainFrom(constant.toString()).equalsIgnoreCase(s)) {
-        return constant;
+        return XOptional.of(constant);
       }
     }
-    throw new IllegalArgumentException("No enum: " + enumType + "." + s);
+
+    return XOptional.empty();
   }
 
   public static boolean isValidPhoneNumber(String phoneNumber) {
