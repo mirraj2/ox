@@ -35,6 +35,10 @@ public class Percent implements Comparable<Percent> {
     return value;
   }
 
+  public double doubleValue() {
+    return value.doubleValue();
+  }
+
   public boolean isZero() {
     return value.compareTo(BigDecimal.ZERO) == 0;
   }
@@ -136,6 +140,20 @@ public class Percent implements Comparable<Percent> {
 
   public Percent multiply(long n) {
     return new Percent(value.multiply(BigDecimal.valueOf(n)));
+  }
+
+  @Override
+  public int hashCode() {
+    return value.hashCode();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (!(obj instanceof Percent)) {
+      return false;
+    }
+    Percent that = (Percent) obj;
+    return this.value.equals(that.value);
   }
 
   public static <T> Percent sum(Iterable<T> iter, Function<T, Percent> function) {

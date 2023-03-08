@@ -400,6 +400,10 @@ public class Json implements Iterable<String> {
     return map(arr(), Json::new);
   }
 
+  public XList<Object> asObjectArray() {
+    return map(arr(), this::toObject);
+  }
+
   private JsonObject obj() {
     return e.getAsJsonObject();
   }
