@@ -11,7 +11,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
-import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -184,14 +183,6 @@ public class XList<T> extends ForwardingList<T> implements XCollection<T> {
    */
   public <V> V mapBulk(Function<? super XList<T>, V> function) {
     return function.apply(this);
-  }
-
-  public T reduce(T identity, BinaryOperator<T> reducer) {
-    T ret = identity;
-    for (T item : this) {
-      ret = reducer.apply(ret, item);
-    }
-    return ret;
   }
 
   @SuppressWarnings({ "unchecked", "rawtypes" })

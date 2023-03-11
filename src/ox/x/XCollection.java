@@ -1,6 +1,7 @@
 package ox.x;
 
 import java.util.Collection;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 
 import com.google.common.base.Joiner;
@@ -30,6 +31,14 @@ public interface XCollection<T> extends Iterable<T>, Collection<T> {
     this.forEach(t -> {
       ret.put(keyFunction.apply(t), valueFunction.apply(t));
     });
+    return ret;
+  }
+
+  public default T reduce(T identity, BinaryOperator<T> reducer) {
+    T ret = identity;
+    for (T item : this) {
+      ret = reducer.apply(ret, item);
+    }
     return ret;
   }
 
