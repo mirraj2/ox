@@ -79,6 +79,20 @@ public class XOptional<T> {
     }
   }
 
+  /**
+   * Useful to avoid cases of having an XOptional<XOptional<T>>
+   */
+  public <U> XOptional<U> flatMap(Function<? super T, ? extends XOptional<? extends U>> function) {
+    checkNotNull(function);
+    if (isEmpty()) {
+      return empty();
+    } else {
+      @SuppressWarnings("unchecked")
+      XOptional<U> r = (XOptional<U>) function.apply(value);
+      return checkNotNull(r);
+    }
+  }
+
   public T orElseThrow(String exceptionString) {
     if (value != null) {
       return value;
