@@ -124,7 +124,9 @@ public class XList<T> extends ForwardingList<T> implements XCollection<T> {
     if (maxThreads == 1) {
       super.forEach(callback);
     } else {
-      Threads.get(Math.min(size(), maxThreads)).input(this).run(callback);
+      if (hasData()) {
+        Threads.get(Math.min(size(), maxThreads)).input(this).run(callback);
+      }
       resetConcurrency();
     }
   }
