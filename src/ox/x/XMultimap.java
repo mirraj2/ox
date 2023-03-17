@@ -111,7 +111,7 @@ public class XMultimap<K, V> extends ForwardingMultimap<K, V> {
   }
 
   @Override
-  protected Multimap<K, V> delegate() {
+  public Multimap<K, V> delegate() {
     return delegate;
   }
 
