@@ -127,6 +127,10 @@ public class XSet<T> extends ForwardingSet<T> implements XCollection<T>, Set<T> 
     return new XSet<>(new LinkedHashSet<>());
   }
 
+  public static <T> XSet<T> empty() {
+    return createWithCapacity(0);
+  }
+
   public static <T> XSet<T> createWithCapacity(int initialCapacity) {
     return new XSet<>(new LinkedHashSet<>(initialCapacity));
   }
