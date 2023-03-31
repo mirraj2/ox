@@ -41,6 +41,7 @@ import ox.util.Time;
 import ox.util.Utils;
 import ox.x.XList;
 import ox.x.XOptional;
+import ox.x.XSet;
 
 import sun.misc.Unsafe;
 
@@ -51,6 +52,9 @@ public class Reflection {
   private static final Map<String, Method> methodCache = Maps.newConcurrentMap();
   private static final Table<Class<?>, Class<?>, Function<Object, Object>> converters = HashBasedTable.create();
   private static final Field modifiersField;
+
+  public static final XSet<Class<?>> BOXED_TYPES = XSet.of(Byte.class, Short.class, Integer.class, Long.class,
+      Float.class, Double.class, Character.class, Boolean.class);
 
   private static final Field NULL_FIELD;
   private static final Method NULL_METHOD;
