@@ -101,6 +101,14 @@ public class XSet<T> extends ForwardingSet<T> implements XCollection<T>, Set<T> 
     return XList.create(this);
   }
 
+  public <B> XList<B> toList(Function<T, B> mappingFunction) {
+    XList<B> ret = XList.createWithCapacity(size());
+    for (T item : this) {
+      ret.add(mappingFunction.apply(item));
+    }
+    return ret;
+  }
+
   @Override
   public XSet<T> toSet() {
     return this;
