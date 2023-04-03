@@ -6,6 +6,7 @@ import static ox.util.Utils.isNullOrEmpty;
 import static ox.util.Utils.parseEnum;
 
 import java.io.Reader;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
@@ -123,6 +124,11 @@ public class Json implements Iterable<String> {
   public LocalTime getTime(String key) {
     String s = get(key);
     return isNullOrEmpty(s) ? null : LocalTime.parse(s);
+  }
+
+  public Instant getInstant(String key) {
+    String s = get(key);
+    return isNullOrEmpty(s) ? null : Instant.parse(s);
   }
 
   public Money getMoney(String key) {
