@@ -154,7 +154,7 @@ public class Reflection {
   }
 
   @SuppressWarnings({ "unchecked", "rawtypes" })
-  public static Object convert(Object value, Type targetType) {
+  public static <T> T convert(Object value, Type targetType) {
     Class<?> wrappedClass = TypeToken.of(targetType).getRawType();
     Class<?> targetClass;
     if (!(value instanceof XOptional || value instanceof Optional)
@@ -183,6 +183,8 @@ public class Reflection {
         value = ZoneId.of(s);
       } else if (targetClass == Money.class) {
         value = Money.parse(s);
+      } else if (targetClass == Boolean.class) {
+        value = Boolean.parseBoolean(s);
       }
     } else if (value instanceof java.sql.Date) {
       if (targetClass == LocalDate.class) {
@@ -229,7 +231,7 @@ public class Reflection {
       }
     }
 
-    return value;
+    return (T) value;
   }
 
   /**
@@ -465,6 +467,20 @@ public class Reflection {
 
   public static boolean isPublic(Field f) {
     return Modifier.isPublic(f.getModifiers());
+  }
+
+  /**
+   * Gets the class hierarchy starting from the given class and going up to Object.class
+   */
+  public static XList<Class<?>> getClassHierarchy(Class<?> c) {
+    XList<Class<?>> ret = XList.create();
+
+    do {
+      ret.add(c);
+      c = c.getSuperclass();
+    } while (c != Object.class);
+
+    return ret;
   }
 
   public static ClassWrapper is(Class<?> a) {
