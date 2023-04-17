@@ -3,7 +3,7 @@ package ox.util;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
 
 import ox.File;
 
@@ -24,10 +24,9 @@ public class CSVWriter {
     write(Arrays.asList(row));
   }
 
-  public void write(List<? extends Object> row) {
+  public void write(Collection<? extends Object> row) {
     int size = row.size();
-    for (int i = 0; i < size; i++) {
-      Object o = row.get(i);
+    for (Object o : row) {
       if (o != null) {
         String s = o.toString();
         if (s.indexOf(',') != -1 || s.indexOf('\n') != -1 || s.indexOf('"') != -1) {
@@ -38,9 +37,11 @@ public class CSVWriter {
           buffer.append(s);
         }
       }
-      if (i < size - 1) {
-        buffer.append(',');
-      }
+      buffer.append(',');
+    }
+    if (size > 0) {
+      // delete the trailing comma
+      buffer.setLength(buffer.length() - 1);
     }
     out.println(buffer.toString());
     buffer.setLength(0);
