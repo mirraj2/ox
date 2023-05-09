@@ -158,10 +158,15 @@ public class XList<T> extends ForwardingList<T> implements XCollection<T> {
 
   @Override
   public <V> XList<V> map(Function<T, V> function) {
-    XList<V> ret = new XList<>();
-    for (T item : this) {
-      ret.add(function.apply(item));
-    }
+    XList<V> ret = XList.createWithCapacity(size());
+
+    forEach(item -> {
+      V toAdd = function.apply(item);
+      synchronized (ret) {
+        ret.add(toAdd);
+      }
+    });
+
     return ret;
   }
 
