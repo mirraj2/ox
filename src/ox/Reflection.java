@@ -153,9 +153,12 @@ public class Reflection {
     }
   }
 
-  @SuppressWarnings({ "unchecked", "rawtypes" })
   public static <T> T convert(Object value, Type targetType) {
-    Class<?> wrappedClass = TypeToken.of(targetType).getRawType();
+    return convert(value, targetType, TypeToken.of(targetType).getRawType());
+  }
+
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+  public static <T> T convert(Object value, Type targetType, Class<?> wrappedClass) {
     Class<?> targetClass;
     if (!(value instanceof XOptional || value instanceof Optional)
         && (wrappedClass == Optional.class || wrappedClass == XOptional.class)) {
