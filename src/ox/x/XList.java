@@ -76,6 +76,13 @@ public class XList<T> extends ForwardingList<T> implements XCollection<T> {
     return this;
   }
 
+  public XOptional<T> getOptional(int index) {
+    if (index < 0 || index >= size()) {
+      return XOptional.empty();
+    }
+    return XOptional.of(get(index));
+  }
+
   @Override
   protected List<T> delegate() {
     return delgate;
