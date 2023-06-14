@@ -22,6 +22,7 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import ox.util.SplitOutputStream;
+import ox.util.SynchronizedOutputStream;
 import ox.util.Time;
 
 public class Log {
@@ -102,7 +103,7 @@ public class Log {
 
   private static synchronized void logToFile(File file) {
     try {
-      OutputStream os = new BufferedOutputStream(new FileOutputStream(file.file, true));
+      OutputStream os = new SynchronizedOutputStream(new BufferedOutputStream(new FileOutputStream(file.file, true)));
       System.setOut(new PrintStream(new SplitOutputStream(originalOut, os)));
       System.setErr(new PrintStream(new SplitOutputStream(originalErr, os)));
       out = System.out;
