@@ -28,6 +28,11 @@ public class XMap<K, V> extends ForwardingMap<K, V> {
     return XOptional.ofNullable(get(key));
   }
 
+  public XMap<K, V> with(K key, V value) {
+    put(key, value);
+    return this;
+  }
+
   public <K2> XMap<K2, V> transformKeys(Function<K, K2> keyFunction) {
     return transform(keyFunction, Functions.identity());
   }
