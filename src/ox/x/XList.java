@@ -238,6 +238,11 @@ public class XList<T> extends ForwardingList<T> implements XCollection<T> {
     return toSet(function).only().orElseNull();
   }
 
+  public <K, V> XMultimap<K, V> toMultimap(Function<? super T, K> keyFunction,
+      Function<? super T, V> valueFunction) {
+    return Functions.buildMultimap(this, keyFunction, valueFunction);
+  }
+
   public <V> XMultimap<V, T> indexMultimap(Function<? super T, V> function) {
     return Functions.indexMultimap(this, function);
   }
