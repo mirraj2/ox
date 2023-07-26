@@ -7,6 +7,7 @@ import java.util.function.Function;
 import com.google.common.base.Joiner;
 
 import ox.util.Functions;
+import ox.util.Utils;
 
 public interface XCollection<T> extends Iterable<T>, Collection<T> {
 
@@ -44,6 +45,10 @@ public interface XCollection<T> extends Iterable<T>, Collection<T> {
 
   public default String join(String separator) {
     return Joiner.on(separator).join(this);
+  }
+
+  public default T random() {
+    return Utils.random(this);
   }
 
 }
