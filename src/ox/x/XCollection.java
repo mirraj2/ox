@@ -1,6 +1,7 @@
 package ox.x;
 
 import java.util.Collection;
+import java.util.Random;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 
@@ -49,6 +50,10 @@ public interface XCollection<T> extends Iterable<T>, Collection<T> {
 
   public default T random() {
     return Utils.random(this);
+  }
+
+  public default T random(Random random) {
+    return Utils.random(this, random);
   }
 
 }

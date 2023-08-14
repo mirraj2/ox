@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
@@ -258,10 +259,14 @@ public class Utils {
   }
 
   public static <T> T random(Collection<T> c) {
+    return random(c, Utils.random);
+  }
+
+  public static <T> T random(Collection<T> c, Random random) {
     if (c.isEmpty()) {
       return null;
     }
-    return Iterables.get(c, random(c.size()));
+    return Iterables.get(c, random.nextInt(c.size()));
   }
 
   /**
