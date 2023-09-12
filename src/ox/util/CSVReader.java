@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkState;
 import static ox.util.Utils.format;
 import static ox.util.Utils.normalize;
 import static ox.util.Utils.propagate;
+import static ox.util.Utils.toBoolean;
 import static ox.util.Utils.toDouble;
 import static ox.util.Utils.toInt;
 
@@ -309,6 +310,10 @@ public class CSVReader {
         return null;
       }
       return Utils.parseEnum(s, enumType);
+    }
+
+    public Boolean getBoolean(String colName) {
+      return toBoolean(get(colName));
     }
 
     @Override
