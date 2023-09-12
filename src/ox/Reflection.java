@@ -206,6 +206,8 @@ public class Reflection {
         value = ((Integer) value).longValue();
       } else if (targetClass == String.class) {
         value = value.toString();
+      } else if (targetClass == boolean.class || targetClass == Boolean.class) {
+        value = ((Integer) value) != 0;
       }
     } else if (value instanceof Number) {
       if (targetClass == Money.class) {
