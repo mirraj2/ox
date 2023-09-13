@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import com.google.common.base.CharMatcher;
+import com.google.common.base.Splitter;
+
 import ox.IO;
 import ox.Log;
 import ox.Money;
@@ -236,8 +239,8 @@ public class CSVReader {
     }
 
     public LocalDate getDate(String colName) {
-      if (get(colName).length() == 10) {
-        return getISODate(colName);
+      if (get(colName).contains("/") || get(colName).contains("-")) {
+        return getParsedDate(colName);
       } else {
         return getExcelDate(colName);
       }
@@ -270,6 +273,47 @@ public class CSVReader {
 
       try {
         return EXCEL_EPOCH_DATE.plusDays((int) Double.parseDouble(val));
+      } catch (Exception e) {
+        throw new RuntimeException(format("Couldn't parse '{0}' as Date, for {1} column.", val, colName));
+      }
+    }
+
+    /**
+     * Parse the following date formats to LocalDate
+     * 
+     * YYYY-MM-DD
+     * 
+     * MM-DD-YY, M-DD-YY, M-D-YY, MM-D-YY, MM-DD-YYYY
+     * 
+     * MM/DD/YY, M/DD/YY, M/D/YY, MM/D/YY, MM/DD/YYYY,
+     * 
+     */
+    public LocalDate getParsedDate(String colName) {
+      String val = get(colName);
+      if (val.isEmpty()) {
+        return null;
+      }
+
+      List<String> parsedDate = Splitter.on(CharMatcher.anyOf("-/")).splitToList(val);
+      if (parsedDate.get(0).length() == 4) {
+        // YYYY-MM-DD
+        return getISODate(colName);
+      }
+
+      int year;
+      if (parsedDate.get(2).length() == 2) {
+        // MM/DD/YY
+        // MM-DD-YY
+        year = Integer.parseInt(parsedDate.get(2)) > 50 ? Integer.parseInt(parsedDate.get(2)) + 1900
+            : Integer.parseInt(parsedDate.get(2)) + 2000;
+      } else {
+        // MM/DD/YYYY
+        // MM-DD-YYYY
+        year = Integer.parseInt(parsedDate.get(2));
+      }
+
+      try {
+        return LocalDate.of(year, Integer.parseInt(parsedDate.get(0)), Integer.parseInt(parsedDate.get(1)));
       } catch (Exception e) {
         throw new RuntimeException(format("Couldn't parse '{0}' as Date, for {1} column.", val, colName));
       }
