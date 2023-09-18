@@ -7,6 +7,7 @@ import static ox.util.Utils.propagate;
 import static ox.util.Utils.toBoolean;
 import static ox.util.Utils.toDouble;
 import static ox.util.Utils.toInt;
+import static ox.util.Utils.toLong;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -292,6 +293,15 @@ public class CSVReader {
         return toInt(val);
       } catch (NumberFormatException e) {
         throw new RuntimeException("Couldn't parse '" + val + "' as Integer, for " + colName + " column.", e);
+      }
+    }
+
+    public Long getLong(String colName) {
+      String val = get(colName);
+      try {
+        return toLong(val);
+      } catch (NumberFormatException e) {
+        throw new RuntimeException("Couldn't parse '" + val + "' as Long, for " + colName + " column.", e);
       }
     }
 
