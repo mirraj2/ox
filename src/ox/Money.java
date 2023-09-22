@@ -16,6 +16,7 @@ import ox.util.Utils;
 public class Money implements Comparable<Money> {
 
   public static final Money ZERO = Money.dollars(0);
+  public static final Money MAX = Money.fromLong(Long.MAX_VALUE);
   private static final CharMatcher moneyMatcher = CharMatcher.anyOf("$£€ ,-–()").precomputed();
 
   private final long cents;
