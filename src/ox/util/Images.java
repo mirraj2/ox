@@ -15,7 +15,8 @@ import ox.Log;
 
 public class Images {
 
-  public static final Set<String> FORMATS = ImmutableSet.of("jpg", "jpeg", "png", "tiff", "gif", "svg", "bmp", "webp");
+  public static final Set<String> FORMATS = ImmutableSet.of("jpg", "jpeg", "png", "tiff", "gif", "svg", "bmp", "webp",
+      "heic");
 
   public static BufferedImage withType(BufferedImage bi, int type) {
     if (bi.getType() == type) {
