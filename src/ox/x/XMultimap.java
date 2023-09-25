@@ -60,10 +60,10 @@ public class XMultimap<K, V> extends ForwardingMultimap<K, V> {
     return ret;
   }
 
-  public <V2> XMap<K, V2> toMap(Function<Collection<V>, V2> valueReducer) {
+  public <V2> XMap<K, V2> toMap(Function<XList<V>, V2> valueReducer) {
     XMap<K, V2> ret = XMap.create();
     for (K key : delegate.keySet()) {
-      ret.put(key, valueReducer.apply(delegate.get(key)));
+      ret.put(key, valueReducer.apply(XList.create(delegate.get(key))));
     }
     return ret;
   }
