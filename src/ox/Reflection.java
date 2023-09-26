@@ -297,6 +297,10 @@ public class Reflection {
     return XList.of(c.getDeclaredFields());
   }
 
+  public static XList<Field> getNonStaticFields(Class<?> c) {
+    return getFields(c).filter(field -> !Modifier.isStatic(field.getModifiers()));
+  }
+
   public static XList<Method> getMethods(Class<?> c) {
     return XList.of(c.getDeclaredMethods());
   }
