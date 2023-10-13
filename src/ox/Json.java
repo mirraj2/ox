@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -28,6 +29,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 import ox.x.XList;
+import ox.x.XOptional;
 
 public class Json implements Iterable<String> {
 
@@ -254,6 +256,14 @@ public class Json implements Iterable<String> {
       with(key, value.toString());
     }
     return this;
+  }
+
+  public Json with(String key, XOptional<?> value) {
+    return with(key, value.orElseNull());
+  }
+
+  public Json with(String key, Optional<?> value) {
+    return with(key, value.orElse(null));
   }
 
   public Json with(String key, Json value) {

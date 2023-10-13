@@ -229,6 +229,10 @@ public class CSVReader {
       return XList.create(row);
     }
 
+    public boolean hasKey(String key) {
+      return header.containsKey(key);
+    }
+
     public String get(String s) {
       Integer index = header.get(s);
       if (index == null) {
