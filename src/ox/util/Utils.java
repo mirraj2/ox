@@ -494,6 +494,13 @@ public class Utils {
     throw new RuntimeException(throwable);
   }
 
+  /**
+   * If the given throwable was caused by an InterruptedException, this will throw the passed in exception.
+   */
+  public static void propagateInterruption(Throwable throwable) {
+    getCause(throwable, InterruptedException.class).ifPresent(ie -> propagate(throwable));
+  }
+
   public static <T extends Throwable> XOptional<T> getCause(Throwable t, Class<T> causeType) {
     return XList.create(Throwables.getCausalChain(t)).filter(causeType).first();
   }
