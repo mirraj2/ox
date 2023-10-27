@@ -110,6 +110,11 @@ public class Reflection {
     }
   }
 
+  public static <T> T get(Class<?> c, String staticFieldName) {
+    Field field = getField(c, staticFieldName);
+    return get(null, field);
+  }
+
   public static <T> T get(Object o, String fieldName) {
     Field field = getField(o.getClass(), fieldName);
     return get(o, field);
