@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkState;
 import static ox.util.Utils.count;
 import static ox.util.Utils.only;
 import static ox.util.Utils.propagate;
+import static ox.util.Utils.sleep;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -98,13 +99,17 @@ public class Threads {
 
     public void await() {
       executor.shutdown();
-      try {
-        executor.awaitTermination(1000, TimeUnit.DAYS);
-      } catch (InterruptedException e) {
-        throw propagate(e);
+      while (true) {
+        if (failFast && exception != null) {
+          break;
+        }
+        if (executor.isTerminated()) {
+          break;
+        }
+        sleep(30);
       }
       if (exception != null) {
-        throw new RuntimeException(exception);
+        throw propagate(exception);
       }
     }
 

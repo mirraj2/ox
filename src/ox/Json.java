@@ -155,7 +155,7 @@ public class Json implements Iterable<String> {
 
   public Json getJson(String key) {
     JsonElement e = getElement(key);
-    return e == null ? null : new Json(e);
+    return e == null || e instanceof JsonNull ? null : new Json(e);
   }
 
   public Object getObject(String key) {
