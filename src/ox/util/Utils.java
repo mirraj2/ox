@@ -17,6 +17,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.text.DecimalFormat;
+import java.text.Normalizer;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Base64;
@@ -332,6 +333,11 @@ public class Utils {
     }
 
     return ret;
+  }
+
+  public static String removeDiacriticalMarks(String s) {
+    s = Normalizer.normalize(s, Normalizer.Form.NFD);
+    return s.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
   }
 
   public static double normalize(Double n) {
