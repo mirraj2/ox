@@ -184,9 +184,10 @@ public class XList<T> extends ForwardingList<T> implements XCollection<T> {
   public <V> XList<V> flatten() {
     XList<V> ret = new XList<>();
     for (T item : this) {
-      checkState(item instanceof Iterable, "Expected all elements in this list to be Iterable, but found: " + item);
-      Iterable<V> iter = (Iterable<V>) item;
-      iter.forEach(ret::add);
+      if (!(item instanceof Iterable)) {
+        throw new IllegalStateException("Expected all elements in this list to be Iterable, but found: " + item);
+      }
+      ((Iterable<V>) item).forEach(ret::add);
     }
     return ret;
   }
