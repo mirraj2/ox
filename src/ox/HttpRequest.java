@@ -1401,7 +1401,8 @@ public class HttpRequest {
   }
 
   public HttpRequest send(Json json) {
-    return send(json.toString());
+    return contentType(CONTENT_TYPE_JSON, CHARSET_UTF8)
+        .send(json.toString());
   }
 
   public HttpRequest send(final byte[] input) throws HttpRequestException {
