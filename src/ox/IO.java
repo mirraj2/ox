@@ -36,8 +36,10 @@ import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipInputStream;
 
 import javax.imageio.ImageIO;
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
@@ -244,12 +246,7 @@ public class IO {
     public String to(URL url) {
       try {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        if (acceptAllCerts && conn instanceof HttpsURLConnection) {
-          HttpsURLConnection https = (HttpsURLConnection) conn;
-          SSLContext ctx = SSLContext.getInstance("SSLv3");
-          ctx.init(null, new TrustManager[] { ACCEPT_ALL }, null);
-          https.setSSLSocketFactory(ctx.getSocketFactory());
-        }
+        configureSSL(conn);
         conn.setRequestMethod("POST");
         conn.setRequestProperty("Content-Type", "application/json");
         conn.setDoOutput(true);
@@ -374,6 +371,8 @@ public class IO {
           httpConn.setRequestMethod(method);
         }
 
+        configureSSL(conn);
+
         conn.setRequestProperty("User-Agent", USER_AGENT);
         if (gzipInput) {
           conn.setRequestProperty("Accept-Encoding", "gzip");
@@ -394,6 +393,27 @@ public class IO {
       }
 
       return conn.getInputStream();
+    }
+
+    private void configureSSL(URLConnection conn) {
+      try {
+        if (acceptAllCerts) {
+          if (conn instanceof HttpsURLConnection) {
+            HttpsURLConnection https = (HttpsURLConnection) conn;
+            SSLContext ctx = SSLContext.getInstance("SSL");
+            ctx.init(null, new TrustManager[] { ACCEPT_ALL }, null);
+            https.setSSLSocketFactory(ctx.getSocketFactory());
+            https.setHostnameVerifier(new HostnameVerifier() {
+              @Override
+              public boolean verify(String hostname, SSLSession sslSession) {
+                return true;
+              }
+            });
+          }
+        }
+      } catch (Exception e) {
+        throw propagate(e);
+      }
     }
 
     public Input gzipInput() {
