@@ -49,15 +49,15 @@ public class XSet<T> extends ForwardingSet<T> implements XCollection<T>, Set<T> 
     return this;
   }
 
-  public XSet<T> minus(XSet<T> set2) {
+  public XSet<T> minus(Set<T> set2) {
     return XSet.create(Sets.difference(this, set2));
   }
 
-  public XSet<T> intersect(XSet<T> set2) {
+  public XSet<T> intersect(Set<T> set2) {
     return XSet.create(Sets.intersection(this, set2));
   }
 
-  public XSet<T> union(XSet<T> set2) {
+  public XSet<T> union(Set<T> set2) {
     return XSet.create(Sets.union(this, set2));
   }
 

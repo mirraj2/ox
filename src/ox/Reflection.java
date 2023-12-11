@@ -310,6 +310,10 @@ public class Reflection {
     return XList.of(c.getDeclaredMethods());
   }
 
+  public static XList<Method> getMethods(Class<?> c, String methodName) {
+    return XList.of(c.getMethods()).filter(m -> m.getName().equals(methodName));
+  }
+
   public static Method getMethod(Class<?> c, String methodName) {
     Method ret = methodCache.computeIfAbsent(c.getName() + methodName, s -> {
       Method varargs = null;
