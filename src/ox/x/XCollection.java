@@ -36,6 +36,27 @@ public interface XCollection<T> extends Iterable<T>, Collection<T> {
     return ret;
   }
 
+  /**
+   * @exception if the set of values of {@code function} does not have exactly one element.
+   * @return the unique value obtained from applying the function to the elements in this list.
+   */
+  public default <V> V toUnique(Function<T, ? extends V> function) {
+    return toSet(function).only().orElseNull();
+  }
+
+  public default <V> XSet<V> toSet(Function<T, V> function) {
+    return Functions.toSet(this, function);
+  }
+
+  public default <K, V> XMultimap<K, V> toMultimap(Function<? super T, K> keyFunction,
+      Function<? super T, V> valueFunction) {
+    return Functions.buildMultimap(this, keyFunction, valueFunction);
+  }
+
+  public default <V> XMultimap<V, T> indexMultimap(Function<? super T, V> function) {
+    return Functions.indexMultimap(this, function);
+  }
+
   public default T reduce(T identity, BinaryOperator<T> reducer) {
     T ret = identity;
     for (T item : this) {

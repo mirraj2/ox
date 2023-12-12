@@ -21,7 +21,6 @@ import com.google.common.collect.Lists;
 
 import ox.Log;
 import ox.Threads;
-import ox.util.Functions;
 
 /**
  * <p>
@@ -225,27 +224,6 @@ public class XList<T> extends ForwardingList<T> implements XCollection<T> {
   @Override
   public XSet<T> toSet() {
     return XSet.create(this);
-  }
-
-  public <V> XSet<V> toSet(Function<T, V> function) {
-    return Functions.toSet(this, function);
-  }
-
-  /**
-   * @exception if the set of values of {@code function} does not have exactly one element.
-   * @return the unique value obtained from applying the function to the elements in this list.
-   */
-  public <V> V toUnique(Function<T, ? extends V> function) {
-    return toSet(function).only().orElseNull();
-  }
-
-  public <K, V> XMultimap<K, V> toMultimap(Function<? super T, K> keyFunction,
-      Function<? super T, V> valueFunction) {
-    return Functions.buildMultimap(this, keyFunction, valueFunction);
-  }
-
-  public <V> XMultimap<V, T> indexMultimap(Function<? super T, V> function) {
-    return Functions.indexMultimap(this, function);
   }
 
   /**
