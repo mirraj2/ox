@@ -15,6 +15,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -44,12 +45,19 @@ public class Log {
 
   private static Supplier<String> prefixSupplier = () -> "";
 
+  private static Consumer<Throwable> exceptionHandler = (e) -> {
+  };
+
   public static void showTimestamps() {
     prefix(() -> Instant.now() + " ");
   }
 
   public static void prefix(Supplier<String> prefixSupplier) {
     Log.prefixSupplier = checkNotNull(prefixSupplier);
+  }
+
+  public static void exceptionHandler(Consumer<Throwable> exceptionHandler) {
+    Log.exceptionHandler = exceptionHandler;
   }
 
   public static void logToFolder(String appName) {
@@ -140,6 +148,11 @@ public class Log {
       if (o instanceof Throwable) {
         Throwable t = (Throwable) o;
         t.printStackTrace(out);
+        try {
+          exceptionHandler.accept(t);
+        } catch (Throwable tt) {
+          tt.printStackTrace();
+        }
         return;
       }
 
@@ -211,6 +224,5 @@ public class Log {
       h.setLevel(level);
     }
   }
-
 
 }
