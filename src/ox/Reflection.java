@@ -126,6 +126,7 @@ public class Reflection {
       return null;
     }
     try {
+      field.setAccessible(true);
       return (T) field.get(o);
     } catch (Exception e) {
       throw propagate(e);
@@ -146,14 +147,16 @@ public class Reflection {
 
   public static void set(Object o, String fieldName, Object value) {
     Field field = getField(o.getClass(), fieldName);
-    if (field == null) {
-      return;
-    }
+    set(o, field, value);
+  }
+
+  public static void set(Object o, Field field, Object value) {
     try {
       value = convert(value, field.getGenericType());
+      field.setAccessible(true);
       field.set(o, value);
     } catch (Exception e) {
-      Log.error("Problem setting field: " + fieldName);
+      Log.error("Problem setting field: " + field.getName());
       throw new RuntimeException(e);
     }
   }
@@ -219,6 +222,14 @@ public class Reflection {
         value = Money.parse(value.toString());
       } else if (targetClass == int.class || targetClass == Integer.class) {
         value = Integer.parseInt(value.toString());
+      }
+    } else if (value instanceof Enum) {
+      if (targetClass == String.class) {
+        value = ((Enum) value).name();
+      }
+    } else if (value instanceof Json) {
+      if (targetClass == String.class) {
+        value = value.toString();
       }
     }
 
