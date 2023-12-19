@@ -109,6 +109,14 @@ public class XOptional<T> {
     }
   }
 
+  public T orThrow(Supplier<String> exceptionStringSupplier) {
+    if (value != null) {
+      return value;
+    } else {
+      throw new RuntimeException(exceptionStringSupplier.get());
+    }
+  }
+
   public XList<T> toList() {
     return value == null ? XList.empty() : XList.of(value);
   }

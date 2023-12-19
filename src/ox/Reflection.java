@@ -401,7 +401,7 @@ public class Reflection {
   }
 
   @SuppressWarnings("unchecked")
-  public static <T> XList<Constructor<T>> getConstructors(Class<?> c) {
+  public static <T> XList<Constructor<T>> getConstructors(Class<T> c) {
     return XList.of((Constructor<T>[]) c.getConstructors());
   }
 
@@ -496,6 +496,10 @@ public class Reflection {
 
   public static boolean isPublic(Field f) {
     return Modifier.isPublic(f.getModifiers());
+  }
+
+  public static boolean isTransient(Field f) {
+    return Modifier.isTransient(f.getModifiers());
   }
 
   /**
