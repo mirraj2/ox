@@ -7,6 +7,7 @@ import java.util.function.Function;
 
 import com.google.common.base.Joiner;
 
+import ox.Log;
 import ox.util.Functions;
 import ox.util.Utils;
 
@@ -75,6 +76,15 @@ public interface XCollection<T> extends Iterable<T>, Collection<T> {
 
   public default T random(Random random) {
     return Utils.random(this, random);
+  }
+
+  public default XCollection<T> log() {
+    if (isEmpty()) {
+      Log.debug("<Empty>");
+    } else {
+      forEach(Log::debug);
+    }
+    return this;
   }
 
 }

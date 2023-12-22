@@ -2,6 +2,7 @@ package ox.x;
 
 import static com.google.common.base.Preconditions.checkState;
 import static ox.util.Utils.sleep;
+import static ox.util.Utils.sort;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -19,7 +20,6 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.ForwardingList;
 import com.google.common.collect.Lists;
 
-import ox.Log;
 import ox.Threads;
 
 /**
@@ -301,8 +301,9 @@ public class XList<T> extends ForwardingList<T> implements XCollection<T> {
     }
   }
 
+  @Override
   public XList<T> log() {
-    forEach(Log::debug);
+    XCollection.super.log();
     return this;
   }
 

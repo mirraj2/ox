@@ -9,7 +9,6 @@ import java.util.function.Predicate;
 import com.google.common.collect.ForwardingSet;
 import com.google.common.collect.Sets;
 
-import ox.Log;
 import ox.util.Utils;
 
 public class XSet<T> extends ForwardingSet<T> implements XCollection<T>, Set<T> {
@@ -114,8 +113,9 @@ public class XSet<T> extends ForwardingSet<T> implements XCollection<T>, Set<T> 
     return this;
   }
 
+  @Override
   public XSet<T> log() {
-    forEach(Log::debug);
+    XCollection.super.log();
     return this;
   }
 

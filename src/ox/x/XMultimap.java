@@ -46,6 +46,15 @@ public class XMultimap<K, V> extends ForwardingMultimap<K, V> {
     return XList.create(super.values());
   }
 
+  public XList<XList<V>> valuesList(){
+    Set<K> keySet = super.keySet();
+    XList<XList<V>> ret = XList.createWithCapacity(keySet.size());
+    for(K key : keySet) {
+      ret.add(get(key));
+    }
+    return ret;
+  }
+
   @Override
   public XSet<K> keySet() {
     Set<K> set = super.keySet();
