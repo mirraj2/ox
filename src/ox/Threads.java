@@ -53,7 +53,7 @@ public class Threads {
       try {
         r.run();
       } catch (Throwable t) {
-        t.printStackTrace();
+        Log.error(t);
       }
     };
   }
@@ -92,7 +92,7 @@ public class Threads {
           r.run();
         } catch (Throwable t) {
           exception = t;
-          t.printStackTrace();
+          Log.error(t);
         }
       });
     }
@@ -130,7 +130,7 @@ public class Threads {
             callback.accept(o);
           } catch (Throwable t) {
             if (failFast) {
-              t.printStackTrace();
+              Log.error(t);
             }
             Log.error("Problem with input: " + o);
             exceptions.add(t);
@@ -146,7 +146,7 @@ public class Threads {
         if (exceptions.size() == 1) {
           throw new RuntimeException(only(exceptions));
         }
-        exceptions.forEach(Throwable::printStackTrace);
+        exceptions.forEach(Log::error);
         throw new RuntimeException("Found " + exceptions.size() + " exceptions.");
       }
       if (timedOut) {
