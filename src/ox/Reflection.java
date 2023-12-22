@@ -98,7 +98,7 @@ public class Reflection {
     } catch (ClassNotFoundException e) {
       // do nothing
     } catch (Exception e) {
-      e.printStackTrace();
+      Log.error(e);
     }
   }
 
