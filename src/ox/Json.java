@@ -158,6 +158,11 @@ public class Json implements Iterable<String> {
     return e == null || e instanceof JsonNull ? null : new Json(e);
   }
 
+  public Object getObject(int index) {
+    JsonElement e = arr().get(index);
+    return toObject(e);
+  }
+
   public Object getObject(String key) {
     return toObject(getElement(key));
   }
@@ -176,6 +181,8 @@ public class Json implements Iterable<String> {
         return jp.getAsBoolean();
       } else if (jp.isString()) {
         return jp.getAsString();
+      } else if (jp.isJsonNull()) {
+        return null;
       } else {
         throw new IllegalStateException(this + "");
       }
