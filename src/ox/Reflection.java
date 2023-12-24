@@ -170,7 +170,7 @@ public class Reflection {
     Class<?> targetClass;
     if (!(value instanceof XOptional || value instanceof Optional)
         && (wrappedClass == Optional.class || wrappedClass == XOptional.class)) {
-      targetClass = getTypeArgument(targetType);
+      targetClass = getClassArgument(targetType);
     } else {
       targetClass = wrappedClass;
     }
@@ -381,14 +381,18 @@ public class Reflection {
   public static Class<?> getGenericClass(Class<?> c) {
     Type t = c.getGenericSuperclass();
     if (t instanceof ParameterizedType) {
-      return getTypeArgument(t);
+      return getClassArgument(t);
     } else {
       return null;
     }
   }
 
-  public static Class<?> getTypeArgument(Type t) {
-    Type type = ((ParameterizedType) t).getActualTypeArguments()[0];
+  public static Type getTypeArgument(Type t) {
+    return ((ParameterizedType) t).getActualTypeArguments()[0];
+  }
+
+  public static Class<?> getClassArgument(Type t) {
+    Type type = getTypeArgument(t);
     if (type instanceof ParameterizedType) {
       type = ((ParameterizedType) type).getRawType();
     }
@@ -402,7 +406,7 @@ public class Reflection {
 
   @SuppressWarnings("unchecked")
   public static <T> XList<Constructor<T>> getConstructors(Class<T> c) {
-    return XList.of((Constructor<T>[]) c.getConstructors());
+    return XList.of((Constructor<T>[]) c.getDeclaredConstructors());
   }
 
   @SuppressWarnings("unchecked")
@@ -514,6 +518,14 @@ public class Reflection {
     } while (c != Object.class);
 
     return ret;
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T> Class<T> toClass(Type type) {
+    if (type instanceof Class) {
+      return (Class<T>) type;
+    }
+    return (Class<T>) ((ParameterizedType) type).getRawType();
   }
 
   public static ClassWrapper is(Class<?> a) {

@@ -6,6 +6,7 @@ import static com.google.common.base.Preconditions.checkState;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
@@ -90,6 +91,15 @@ public class XOptional<T> {
       @SuppressWarnings("unchecked")
       XOptional<U> r = (XOptional<U>) function.apply(value);
       return checkNotNull(r);
+    }
+  }
+
+  public XOptional<T> filter(Predicate<? super T> predicate) {
+    checkNotNull(predicate);
+    if (isEmpty()) {
+      return this;
+    } else {
+      return predicate.test(value) ? this : empty();
     }
   }
 

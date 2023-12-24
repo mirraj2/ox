@@ -406,6 +406,9 @@ public class Json implements Iterable<String> {
   }
 
   public XList<String> asStringArray() {
+    if (e.isJsonPrimitive()) {
+      return new Json(e.getAsString()).asStringArray();
+    }
     return map(arr(), e -> e.isJsonNull() ? null : e.getAsString());
   }
 
@@ -434,6 +437,9 @@ public class Json implements Iterable<String> {
   }
 
   private JsonObject obj() {
+    if (e instanceof JsonPrimitive) {
+      return new Json(e.getAsString()).e.getAsJsonObject();
+    }
     return e.getAsJsonObject();
   }
 
