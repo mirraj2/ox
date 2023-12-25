@@ -60,12 +60,20 @@ public class XOptional<T> {
     return isPresent() ? this.value : alternativeValue;
   }
 
-  public T orElse(Supplier<T> alternativeValue) {
+  public T orElse(Supplier<? extends T> alternativeValue) {
     return isPresent() ? this.value : alternativeValue.get();
   }
 
   public T orElseNull() {
     return isPresent() ? this.value : null;
+  }
+
+  public XOptional<T> or(T alternativeValue) {
+    return isPresent() ? this : XOptional.ofNullable(alternativeValue);
+  }
+
+  public XOptional<T> or(Supplier<? extends T> alternativeValue) {
+    return isPresent() ? this : XOptional.ofNullable(alternativeValue.get());
   }
 
   public <V> V compute(Function<T, V> callback, V defaultValue) {

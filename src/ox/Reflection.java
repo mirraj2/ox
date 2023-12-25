@@ -196,6 +196,8 @@ public class Reflection {
         value = Money.parse(s);
       } else if (targetClass == Boolean.class) {
         value = Boolean.parseBoolean(s);
+      } else if (targetClass == Integer.class) {
+        value = Integer.parseInt(s);
       }
     } else if (value instanceof java.sql.Date) {
       if (targetClass == LocalDate.class) {
@@ -524,8 +526,11 @@ public class Reflection {
   public static <T> Class<T> toClass(Type type) {
     if (type instanceof Class) {
       return (Class<T>) type;
+    } else if (type instanceof ParameterizedType) {
+      return (Class<T>) ((ParameterizedType) type).getRawType();
+    } else {
+      return (Class<T>) TypeToken.of(type).getRawType();
     }
-    return (Class<T>) ((ParameterizedType) type).getRawType();
   }
 
   public static ClassWrapper is(Class<?> a) {
