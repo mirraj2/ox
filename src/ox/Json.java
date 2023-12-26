@@ -186,6 +186,8 @@ public class Json implements Iterable<String> {
       } else {
         throw new IllegalStateException(this + "");
       }
+    } else if (e.isJsonNull()) {
+      return null;
     } else {
       throw new IllegalStateException(this + "");
     }
