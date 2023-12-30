@@ -13,7 +13,6 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -77,15 +76,8 @@ public class Log {
     currentLogDate = LocalDate.now(Time.DEFAULT_TIME_ZONE);
     logToFile(logFolder.child(currentLogDate + ".log"));
 
-    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1, new ThreadFactory() {
-      @Override
-      public Thread newThread(Runnable r) {
-        Thread t = new Thread(r);
-        t.setName("ox.Log thread");
-        t.setDaemon(true);
-        return t;
-      }
-    });
+    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1,
+        new NamedThreadFactory(Log.class).daemon());
 
     executor.scheduleAtFixedRate(Log::flush, 0, 100, TimeUnit.MILLISECONDS);
     executor.scheduleAtFixedRate(Log::rolloverLog, 1, 1, TimeUnit.MINUTES);

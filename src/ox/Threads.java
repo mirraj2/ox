@@ -23,7 +23,8 @@ import ox.x.XList;
 
 public class Threads {
 
-  private static final ScheduledExecutorService pool = Executors.newScheduledThreadPool(16);
+  private static final ScheduledExecutorService pool = Executors.newScheduledThreadPool(16,
+      new NamedThreadFactory(Threads.class, "pool"));
 
   public static void run(Runnable r) {
     pool.execute(wrap(r));
@@ -71,7 +72,7 @@ public class Threads {
 
     private Parallelizer(int numThreads) {
       checkState(numThreads > 0, "numThreads=" + numThreads);
-      executor = Executors.newFixedThreadPool(numThreads);
+      executor = Executors.newFixedThreadPool(numThreads, new NamedThreadFactory(Threads.class, "Parallelizer"));
     }
 
     @SuppressWarnings("unchecked")
