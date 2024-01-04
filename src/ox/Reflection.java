@@ -319,6 +319,11 @@ public class Reflection {
     return getFields(c).filter(field -> !Modifier.isStatic(field.getModifiers()));
   }
 
+  public static XList<Field> getPublicNonStaticFields(Class<?> c) {
+    return getFields(c).filter(field -> !Modifier.isStatic(field.getModifiers())
+        && Modifier.isPublic(field.getModifiers()));
+  }
+
   public static XList<Method> getMethods(Class<?> c) {
     return XList.of(c.getDeclaredMethods());
   }
@@ -506,6 +511,10 @@ public class Reflection {
 
   public static boolean isTransient(Field f) {
     return Modifier.isTransient(f.getModifiers());
+  }
+
+  public static boolean isFinalSynthetic(Field f) {
+    return f.isSynthetic() && Modifier.isFinal(f.getModifiers());
   }
 
   /**
