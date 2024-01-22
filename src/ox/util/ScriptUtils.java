@@ -39,10 +39,22 @@ public class ScriptUtils {
     return IO.from(baos.toByteArray()).toString();
   }
 
-  public static void run(String command, File workingDir) {
+  public static String runCmd(String s) {
+    return runCmd(s, null);
+  }
+
+  public static String runCmd(String s, File workingDir) {
+    Log.debug(s);
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    XList<String> m = XList.of("cmd.exe", "/c", s);
+    run(m, baos, workingDir);
+    return IO.from(baos.toByteArray()).toString();
+  }
+
+  public static int run(String command, File workingDir) {
     Log.debug(command);
     XList<String> m = XList.of("/bin/sh", "-c", command);
-    run(m, true, workingDir);
+    return run(m, true, workingDir);
   }
 
   private static int run(XList<String> command, boolean errorCheck, File workingDir) {

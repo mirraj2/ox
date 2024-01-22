@@ -1346,7 +1346,7 @@ public class HttpRequest {
 
   public HttpRequest part(final String name, final File part)
       throws HttpRequestException {
-    return part(name, null, part);
+    return part(name, name, part);
   }
 
   public HttpRequest part(final String name, final String filename,
