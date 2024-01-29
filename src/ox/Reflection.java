@@ -50,6 +50,7 @@ public class Reflection {
   private static final Objenesis objenesis = new ObjenesisStd(true);
   private static final Map<String, Field> fieldCache = Maps.newConcurrentMap();
   private static final Map<String, Method> methodCache = Maps.newConcurrentMap();
+  private static final Map<Class<?>, XList<Field>> allFieldsCache = Maps.newConcurrentMap();
   private static final Table<Class<?>, Class<?>, Function<Object, Object>> converters = HashBasedTable.create();
   private static final Field modifiersField;
 
@@ -319,6 +320,17 @@ public class Reflection {
     return getFields(c).filter(field -> !Modifier.isStatic(field.getModifiers()));
   }
 
+  /**
+   * Gets all non-static fields (including inherited fields).
+   */
+  public static XList<Field> getAllFields(Class<?> c) {
+    return allFieldsCache.computeIfAbsent(c, key -> {
+      XList<Field> ret = XList.create();
+      getClassHierarchy(c).reverse().forEach(cc -> ret.addAll(getNonStaticFields(cc)));
+      return ret;
+    });
+  }
+
   public static XList<Field> getPublicNonStaticFields(Class<?> c) {
     return getFields(c).filter(field -> !Modifier.isStatic(field.getModifiers())
         && Modifier.isPublic(field.getModifiers()));
@@ -526,7 +538,7 @@ public class Reflection {
     do {
       ret.add(c);
       c = c.getSuperclass();
-    } while (c != Object.class);
+    } while (c != Object.class && c != null);
 
     return ret;
   }
