@@ -20,7 +20,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -205,11 +204,7 @@ public class IO {
       if (file.getName().endsWith(".gzip") || file.getName().endsWith(".gz")) {
         gzipOutput = true;
       }
-      try {
-        to(new FileOutputStream(file.file));
-      } catch (FileNotFoundException e) {
-        throw propagate(e);
-      }
+      to(file.outputStream());
     }
 
     public void to(OutputStream os) {
