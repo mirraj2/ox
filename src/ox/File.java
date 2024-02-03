@@ -319,6 +319,15 @@ public class File {
     }
   }
 
+  public static void tempFolder(Consumer<File> callback) {
+    File file = new File(Files.createTempDir());
+    try {
+      callback.accept(file);
+    } finally {
+      file.deleteRecursive();
+    }
+  }
+
   /**
    * This method will automatically delete the file after the callback is run.
    */
