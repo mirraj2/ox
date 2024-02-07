@@ -56,6 +56,13 @@ public class XOptional<T> {
     return this;
   }
 
+  public boolean isEqual(T value) {
+    if (value == null) {
+      return isEmpty();
+    }
+    return value.equals(orElseNull());
+  }
+
   public T orElse(T alternativeValue) {
     return isPresent() ? this.value : alternativeValue;
   }
