@@ -277,27 +277,8 @@ public class XList<T> extends ForwardingList<T> implements XCollection<T> {
     return ret;
   }
 
-  public XOptional<T> first() {
-    if (isEmpty()) {
-      return XOptional.empty();
-    }
-    return XOptional.ofNullable(get(0));
-  }
-
   public XOptional<T> last() {
     return isEmpty() ? XOptional.empty() : XOptional.ofNullable(get(size() - 1));
-  }
-
-  @Override
-  public XOptional<T> only() {
-    int size = size();
-    if (size == 1) {
-      return XOptional.ofNullable(get(0));
-    } else if (size == 0) {
-      return XOptional.empty();
-    } else {
-      throw new IllegalStateException("Expected one element, but had " + size());
-    }
   }
 
   @Override

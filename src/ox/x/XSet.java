@@ -9,8 +9,6 @@ import java.util.function.Predicate;
 import com.google.common.collect.ForwardingSet;
 import com.google.common.collect.Sets;
 
-import ox.util.Utils;
-
 public class XSet<T> extends ForwardingSet<T> implements XCollection<T>, Set<T> {
 
   private final Set<T> delegate;
@@ -88,11 +86,6 @@ public class XSet<T> extends ForwardingSet<T> implements XCollection<T>, Set<T> 
 
   public boolean hasData() {
     return size() > 0;
-  }
-
-  @Override
-  public XOptional<T> only() {
-    return XOptional.ofNullable(Utils.only(this));
   }
 
   @Override

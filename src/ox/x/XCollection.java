@@ -1,6 +1,9 @@
 package ox.x;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -15,7 +18,30 @@ public interface XCollection<T> extends Iterable<T>, Collection<T> {
 
   public <V> XCollection<V> map(Function<T, V> function);
 
-  public XOptional<T> only();
+  public default XOptional<T> only() {
+    int size = size();
+    checkState(size < 2, "Expected one element, but had " + size);
+
+    return first();
+  }
+
+  /**
+   * Returns the singular element in this collection. If there are zero or multiple elements, returns EMPTY.
+   */
+  public default XOptional<T> single() {
+    if (size() > 1) {
+      return XOptional.empty();
+    }
+    return first();
+  }
+
+  public default XOptional<T> first() {
+    Iterator<T> iter = iterator();
+    if (iter.hasNext()) {
+      return XOptional.ofNullable(iterator().next());
+    }
+      return XOptional.empty();
+  }
 
   public XList<T> toList();
 

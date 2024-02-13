@@ -61,6 +61,9 @@ public class Utils {
   private static final SecureRandom random = new SecureRandom();
   private static final Base64.Encoder tokenEncoder = Base64.getUrlEncoder().withoutPadding();
 
+  /**
+   * HELLO_WORLD -> Hello World
+   */
   public static String capitalize(String s) {
     if (isNullOrEmpty(s)) {
       return s;
