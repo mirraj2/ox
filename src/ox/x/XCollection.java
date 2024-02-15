@@ -6,19 +6,49 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.function.BinaryOperator;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.ForwardingCollection;
 
 import ox.Log;
+import ox.Threads;
 import ox.util.Functions;
 import ox.util.Utils;
 
-public interface XCollection<T> extends Iterable<T>, Collection<T> {
+public abstract class XCollection<T> extends ForwardingCollection<T> implements Iterable<T>, Collection<T> {
 
-  public <V> XCollection<V> map(Function<T, V> function);
+  private int maxThreads = 1;
 
-  public default XOptional<T> only() {
+  public abstract <V> XCollection<V> map(Function<T, V> function);
+
+  @Override
+  public void forEach(Consumer<? super T> callback) {
+    if (maxThreads == 1) {
+      super.forEach(callback);
+    } else {
+      if (hasData()) {
+        Threads.get(Math.min(size(), maxThreads)).input(this.toList()).failFast().run(callback);
+      }
+      resetConcurrency();
+    }
+  }
+
+  /**
+   * Sets up the next operation to run on multiple threads (if supported).
+   */
+  public XCollection<T> concurrent(int maxThreads) {
+    checkState(maxThreads > 0, "maxThreads must be a positive number.");
+    this.maxThreads = maxThreads;
+    return this;
+  }
+
+  private void resetConcurrency() {
+    this.maxThreads = 1;
+  }
+
+  public XOptional<T> only() {
     int size = size();
     checkState(size < 2, "Expected one element, but had " + size);
 
@@ -28,14 +58,14 @@ public interface XCollection<T> extends Iterable<T>, Collection<T> {
   /**
    * Returns the singular element in this collection. If there are zero or multiple elements, returns EMPTY.
    */
-  public default XOptional<T> single() {
+  public XOptional<T> single() {
     if (size() > 1) {
       return XOptional.empty();
     }
     return first();
   }
 
-  public default XOptional<T> first() {
+  public XOptional<T> first() {
     Iterator<T> iter = iterator();
     if (iter.hasNext()) {
       return XOptional.ofNullable(iterator().next());
@@ -43,19 +73,23 @@ public interface XCollection<T> extends Iterable<T>, Collection<T> {
       return XOptional.empty();
   }
 
-  public XList<T> toList();
+  public boolean hasData() {
+    return size() > 0;
+  }
 
-  public XSet<T> toSet();
+  public abstract XList<T> toList();
 
-  public default <V> XMap<V, T> index(Function<T, V> function) {
+  public abstract XSet<T> toSet();
+
+  public <V> XMap<V, T> index(Function<T, V> function) {
     return Functions.index(this, function);
   }
 
-  public default <B> XMap<T, B> toMap(Function<T, B> valueFunction) {
+  public <B> XMap<T, B> toMap(Function<T, B> valueFunction) {
     return toMap(Function.identity(), valueFunction);
   }
 
-  public default <A, B> XMap<A, B> toMap(Function<T, A> keyFunction, Function<T, B> valueFunction) {
+  public <A, B> XMap<A, B> toMap(Function<T, A> keyFunction, Function<T, B> valueFunction) {
     XMap<A, B> ret = XMap.create();
     this.forEach(t -> {
       ret.put(keyFunction.apply(t), valueFunction.apply(t));
@@ -67,24 +101,24 @@ public interface XCollection<T> extends Iterable<T>, Collection<T> {
    * @exception if the set of values of {@code function} does not have exactly one element.
    * @return the unique value obtained from applying the function to the elements in this list.
    */
-  public default <V> V toUnique(Function<T, ? extends V> function) {
+  public <V> V toUnique(Function<T, ? extends V> function) {
     return toSet(function).only().orElseNull();
   }
 
-  public default <V> XSet<V> toSet(Function<T, V> function) {
+  public <V> XSet<V> toSet(Function<T, V> function) {
     return Functions.toSet(this, function);
   }
 
-  public default <K, V> XMultimap<K, V> toMultimap(Function<? super T, K> keyFunction,
+  public <K, V> XMultimap<K, V> toMultimap(Function<? super T, K> keyFunction,
       Function<? super T, V> valueFunction) {
     return Functions.buildMultimap(this, keyFunction, valueFunction);
   }
 
-  public default <V> XMultimap<V, T> indexMultimap(Function<? super T, V> function) {
+  public <V> XMultimap<V, T> indexMultimap(Function<? super T, V> function) {
     return Functions.indexMultimap(this, function);
   }
 
-  public default T reduce(T identity, BinaryOperator<T> reducer) {
+  public T reduce(T identity, BinaryOperator<T> reducer) {
     T ret = identity;
     for (T item : this) {
       ret = reducer.apply(ret, item);
@@ -92,19 +126,19 @@ public interface XCollection<T> extends Iterable<T>, Collection<T> {
     return ret;
   }
 
-  public default String join(String separator) {
+  public String join(String separator) {
     return Joiner.on(separator).join(this);
   }
 
-  public default T random() {
+  public T random() {
     return Utils.random(this);
   }
 
-  public default T random(Random random) {
+  public T random(Random random) {
     return Utils.random(this, random);
   }
 
-  public default XCollection<T> log() {
+  public XCollection<T> log() {
     if (isEmpty()) {
       Log.debug("<Empty>");
     } else {

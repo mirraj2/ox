@@ -1,6 +1,5 @@
 package ox.x;
 
-import static com.google.common.base.Preconditions.checkState;
 import static ox.util.Utils.sleep;
 
 import java.lang.reflect.Array;
@@ -9,6 +8,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -16,10 +16,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import com.google.common.base.Predicates;
-import com.google.common.collect.ForwardingList;
 import com.google.common.collect.Lists;
-
-import ox.Threads;
 
 /**
  * <p>
@@ -44,20 +41,18 @@ import ox.Threads;
  * foo.map(...) //much easier!
  * </pre>
  */
-public class XList<T> extends ForwardingList<T> implements XCollection<T> {
+public class XList<T> extends XCollection<T> implements List<T> {
 
   private static final int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors();
 
-  private final List<T> delgate;
-
-  private int maxThreads = 1;
+  private final List<T> delegate;
 
   public XList() {
     this(new ArrayList<>());
   }
 
   private XList(List<T> delegate) {
-    this.delgate = delegate;
+    this.delegate = delegate;
   }
 
   @SuppressWarnings("unchecked")
@@ -83,7 +78,7 @@ public class XList<T> extends ForwardingList<T> implements XCollection<T> {
 
   @Override
   protected List<T> delegate() {
-    return delgate;
+    return delegate;
   }
 
   public XList<T> removeNulls() {
@@ -122,18 +117,6 @@ public class XList<T> extends ForwardingList<T> implements XCollection<T> {
     }
 
     return false;
-  }
-
-  @Override
-  public void forEach(Consumer<? super T> callback) {
-    if (maxThreads == 1) {
-      super.forEach(callback);
-    } else {
-      if (hasData()) {
-        Threads.get(Math.min(size(), maxThreads)).input(this).run(callback);
-      }
-      resetConcurrency();
-    }
   }
 
   /**
@@ -283,12 +266,8 @@ public class XList<T> extends ForwardingList<T> implements XCollection<T> {
 
   @Override
   public XList<T> log() {
-    XCollection.super.log();
+    super.log();
     return this;
-  }
-
-  public boolean hasData() {
-    return size() > 0;
   }
 
   /**
@@ -328,19 +307,15 @@ public class XList<T> extends ForwardingList<T> implements XCollection<T> {
   /**
    * Sets up the next operation to run on multiple threads (if supported).
    */
+  @Override
   public XList<T> concurrent(int maxThreads) {
-    checkState(maxThreads > 0, "maxThreads must be a positive number.");
-    this.maxThreads = maxThreads;
+    super.concurrent(maxThreads);
     return this;
-  }
-
-  private void resetConcurrency() {
-    this.maxThreads = 1;
   }
 
   @Override
   public int size() {
-    return delgate.size();
+    return delegate.size();
   }
 
   @Override
@@ -390,6 +365,56 @@ public class XList<T> extends ForwardingList<T> implements XCollection<T> {
 
   public static <T> XList<T> create(Collection<? extends T> c) {
     return new XList<T>(Lists.newArrayList(c));
+  }
+
+  @Override
+  public boolean addAll(int index, Collection<? extends T> c) {
+    return delegate.addAll(index, c);
+  }
+
+  @Override
+  public T get(int index) {
+    return delegate.get(index);
+  }
+
+  @Override
+  public T set(int index, T element) {
+    return delegate.set(index, element);
+  }
+
+  @Override
+  public void add(int index, T element) {
+    delegate.add(index, element);
+  }
+
+  @Override
+  public T remove(int index) {
+    return delegate.remove(index);
+  }
+
+  @Override
+  public int indexOf(Object o) {
+    return delegate.indexOf(o);
+  }
+
+  @Override
+  public int lastIndexOf(Object o) {
+    return delegate.lastIndexOf(o);
+  }
+
+  @Override
+  public ListIterator<T> listIterator() {
+    return delegate.listIterator();
+  }
+
+  @Override
+  public ListIterator<T> listIterator(int index) {
+    return delegate.listIterator(index);
+  }
+
+  @Override
+  public List<T> subList(int fromIndex, int toIndex) {
+    return delegate.subList(fromIndex, toIndex);
   }
 
 }
