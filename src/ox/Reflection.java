@@ -529,6 +529,14 @@ public class Reflection {
     return f.isSynthetic() && Modifier.isFinal(f.getModifiers());
   }
 
+  public static void init(Class<?> c) {
+    try {
+      Class.forName(c.getName());
+    } catch (ClassNotFoundException e) {
+      throw propagate(e);
+    }
+  }
+
   /**
    * Gets the class hierarchy starting from the given class and going up to Object.class
    */
