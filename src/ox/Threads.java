@@ -2,6 +2,7 @@ package ox;
 
 import static com.google.common.base.Preconditions.checkState;
 import static ox.util.Utils.count;
+import static ox.util.Utils.getCause;
 import static ox.util.Utils.only;
 import static ox.util.Utils.propagate;
 import static ox.util.Utils.sleep;
@@ -129,27 +130,35 @@ public class Threads {
           states[index]++;
           try {
             callback.accept(o);
+            lock.decrement();
           } catch (Throwable t) {
-            if (failFast) {
-              Log.error(t);
+            if (exceptions.isEmpty()) {
+              Log.error("Problem with input: " + o);
             }
-            Log.error("Problem with input: " + o);
             exceptions.add(t);
+            if (failFast) {
+              lock.set(0);
+            } else {
+              lock.decrement();
+            }
           } finally {
             states[index]++;
-            lock.decrement();
           }
         });
       }
+
       boolean timedOut = !lock.await(timeout);
-      executor.shutdown();
+      executor.shutdownNow();
+
       if (!exceptions.isEmpty()) {
         if (exceptions.size() == 1) {
           throw new RuntimeException(only(exceptions));
         }
-        exceptions.forEach(Log::error);
-        throw new RuntimeException("Found " + exceptions.size() + " exceptions.");
+        XList<Throwable> list = XList.create(exceptions).filter(e -> getCause(e, InterruptedException.class).isEmpty());
+        list.forEach(Log::error);
+        throw new RuntimeException("Found " + list.size() + " exceptions.");
       }
+
       if (timedOut) {
         XList<T> itemsTimedOut = count(0, input.size() - 1).filter(i -> states[i] == 1).map(i -> input.get(i));
         throw new RuntimeException("Timed out. Did not finish: " + itemsTimedOut.join(", "));

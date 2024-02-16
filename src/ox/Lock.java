@@ -40,6 +40,15 @@ public class Lock {
     }
   }
 
+  public void set(int counter) {
+    synchronized (lock) {
+      this.counter = counter;
+      if (counter == 0) {
+        lock.notifyAll();
+      }
+    }
+  }
+
   public void await() {
     await(null);
   }
@@ -52,7 +61,7 @@ public class Lock {
   public boolean await(Duration timeout) {
     Instant t = timeout == null ? null : Instant.now().plus(timeout);
     synchronized (lock) {
-      while (counter != 0) {
+      while (counter > 0) {
         if (t != null && Instant.now().isAfter(t)) {
           return false;
         }
