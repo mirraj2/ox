@@ -147,4 +147,9 @@ public abstract class XCollection<T> extends ForwardingCollection<T> implements 
     return this;
   }
 
+  @Override
+  public boolean equals(Object object) {
+    return object == this || delegate().equals(object);
+  }
+
 }
