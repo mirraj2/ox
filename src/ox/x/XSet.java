@@ -29,7 +29,19 @@ public class XSet<T> extends XCollection<T> implements Set<T> {
     }
     return ret;
   }
-  
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null || !(obj instanceof Set)) {
+      return false;
+    }
+    Set<?> other = (Set<?>) obj;
+    return delegate.equals(other) || (other instanceof XSet && delegate.equals(((XSet<?>) other).delegate()));
+  }
+
   /**
    * Unlike map(), which calls the function one time per element, the given function will only be called once. It is
    * passed this entire list as an argument.
