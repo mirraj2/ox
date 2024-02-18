@@ -270,7 +270,9 @@ public class Reflection {
    */
   public static <T> T constructNewInstance(Class<T> c) {
     try {
-      return c.getConstructor().newInstance();
+      Constructor<T> constructor = c.getDeclaredConstructor();
+      constructor.setAccessible(true);
+      return constructor.newInstance();
     } catch (Exception e) {
       throw propagate(e);
     }
