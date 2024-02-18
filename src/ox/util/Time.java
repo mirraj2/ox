@@ -3,6 +3,7 @@ package ox.util;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static ox.util.Utils.isNullOrEmpty;
 
+import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,13 +25,15 @@ public class Time {
   public static final ZoneId CENTRAL = ZoneId.of("US/Central");
   public static final ZoneId EASTERN = ZoneId.of("US/Eastern");
   public static ZoneId DEFAULT_TIME_ZONE = PACIFIC;
-  public static TimeWrapper timeWrapper = new TimeWrapper();
 
   public static final DateTimeFormatter slashFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
   private static final DateTimeFormatter longFormat = DateTimeFormatter.ofPattern("MMM d, yyyy");
   public static final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("M/d/yyyy h:mm a");
 
   private static final Map<String, DateTimeFormatter> formatCache = Maps.newHashMap();
+
+  private static final InheritableThreadLocal<Clock> threadClocks = new InheritableThreadLocal<>();
+  private static final Clock SYSTEM_CLOCK = Clock.system(DEFAULT_TIME_ZONE);
 
   public static Instant timestamp(LocalDate date) {
     return timestamp(date.atStartOfDay(DEFAULT_TIME_ZONE));
@@ -62,23 +65,23 @@ public class Time {
   }
 
   public static LocalDate now() {
-    return timeWrapper.now();
+    return LocalDate.now(getClock());
   }
 
   public static LocalDate now(ZoneId timezone) {
-    return timeWrapper.now(timezone);
+    return LocalDate.now(getClock().withZone(timezone));
   }
 
   public static Instant nowInstant() {
-    return timeWrapper.nowInstant();
+    return Instant.now(getClock());
   }
 
   public static LocalDateTime nowLocalDateTime() {
-    return timeWrapper.nowLocalDateTime();
+    return LocalDateTime.now(getClock());
   }
 
   public static LocalDateTime nowLocalDateTime(ZoneId timezone) {
-    return timeWrapper.nowLocalDateTime(timezone);
+    return LocalDateTime.now(getClock().withZone(timezone));
   }
 
   public static int daysSince(long timestamp) {
@@ -185,27 +188,24 @@ public class Time {
     return Math.toIntExact(ChronoUnit.DAYS.between(date, date.plusYears(1)));
   }
 
-  // this wrapper is useful for unit tests
-  public static class TimeWrapper {
-    public LocalDate now() {
-      return now(DEFAULT_TIME_ZONE);
+  public static Clock getClock() {
+    Clock ret = threadClocks.get();
+    if (ret == null) {
+      ret = SYSTEM_CLOCK;
     }
+    return ret;
+  }
 
-    public LocalDate now(ZoneId timezone) {
-      return LocalDate.now(timezone);
-    }
+  /**
+   * Used for testing. All calls to now() methods in this thread and child threads will use the passed in clock instead
+   * of the system clock.
+   */
+  public static void setClock(Clock clock) {
+    threadClocks.set(clock);
+  }
 
-    public Instant nowInstant() {
-      return Instant.now();
-    }
-
-    public LocalDateTime nowLocalDateTime() {
-      return nowLocalDateTime(DEFAULT_TIME_ZONE);
-    }
-
-    public LocalDateTime nowLocalDateTime(ZoneId timezone) {
-      return LocalDateTime.now(timezone);
-    }
+  public static void resetClock() {
+    threadClocks.remove();
   }
 
 }
