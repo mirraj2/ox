@@ -160,6 +160,11 @@ public class XOptional<T> {
     return Objects.equals(this.value, that.value);
   }
 
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(value);
+  }
+
   public static <T> XOptional<T> empty() {
     @SuppressWarnings("unchecked")
     XOptional<T> t = (XOptional<T>) EMPTY;
@@ -173,6 +178,13 @@ public class XOptional<T> {
 
   public static <T> XOptional<T> ofNullable(T value) {
     return value == null ? empty() : of(value);
+  }
+
+  public static Object unwrap(Object o) {
+    if (o instanceof XOptional) {
+      o = ((XOptional<?>) o).orElseNull();
+    }
+    return o;
   }
 
 }

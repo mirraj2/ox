@@ -400,12 +400,25 @@ public class Reflection {
    * If this method is given UserDB.class as input, it will return User.class
    */
   public static Class<?> getGenericClass(Class<?> c) {
+    return getGenericClass(c, 0);
+  }
+
+  /**
+   * TestDB extends AbstractDB<XOptional<String>>
+   * 
+   * index 0 = XOptional<br>
+   * index 1 = String
+   */
+  public static Class<?> getGenericClass(Class<?> c, int index) {
     Type t = c.getGenericSuperclass();
-    if (t instanceof ParameterizedType) {
-      return getClassArgument(t);
-    } else {
-      return null;
+    for (int i = 0; i <= index; i++) {
+      if (t instanceof ParameterizedType) {
+        t = getTypeArgument(t);
+      } else {
+        return null;
+      }
     }
+    return toClass(t);
   }
 
   public static Type getTypeArgument(Type t) {
@@ -414,10 +427,7 @@ public class Reflection {
 
   public static Class<?> getClassArgument(Type t) {
     Type type = getTypeArgument(t);
-    if (type instanceof ParameterizedType) {
-      type = ((ParameterizedType) type).getRawType();
-    }
-    return (Class<?>) type;
+    return toClass(type);
   }
 
   @SuppressWarnings("unchecked")
