@@ -152,4 +152,9 @@ public abstract class XCollection<T> extends ForwardingCollection<T> implements 
     return object == this || delegate().equals(object);
   }
 
+  @Override
+  public int hashCode() {
+    return delegate().hashCode();
+  }
+
 }
