@@ -53,6 +53,7 @@ public class Reflection {
   private static final Map<Class<?>, XList<Field>> allFieldsCache = Maps.newConcurrentMap();
   private static final Table<Class<?>, Class<?>, Function<Object, Object>> converters = HashBasedTable.create();
   private static final Field modifiersField;
+  private static final Map<String, Boolean> hasOverrideCache = Maps.newConcurrentMap();
 
   public static final XSet<Class<?>> BOXED_TYPES = XSet.of(Byte.class, Short.class, Integer.class, Long.class,
       Float.class, Double.class, Character.class, Boolean.class);
@@ -383,12 +384,22 @@ public class Reflection {
     return ret;
   }
 
+  private static Method getDeclaredMethodByName(Class<?> c, String methodName) {
+    for (Method m : c.getDeclaredMethods()) {
+      if (m.getName().equals(methodName)) {
+        return m;
+      }
+    }
+    return null;
+  }
+
   /**
    * Returns true if the given class overrides a parent class's implementation of the given method.
    */
   public static boolean hasOverride(Class<?> c, String methodName) {
-    Method m = getMethod(c, methodName);
-    return m.getDeclaringClass() == c;
+   return hasOverrideCache.computeIfAbsent(c.getName() + methodName, key -> {
+     return getDeclaredMethodByName(c, methodName) != null;
+    });
   }
 
   @SuppressWarnings("unchecked")
