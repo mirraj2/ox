@@ -355,6 +355,7 @@ public class Reflection {
             varargs = m;
           }
           if (m.getParameterCount() == 0) {
+            m.setAccessible(true);
             return m;
           }
         }
@@ -362,11 +363,13 @@ public class Reflection {
       for (Method m : c.getMethods()) {
         if (m.getName().equals(methodName)) {
           if (m.getParameterCount() == 0) {
+            m.setAccessible(true);
             return m;
           }
         }
       }
       if (varargs != null) {
+        varargs.setAccessible(true);
         return varargs;
       }
 
@@ -377,9 +380,15 @@ public class Reflection {
       throw new RuntimeException("Method not found: " + c.getSimpleName() + "." + methodName);
     }
 
-    ret.setAccessible(true);
-
     return ret;
+  }
+
+  /**
+   * Returns true if the given class overrides a parent class's implementation of the given method.
+   */
+  public static boolean hasOverride(Class<?> c, String methodName) {
+    Method m = getMethod(c, methodName);
+    return m.getDeclaringClass() == c;
   }
 
   @SuppressWarnings("unchecked")
