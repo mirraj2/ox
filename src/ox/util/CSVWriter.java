@@ -28,8 +28,8 @@ public class CSVWriter {
     int size = row.size();
     for (Object o : row) {
       if (o != null) {
-        String s = o.toString();
-        if (s.indexOf(',') != -1 || s.indexOf('\n') != -1 || s.indexOf('"') != -1) {
+        String s = o.toString().replaceAll("\"", "\"\"");
+        if (s.indexOf(',') != -1 || s.indexOf('\n') != -1) {
           buffer.append('"');
           buffer.append(s);
           buffer.append('"');
