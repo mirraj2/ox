@@ -1,6 +1,7 @@
 package ox.util;
 
 import static com.google.common.base.Preconditions.checkState;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
@@ -10,6 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.jupiter.api.Test;
 
 import ox.IO;
+import ox.Log;
 import ox.x.XList;
 
 public class CSVTest {
@@ -18,6 +20,21 @@ public class CSVTest {
   public void test() {
     XList<String> input = XList.of("a", "b", "c", "this is a \"quoted\" word");
 
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    CSVWriter writer = new CSVWriter(baos);
+    writer.write(input);
+    writer.close();
+
+    CSVReader reader = new CSVReader(new ByteArrayInputStream(baos.toByteArray()));
+    XList<String> output = reader.nextLine();
+
+    checkState(input.equals(output), input + " vs " + output);
+
+  }
+
+  @Test
+  public void jakeAndJZTest() {
+    XList<String> input = XList.of("a", "A \"on\" B, C\nD", "z");
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     CSVWriter writer = new CSVWriter(baos);
     writer.write(input);
