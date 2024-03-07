@@ -1,7 +1,6 @@
 package ox.util;
 
 import static com.google.common.base.Preconditions.checkState;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
@@ -11,7 +10,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.jupiter.api.Test;
 
 import ox.IO;
-import ox.Log;
 import ox.x.XList;
 
 public class CSVTest {
