@@ -177,7 +177,8 @@ public class CSVReader {
       char c = line.charAt(i);
       if (c == escape) {
         if (escaped) {
-          // next character must be a delimiter in order to unescape (or we've reached end of file)
+          // next character must be a delimiter in order to unescape (or we've reached end
+          // of file)
           if (i == line.length() - 1 || line.charAt(i + 1) == delimiter) {
             escaped = false;
           } else {
@@ -187,7 +188,7 @@ public class CSVReader {
           escaped = true;
         }
       } else if (!escaped && c == delimiter) {
-        ret.add(sb.toString());
+        ret.add(sb.toString().replace("\"\"", "\""));
         sb.setLength(0);
       } else {
         sb.append(c);
@@ -204,7 +205,7 @@ public class CSVReader {
         }
       }
     }
-    ret.add(sb.toString());
+    ret.add(sb.toString().replace("\"\"", "\""));
     sb.setLength(0);
 
     if (lastSize == 0) {
@@ -270,7 +271,8 @@ public class CSVReader {
     }
 
     /**
-     * Get date assuming it is stored as an "Excel" date, which is a number of days since the Excel epoch date.
+     * Get date assuming it is stored as an "Excel" date, which is a number of days
+     * since the Excel epoch date.
      */
     public LocalDate getExcelDate(String colName) {
       String val = get(colName);

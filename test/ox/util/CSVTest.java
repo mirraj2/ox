@@ -27,6 +27,21 @@ public class CSVTest {
     XList<String> output = reader.nextLine();
 
     checkState(input.equals(output), input + " vs " + output);
+
+  }
+
+  @Test
+  public void jakeAndJZTest() {
+    XList<String> input = XList.of("a", "A \"on\" B, C\nD", "z");
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    CSVWriter writer = new CSVWriter(baos);
+    writer.write(input);
+    writer.close();
+
+    CSVReader reader = new CSVReader(new ByteArrayInputStream(baos.toByteArray()));
+    XList<String> output = reader.nextLine();
+
+    checkState(input.equals(output), input + " vs " + output);
   }
 
   /**
