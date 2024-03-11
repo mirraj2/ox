@@ -30,6 +30,7 @@ import java.util.zip.ZipInputStream;
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
 
+import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -457,7 +458,11 @@ public class Reflection {
 
   @SuppressWarnings("unchecked")
   public static <T> XList<Constructor<T>> getConstructors(Class<T> c) {
-    return XList.of((Constructor<T>[]) c.getDeclaredConstructors());
+    return XList.of((Constructor<T>[]) c.getDeclaredConstructors()).sortSelf((a, b) -> {
+      return ComparisonChain.start()
+          .compare(a.getParameterCount(), b.getParameterCount())
+          .result();
+    });
   }
 
   @SuppressWarnings("unchecked")
