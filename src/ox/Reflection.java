@@ -443,7 +443,12 @@ public class Reflection {
   }
 
   public static Type getTypeArgument(Type t) {
-    return ((ParameterizedType) t).getActualTypeArguments()[0];
+    Class<?> c = toClass(t);
+    if (c.isArray()) {
+      return c.getComponentType();
+    } else {
+      return ((ParameterizedType) t).getActualTypeArguments()[0];
+    }
   }
 
   public static Class<?> getClassArgument(Type t) {
