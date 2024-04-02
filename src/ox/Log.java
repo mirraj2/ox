@@ -118,10 +118,10 @@ public class Log {
   }
 
   private static void log(Object o) {
-    log(o, (Object[]) null);
+    log(o, false, (Object[]) null);
   }
 
-  private static void log(Object o, Object... args) {
+  private static void log(Object o, boolean isError, Object... args) {
     // without synchronizing here, you end up with weird cases like timestamps on their own line
     synchronized (out) {
       String prefix = prefixSupplier.get();
@@ -140,10 +140,12 @@ public class Log {
       if (o instanceof Throwable) {
         Throwable t = (Throwable) o;
         t.printStackTrace(out);
-        try {
-          exceptionHandler.accept(t);
-        } catch (Throwable tt) {
-          tt.printStackTrace();
+        if (isError) {
+          try {
+            exceptionHandler.accept(t);
+          } catch (Throwable tt) {
+            tt.printStackTrace();
+          }
         }
         return;
       }
@@ -178,7 +180,7 @@ public class Log {
   }
 
   public static void debug(Object o, Object... args) {
-    log(o, args);
+    log(o, false, args);
   }
 
   public static void info(Object o) {
@@ -186,7 +188,7 @@ public class Log {
   }
 
   public static void info(Object o, Object... args) {
-    log(o, args);
+    log(o, false, args);
   }
 
   public static void warn(Object o) {
@@ -194,15 +196,15 @@ public class Log {
   }
 
   public static void warn(Object o, Object... args) {
-    log(o, args);
+    log(o, false, args);
   }
 
   public static void error(Object o) {
-    log(o);
+    log(o, true, (Object[]) null);
   }
 
   public static void error(Object o, Object... args) {
-    log(o, args);
+    log(o, true, args);
   }
 
   public static void showAllJavaLogs() {
