@@ -217,7 +217,7 @@ public class CSVReader {
     return ret;
   }
 
-  public static class CSVRow {
+  public static class CSVRow implements CSVRowReader {
     private List<String> row;
     private Map<String, Integer> header;
 
