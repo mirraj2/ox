@@ -22,7 +22,6 @@
 package ox;
 
 import static com.google.common.base.Preconditions.checkState;
-import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 import static ox.util.Utils.normalize;
 import static ox.util.Utils.urlEncode;
 
@@ -796,7 +795,7 @@ public class HttpRequest {
 
   public InputStream stream() throws HttpRequestException {
     InputStream stream;
-    if (status() < HTTP_BAD_REQUEST) {
+    if (status() < HttpURLConnection.HTTP_BAD_REQUEST) {
       try {
         stream = getConnection().getInputStream();
       } catch (IOException e) {

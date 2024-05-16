@@ -53,7 +53,7 @@ public class Reflection {
   private static final Map<String, Method> methodCache = Maps.newConcurrentMap();
   private static final Map<Class<?>, XList<Field>> allFieldsCache = Maps.newConcurrentMap();
   private static final Table<Class<?>, Class<?>, Function<Object, Object>> converters = HashBasedTable.create();
-  private static final Field modifiersField;
+  private static Field modifiersField;
   private static final Map<String, Boolean> hasOverrideCache = Maps.newConcurrentMap();
 
   public static final XSet<Class<?>> BOXED_TYPES = XSet.of(Byte.class, Short.class, Integer.class, Long.class,
@@ -74,10 +74,12 @@ public class Reflection {
     disableWarning();
     try {
       modifiersField = Field.class.getDeclaredField("modifiers");
-    } catch (Exception e) {
-      throw propagate(e);
+    } catch (NoSuchFieldException e) {
+      Log.warn("Reflection: Running on JDK without Field.modifiers.");
     }
-    modifiersField.setAccessible(true);
+    if (modifiersField != null) {
+      modifiersField.setAccessible(true);
+    }
   }
 
   public static void nullMethod() {

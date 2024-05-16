@@ -67,9 +67,13 @@ public class Json implements Iterable<String> {
   }
 
   public Integer getInt(String key) {
+    return getInt(key, null);
+  }
+
+  public Integer getInt(String key, Integer defaultValue) {
     String s = get(key);
     if (isNullOrEmpty(s)) {
-      return null;
+      return defaultValue;
     } else {
       try {
         return Integer.valueOf(s);

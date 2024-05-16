@@ -50,7 +50,7 @@ public class Threads {
     }
   }
 
-  private static Runnable wrap(Runnable r) {
+  public static Runnable wrap(Runnable r) {
     return () -> {
       try {
         r.run();

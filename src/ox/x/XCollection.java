@@ -147,6 +147,10 @@ public abstract class XCollection<T> extends ForwardingCollection<T> implements 
     return this;
   }
 
+  public void addAll(Iterable<? extends T> iter) {
+    iter.forEach(this::add);
+  }
+
   @Override
   public boolean equals(Object object) {
     return object == this || delegate().equals(object);

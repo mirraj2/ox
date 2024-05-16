@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -234,6 +235,11 @@ public class XList<T> extends XCollection<T> implements List<T> {
 
   public XList<T> shuffleSelf() {
     Collections.shuffle(this);
+    return this;
+  }
+
+  public XList<T> shuffleSelf(Random random) {
+    Collections.shuffle(this, random);
     return this;
   }
 

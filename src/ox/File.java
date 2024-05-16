@@ -1,7 +1,6 @@
 package ox;
 
 import static com.google.common.base.Preconditions.checkState;
-import static ox.util.Functions.map;
 import static ox.util.Utils.getExtension;
 import static ox.util.Utils.propagate;
 
@@ -29,6 +28,8 @@ import ox.x.XList;
 
 public class File {
 
+  public static boolean ignoreDSStore = true;
+
   public final java.io.File file;
 
   private File(String path) {
@@ -41,6 +42,15 @@ public class File {
 
   public String getName() {
     return file.getName();
+  }
+
+  public String getNameWithoutExtension() {
+    String extension = extension();
+    if (extension.isEmpty()) {
+      return getName();
+    }
+    String name = getName();
+    return name.substring(0, name.length() - extension.length() - 1);
   }
 
   public String getPath() {
@@ -97,7 +107,14 @@ public class File {
     }
     java.io.File[] files = file.listFiles();
     checkState(files != null, file + " does not exist.");
-    return map(files, File::new);
+    XList<File> ret = XList.createWithCapacity(files.length);
+    for (java.io.File file : files) {
+      if (ignoreDSStore && file.getName().equals(".DS_Store")) {
+        continue;
+      }
+      ret.add(new File(file));
+    }
+    return ret;
   }
 
   public void walkTree(Consumer<File> callback) {
@@ -143,6 +160,19 @@ public class File {
     }
     file.delete();
     return this;
+  }
+
+/**
+ * Copies the contents of this file into the given directory. Recursively copies all subfolders and files.
+ */
+  public void copyContentsInto(File targetDir) {
+    for (File child : children()) {
+      if (child.isDirectory()) {
+        child.copyContentsInto(targetDir.child(child.getName()));
+      } else {
+        child.copyTo(targetDir.child(child.getName()));
+      }
+    }
   }
 
   /**

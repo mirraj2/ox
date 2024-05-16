@@ -41,14 +41,23 @@ public class Images {
   }
 
   public static BufferedImage resize(BufferedImage bi, int w, int h) {
+    return resize(bi, w, h, true);
+  }
+
+  public static BufferedImage resize(BufferedImage bi, int w, int h, boolean highQuality) {
+    if (bi.getWidth() == w && bi.getHeight() == h) {
+      return bi;
+    }
+
     BufferedImage ret = new BufferedImage(w, h, bi.getType());
 
     while (bi.getWidth() > w * 2 + 1) {
-      bi = resize(bi, bi.getWidth() / 2, bi.getHeight() / 2);
+      bi = resize(bi, bi.getWidth() / 2, bi.getHeight() / 2, highQuality);
     }
 
     Graphics2D g = ret.createGraphics();
-    g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+    g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+        highQuality ? RenderingHints.VALUE_INTERPOLATION_BICUBIC : RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
     g.drawImage(bi, 0, 0, w, h, null);
     g.dispose();
 
@@ -87,6 +96,17 @@ public class Images {
     }
     bi.setRGB(0, 0, bi.getWidth(), bi.getHeight(), data, 0, bi.getWidth());
     Log.debug("Switched " + switched + " pixels in " + watch);
+  }
+
+  public static void setOpacity(BufferedImage bi, double opacity) {
+    int[] data = bi.getRGB(0, 0, bi.getWidth(), bi.getHeight(), null, 0, bi.getWidth());
+    for (int i = 0; i < data.length; i++) {
+      int rgb = data[i];
+      int alpha = (rgb >> 24) & 0xff;
+      alpha = (int) (alpha * opacity);
+      data[i] = (rgb & 0x00ffffff) | (alpha << 24);
+    }
+    bi.setRGB(0, 0, bi.getWidth(), bi.getHeight(), data, 0, bi.getWidth());
   }
 
   public static BufferedImage rotate(BufferedImage img, double angle) {
