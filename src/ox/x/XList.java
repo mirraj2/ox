@@ -12,6 +12,7 @@ import java.util.ListIterator;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -155,6 +156,17 @@ public class XList<T> extends XCollection<T> implements List<T> {
         ret.add(toAdd);
       }
     });
+
+    return ret;
+  }
+
+  public <V> XList<V> mapWithIndex(BiFunction<T, Integer, V> function) {
+    int size = size();
+    XList<V> ret = XList.createWithCapacity(size);
+
+    for (int i = 0; i < size; i++) {
+      ret.add(function.apply(delegate.get(i), i));
+    }
 
     return ret;
   }

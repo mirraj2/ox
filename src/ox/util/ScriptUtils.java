@@ -11,6 +11,8 @@ import java.nio.charset.StandardCharsets;
 import ox.File;
 import ox.IO;
 import ox.Log;
+import ox.OS;
+import ox.OS.OS_Type;
 import ox.x.XList;
 
 public class ScriptUtils {
@@ -55,6 +57,14 @@ public class ScriptUtils {
     Log.debug(command);
     XList<String> m = XList.of("/bin/sh", "-c", command);
     return run(m, true, workingDir);
+  }
+
+  public static void run2(String command, File workingDir) {
+    if (OS.type == OS_Type.MAC) {
+      runZSH(command, workingDir);
+    } else {
+      run(command, workingDir);
+    }
   }
 
   private static int run(XList<String> command, boolean errorCheck, File workingDir) {

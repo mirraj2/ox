@@ -50,7 +50,7 @@ import ox.util.CSVReader;
 public class IO {
 
   public static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
-      + " (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36";
+      + " (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36";
 
   public static Input from(Json json) {
     return from(json.toString());

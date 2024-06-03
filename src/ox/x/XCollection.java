@@ -134,8 +134,8 @@ public abstract class XCollection<T> extends ForwardingCollection<T> implements 
     return Utils.random(this);
   }
 
-  public T random(Random random) {
-    return Utils.random(this, random);
+  public XOptional<T> random(Random random) {
+    return XOptional.ofNullable(Utils.random(this, random));
   }
 
   public XCollection<T> log() {
