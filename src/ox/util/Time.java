@@ -121,7 +121,10 @@ public class Time {
     if (date instanceof Instant) {
       date = toDate((Instant) date);
     }
-    DateTimeFormatter dtf = formatCache.computeIfAbsent(format, DateTimeFormatter::ofPattern);
+    DateTimeFormatter dtf;
+    synchronized (formatCache) {
+      dtf = formatCache.computeIfAbsent(format, DateTimeFormatter::ofPattern);
+    }
     return dtf.format(date);
   }
 
