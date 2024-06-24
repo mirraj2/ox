@@ -17,6 +17,8 @@ import ox.x.XList;
 
 public class ScriptUtils {
 
+  public static boolean debug = true;
+
   public static String run(String s) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     run(s, baos);
@@ -34,7 +36,9 @@ public class ScriptUtils {
   }
 
   public static String runZSH(String s, File workingDir) {
-    Log.debug(s);
+    if (debug) {
+      Log.debug(s);
+    }
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     XList<String> m = XList.of("/bin/zsh", "-c", "--login", "source ~/.zshrc;" + s);
     run(m, baos, workingDir);
@@ -107,7 +111,9 @@ public class ScriptUtils {
         pb.directory(workingDir.file);
       }
 
-      pb.redirectError(Redirect.INHERIT);
+      if (debug) {
+        pb.redirectError(Redirect.INHERIT);
+      }
       Process process = pb.start();
       IO.from(process.getInputStream()).to(out);
       exitStatus = process.waitFor();
