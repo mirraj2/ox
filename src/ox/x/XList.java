@@ -207,7 +207,7 @@ public class XList<T> extends XCollection<T> implements List<T> {
 
   @SuppressWarnings({ "unchecked", "rawtypes" })
   /**
-   * Returns the maximum value in this collection. Assumes that all elements in this collection are Comparable
+   * Returns the minimum value in this collection. Assumes that all elements in this collection are Comparable
    */
   public XOptional<T> min() {
     if (isEmpty()) {
