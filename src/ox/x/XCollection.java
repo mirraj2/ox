@@ -19,6 +19,8 @@ import ox.util.Utils;
 
 public abstract class XCollection<T> extends ForwardingCollection<T> implements Iterable<T>, Collection<T> {
 
+  private static final int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors();
+
   private int maxThreads = 1;
 
   public abstract <V> XCollection<V> map(Function<T, V> function);
@@ -42,6 +44,14 @@ public abstract class XCollection<T> extends ForwardingCollection<T> implements 
     checkState(maxThreads > 0, "maxThreads must be a positive number.");
     this.maxThreads = maxThreads;
     return this;
+  }
+
+  public XCollection<T> concurrent() {
+    return concurrent(NUM_PROCESSORS * 2);
+  }
+
+  public XCollection<T> concurrentAll() {
+    return concurrent(Integer.MAX_VALUE);
   }
 
   private void resetConcurrency() {

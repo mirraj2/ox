@@ -45,8 +45,6 @@ import com.google.common.collect.Lists;
  */
 public class XList<T> extends XCollection<T> implements List<T> {
 
-  private static final int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors();
-
   private final List<T> delegate;
 
   public XList() {
@@ -314,20 +312,24 @@ public class XList<T> extends XCollection<T> implements List<T> {
     return ret;
   }
 
-  public XList<T> concurrent() {
-    return concurrent(NUM_PROCESSORS * 2);
-  }
-
-  public XList<T> concurrentAll() {
-    return concurrent(Integer.MAX_VALUE);
-  }
-
   /**
    * Sets up the next operation to run on multiple threads (if supported).
    */
   @Override
   public XList<T> concurrent(int maxThreads) {
     super.concurrent(maxThreads);
+    return this;
+  }
+
+  @Override
+  public XCollection<T> concurrent() {
+    super.concurrent();
+    return this;
+  }
+
+  @Override
+  public XCollection<T> concurrentAll() {
+    super.concurrentAll();
     return this;
   }
 

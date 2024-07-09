@@ -63,6 +63,10 @@ public class ScriptUtils {
     return run(m, true, workingDir);
   }
 
+  public static void run2(String command) {
+    run2(command, null);
+  }
+
   public static void run2(String command, File workingDir) {
     if (OS.type == OS_Type.MAC) {
       runZSH(command, workingDir);
