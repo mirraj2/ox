@@ -34,6 +34,7 @@ public class Time {
 
   private static final InheritableThreadLocal<Clock> threadClocks = new InheritableThreadLocal<>();
   private static final Clock SYSTEM_CLOCK = Clock.system(DEFAULT_TIME_ZONE);
+  private static Clock globalClock = SYSTEM_CLOCK;
 
   public static Instant timestamp(LocalDate date) {
     return timestamp(date.atStartOfDay(DEFAULT_TIME_ZONE));
@@ -194,7 +195,7 @@ public class Time {
   public static Clock getClock() {
     Clock ret = threadClocks.get();
     if (ret == null) {
-      ret = SYSTEM_CLOCK;
+      ret = globalClock;
     }
     return ret;
   }
@@ -209,6 +210,19 @@ public class Time {
 
   public static void resetClock() {
     threadClocks.remove();
+  }
+
+  /**
+   * Sets the clock for the entire process unlike {@code Time.setClock} that only sets the clock for the current thread
+   * and its sub-threads. Used by the TimeMachine to mimic moving time forward for demonstrating/testing functionality
+   * that depends on the passage of time such as Cron jobs.
+   */
+  public static void setGlobalClock(Clock clock) {
+    globalClock = clock;
+  }
+
+  public static void resetGlobalClock() {
+    globalClock = SYSTEM_CLOCK;
   }
 
 }
