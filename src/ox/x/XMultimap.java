@@ -51,10 +51,10 @@ public class XMultimap<K, V> extends ForwardingMultimap<K, V> {
     return XList.create(super.values());
   }
 
-  public XList<XList<V>> valuesList(){
+  public XList<XList<V>> valuesList() {
     Set<K> keySet = super.keySet();
     XList<XList<V>> ret = XList.createWithCapacity(keySet.size());
-    for(K key : keySet) {
+    for (K key : keySet) {
       ret.add(get(key));
     }
     return ret;
@@ -110,11 +110,25 @@ public class XMultimap<K, V> extends ForwardingMultimap<K, V> {
     return transform(Function.identity(), valueFunction);
   }
 
+  public <V2> XMultimap<K, V2> transformValues(BiFunction<K, V, V2> valueFunction) {
+    return transform(Function.identity(), valueFunction);
+  }
+
   public <K2, V2> XMultimap<K2, V2> transform(Function<K, K2> keyFunction, Function<V, V2> valueFunction) {
+    return transform(keyFunction, (k, v) -> valueFunction.apply(v));
+  }
+
+  public <K2, V2> XMultimap<K2, V2> transform(Function<K, K2> keyFunction, BiFunction<K, V, V2> valueFunction) {
+    XMap<K, K2> keyMap = XMap.create();
+    for (K k : super.keySet()) {
+      keyMap.put(k, keyFunction.apply(k));
+    }
+
     XMultimap<K2, V2> ret = create();
     forEach((k, v) -> {
-      ret.put(keyFunction.apply(k), valueFunction.apply(v));
+      ret.put(keyMap.get(k), valueFunction.apply(k, v));
     });
+
     return ret;
   }
 
