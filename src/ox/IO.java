@@ -287,7 +287,11 @@ public class IO {
       try {
         return new Json(s);
       } catch (Exception e) {
-        Log.error("Problem parsing json: " + s);
+        if (s.length() > 100_000) {
+          Log.error("Problem parsing json: " + s.substring(0, 1000) + "...");
+        } else {
+          Log.error("Problem parsing json: " + s);
+        }
         throw propagate(e);
       }
     }

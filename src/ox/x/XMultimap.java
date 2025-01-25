@@ -46,15 +46,28 @@ public class XMultimap<K, V> extends ForwardingMultimap<K, V> {
     return ret;
   }
 
+  /**
+   * For the given key, returns the first value in the list, or null if the list is empty.
+   */
+  public V poll(K key) {
+    Collection<V> c = super.get(key);
+    if (c.isEmpty()) {
+      return null;
+    }
+    V ret = c.iterator().next();
+    c.remove(ret);
+    return ret;
+  }
+
   @Override
   public XList<V> values() {
     return XList.create(super.values());
   }
 
-  public XList<XList<V>> valuesList(){
+  public XList<XList<V>> valuesList() {
     Set<K> keySet = super.keySet();
     XList<XList<V>> ret = XList.createWithCapacity(keySet.size());
-    for(K key : keySet) {
+    for (K key : keySet) {
       ret.add(get(key));
     }
     return ret;

@@ -276,8 +276,16 @@ public class XList<T> extends XCollection<T> implements List<T> {
     return ret;
   }
 
+  public XList<T> copy() {
+    return XList.create(this);
+  }
+
   public XOptional<T> last() {
     return isEmpty() ? XOptional.empty() : XOptional.ofNullable(get(size() - 1));
+  }
+
+  public T getLast() {
+    return last().get();
   }
 
   @Override
@@ -322,13 +330,13 @@ public class XList<T> extends XCollection<T> implements List<T> {
   }
 
   @Override
-  public XCollection<T> concurrent() {
+  public XList<T> concurrent() {
     super.concurrent();
     return this;
   }
 
   @Override
-  public XCollection<T> concurrentAll() {
+  public XList<T> concurrentAll() {
     super.concurrentAll();
     return this;
   }

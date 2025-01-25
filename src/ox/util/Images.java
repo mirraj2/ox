@@ -49,7 +49,11 @@ public class Images {
       return bi;
     }
 
-    BufferedImage ret = new BufferedImage(w, h, bi.getType());
+    int type = bi.getType();
+    if (type == BufferedImage.TYPE_CUSTOM || type == BufferedImage.TYPE_BYTE_INDEXED) {
+      type = BufferedImage.TYPE_INT_ARGB;
+    }
+    BufferedImage ret = new BufferedImage(w, h, type);
 
     while (bi.getWidth() > w * 2 + 1) {
       bi = resize(bi, bi.getWidth() / 2, bi.getHeight() / 2, highQuality);

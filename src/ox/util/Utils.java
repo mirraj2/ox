@@ -8,6 +8,8 @@ import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.net.URI;
@@ -37,6 +39,7 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Iterables;
 
+import ox.IO;
 import ox.Log;
 import ox.Money;
 import ox.Percent;
@@ -491,6 +494,9 @@ public class Utils {
   }
 
   public static void sleep(long millis) {
+    if (millis <= 0) {
+      return;
+    }
     try {
       Thread.sleep(millis);
     } catch (InterruptedException e) {
@@ -514,6 +520,10 @@ public class Utils {
     return XList.create(Throwables.getCausalChain(t)).filter(causeType).first();
   }
 
+  public static <T> T attempt(Supplier<T> function, int maxTries) {
+    return attempt(function, maxTries, 0);
+  }
+
   public static <T> T attempt(Supplier<T> function, int maxTries, int delayBetweenTriesMillis) {
     checkState(maxTries > 0);
 
@@ -534,6 +544,27 @@ public class Utils {
 
   public static XList<String> split(String s, String separator) {
     return XList.create(Splitter.on(separator).trimResults().omitEmptyStrings().split(s));
+  }
+
+  /**
+   * Prompts the user with the message and returns true if the user entered "y" or "yes".
+   */
+  public static void promptYesNo(String action, Runnable callback) {
+    Log.warn("Are you sure you want to " + action + "? (y/n)");
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    try {
+      String line = normalize(br.readLine().toLowerCase());
+      if (line.equals("y") || line.equals("yes")) {
+        callback.run();
+      } else {
+        Log.debug("Not running.");
+      }
+    } catch (Exception e) {
+      throw propagate(e);
+    } finally {
+      IO.close(br);
+    }
+
   }
 
 }

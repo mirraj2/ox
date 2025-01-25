@@ -297,7 +297,9 @@ public class Reflection {
     try {
       ret = c.getDeclaredField(fieldName);
       ret.setAccessible(true);
-      modifiersField.setInt(ret, ret.getModifiers() & ~Modifier.FINAL);
+      if (modifiersField != null) {
+        modifiersField.setInt(ret, ret.getModifiers() & ~Modifier.FINAL);
+      }
     } catch (NoSuchFieldException e) {
       Class<?> parent = c.getSuperclass();
       if (parent == null) {

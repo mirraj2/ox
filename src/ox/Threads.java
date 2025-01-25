@@ -17,6 +17,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import com.google.common.collect.Lists;
 
@@ -29,6 +30,10 @@ public class Threads {
 
   public static void run(Runnable r) {
     pool.execute(wrap(r));
+  }
+
+  public static void run(String threadName, Runnable r) {
+    Executors.newSingleThreadExecutor(new NamedThreadFactory(threadName)).execute(wrap(r));
   }
 
   public static <T> Future<T> submit(Callable<T> c) {
@@ -62,6 +67,22 @@ public class Threads {
 
   public static <T> Parallelizer<T> get(int numThreads) {
     return new Parallelizer<T>(numThreads);
+  }
+
+  public static void blockUntil(Supplier<Boolean> condition) {
+    while (!condition.get()) {
+      sleep(30);
+    }
+  }
+
+  public static void wait(Object o) {
+    synchronized (o) {
+      try {
+        o.wait();
+      } catch (InterruptedException e) {
+        throw propagate(e);
+      }
+    }
   }
 
   public static class Parallelizer<T> {

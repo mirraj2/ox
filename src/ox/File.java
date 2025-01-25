@@ -57,6 +57,10 @@ public class File {
     return file.getPath();
   }
 
+  public String quotePath() {
+    return "\"" + getPath() + "\"";
+  }
+
   public boolean exists() {
     return file.exists();
   }
