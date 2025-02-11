@@ -30,11 +30,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Enums;
 import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Iterables;
@@ -525,26 +527,47 @@ public class Utils {
   }
 
   public static <T> T attempt(Supplier<T> function, int maxTries, int delayBetweenTriesMillis) {
-    checkState(maxTries > 0);
+    return attempt(function, maxTries, delayBetweenTriesMillis, UnaryOperator.identity(), t -> true);
+  }
 
-    Throwable toThrow = null;
+  public static <T> T attempWithBackoff(Supplier<T> function, int maxTries, int initialDelayMillis,
+      Predicate<Throwable> isRetryable) {
+    return attempt(function, maxTries, initialDelayMillis,
+        delay -> Math.round(delay.doubleValue() * (0.75 + Math.random() * 0.75)), // Jittering between 75% - 150%
+        isRetryable);
+  }
+
+  public static <T> T attempt(Supplier<T> function, int maxTries, int initialDelayMillis,
+      UnaryOperator<Long> backoffStrategy, Predicate<Throwable> isRetryable) {
+    checkState(maxTries > 0, "maxTries must be greater than 0");
+    checkState(initialDelayMillis > 0, "initialDelayMillis must be greater than or equal to 0");
+
+    Throwable lastException = null;
+    long currentDelay = initialDelayMillis;
+
     for (int i = 0; i < maxTries; i++) {
       try {
-        return function.get();
+        return function.get(); // Attempt the function
       } catch (Throwable t) {
-        Log.error("Utils.attempt: Exception thrown, trying again...");
-        toThrow = t;
+        if (!isRetryable.test(t)) {
+          throw propagate(t); // Non-retryable, propagate immediately
+        }
+        lastException = t;
+        Log.error("Utils.attempt: Exception thrown, trying again...", t);
+
         if (i < maxTries - 1) {
-          sleep(delayBetweenTriesMillis);
+          sleep(currentDelay); // Wait before retrying
+          currentDelay = backoffStrategy.apply(currentDelay); // Compute next delay
         }
       }
     }
-    throw propagate(toThrow);
+    throw propagate(lastException); // All attempts failed
   }
 
   public static XList<String> split(String s, String separator) {
     return XList.create(Splitter.on(separator).trimResults().omitEmptyStrings().split(s));
   }
+
 
   /**
    * Prompts the user with the message and returns true if the user entered "y" or "yes".
