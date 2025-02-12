@@ -1541,15 +1541,29 @@ public class HttpRequest {
     return this;
   }
 
+  @SuppressWarnings("serial") // Not going to serialize this exception.
+  public class InvalidHttpStatusException extends IllegalStateException {
+    private final int statusCode;
+
+    public InvalidHttpStatusException(String body, int statusCode) {
+      super(body.isEmpty() ? "Error status: " + status() : body);
+      this.statusCode = statusCode;
+    }
+
+    public int getStatusCode() {
+      return statusCode;
+    }
+  }
+
   public HttpRequest checkStatus() {
     if (hasError()) {
       String body = "";
       try {
         body = normalize(getBody());
         Log.debug(body);
-      } catch (Throwable t) {
+      } catch (Exception e) {
       }
-      throw new IllegalStateException(body.isEmpty() ? "Error status: " + status() : body);
+      throw new InvalidHttpStatusException(body, status());
     }
     return this;
   }
