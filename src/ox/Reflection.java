@@ -201,7 +201,7 @@ public class Reflection {
         value = Money.parse(s);
       } else if (targetClass == Boolean.class) {
         value = Boolean.parseBoolean(s);
-      } else if (targetClass == Integer.class) {
+      } else if (targetClass == Integer.class || targetClass == int.class) {
         value = Integer.parseInt(s);
       }
     } else if (value instanceof java.sql.Date) {

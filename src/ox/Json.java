@@ -62,6 +62,9 @@ public class Json implements Iterable<String> {
   }
 
   public String getOrDefault(String key, String defaultValue) {
+    if (!isObject()) {
+      return defaultValue;
+    }
     JsonElement e = getElement(key);
     return e == null || e.isJsonNull() ? defaultValue : e.getAsString();
   }
@@ -114,6 +117,9 @@ public class Json implements Iterable<String> {
   }
 
   public boolean getBoolean(String key, boolean defaultValue) {
+    if (!isObject()) {
+      return defaultValue;
+    }
     Boolean b = getBoolean(key);
     return b == null ? defaultValue : b;
   }
@@ -415,7 +421,7 @@ public class Json implements Iterable<String> {
     if (e.isJsonPrimitive()) {
       return new Json(e.getAsString()).asStringArray();
     }
-    return map(arr(), e -> e.isJsonNull() ? null : e.getAsString());
+    return map(arr(), el -> el.isJsonNull() ? null : el.getAsString());
   }
 
   public XList<Integer> asIntArray() {
@@ -435,6 +441,9 @@ public class Json implements Iterable<String> {
   }
 
   public XList<Json> asJsonArray() {
+    if (isNull()) {
+      return XList.empty();
+    }
     return map(arr(), Json::new);
   }
 
@@ -504,8 +513,8 @@ public class Json implements Iterable<String> {
   }
 
   public Json rename(String oldKeyName, String newKeyName) {
-    JsonElement e = obj().remove(oldKeyName);
-    obj().add(newKeyName, e);
+    JsonElement el = obj().remove(oldKeyName);
+    obj().add(newKeyName, el);
     return this;
   }
 
@@ -622,4 +631,49 @@ public class Json implements Iterable<String> {
     return array(Arrays.asList(data));
   }
 
+  // ---------------- Utility Methods Added ----------------
+
+  /**
+   * Traverses a dot-separated key path into nested JSON objects.
+   * For example: json.at("data.user.result") returns the nested Json at that path.
+   * If any key in the path is missing, a Json wrapping JsonNull is returned.
+   */
+  public Json at(String path) {
+    if (path == null || path.isEmpty()) {
+      return this;
+    }
+    String[] keys = path.split("\\.");
+    Json current = this;
+    for (String key : keys) {
+      if (!current.isObject()) {
+        // Log.debug("non-object found at " + key + " in " + path);
+        return new Json(JsonNull.INSTANCE);
+      }
+      Json next = current.getJson(key);
+      if (next == null || next.isNull()) {
+        // Log.debug("Could not find: " + key + " in " + path);
+        return new Json(JsonNull.INSTANCE);
+      }
+      current = next;
+    }
+    return current;
+  }
+
+  /**
+   * Retrieves the JSON element at the given index if this Json is an array.
+   * Otherwise, returns a Json wrapping JsonNull.
+   */
+  public Json at(int index) {
+    if (isArray() && arr().size() > index) {
+      return new Json(arr().get(index));
+    }
+    return new Json(JsonNull.INSTANCE);
+  }
+
+  /**
+   * Returns true if this Json value exists (i.e. is not null or JsonNull).
+   */
+  public boolean exists() {
+    return e != null && !e.isJsonNull();
+  }
 }
