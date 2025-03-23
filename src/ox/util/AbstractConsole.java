@@ -6,6 +6,7 @@ import static ox.util.Utils.propagate;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
+import java.util.Scanner;
 import java.util.function.Consumer;
 
 import com.google.common.base.Splitter;
@@ -83,10 +84,12 @@ public abstract class AbstractConsole {
     return true;
   }
 
+  @SuppressWarnings("resource")
   private void listen() {
     Threads.run(() -> {
+      Scanner scanner = new Scanner(System.in);
       while (true) {
-        String line = System.console().readLine();
+        String line = scanner.nextLine();
         if (line == null || line.trim().isEmpty()) {
           continue;
         }
